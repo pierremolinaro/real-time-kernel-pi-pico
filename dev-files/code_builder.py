@@ -88,7 +88,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   print (makefile.BOLD_GREEN () + "--- Making " + projectDir + makefile.ENDC ())
   dictionaire = dictionaryFromJsonFile (projectDir + "/makefile.json")
 #--- PLATFORM
-  linkerScript = "raspberry-pi-pico.ld"
+  linkerScript = "common-sources/raspberry-pi-pico.ld"
   platformName = "RASPBERRY_PI_PICO"
 #--- ASSERTION_GENERATION
   ASSERTION_GENERATION = False
@@ -358,15 +358,6 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   rule.mCommand.append (ELF2UF2_TOOL_PATH)
   rule.mCommand.append (PRODUCT_FLASH + ".elf")
   rule.mCommand.append (PRODUCT_FLASH + ".uf2")
-#   rule.mCommand.append ("../../dev-files/uf2conv.py")
-#   rule.mCommand.append ("--convert")
-#   rule.mCommand.append ("--family")
-#   rule.mCommand.append ("RP2040")
-#   rule.mCommand.append ("--base")
-#   rule.mCommand.append ("0x2000")
-#   rule.mCommand.append ("-o")
-#   rule.mCommand.append (PRODUCT_FLASH + ".uf2")
-#   rule.mCommand.append (PRODUCT_FLASH + ".bin")
   make.addRule (rule)
 #--------------------------------------------------------------------------- Goals
   make.addGoal ("all", allGoal, "Build all")

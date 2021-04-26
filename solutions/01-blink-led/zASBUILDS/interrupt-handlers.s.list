@@ -1,0 +1,495 @@
+   1              	  .syntax unified
+   2              	  .cpu cortex-m4
+   3              	  .thumb
+   4              	
+   5              	@--------------------------------------------------------------------------------------------------
+   6              	@   INTERRUPT - UNUSED: ADC_IRQ_FIFO
+   7              	@--------------------------------------------------------------------------------------------------
+   8              	
+   9              	  .section .text.interrupt.ADC_IRQ_FIFO, "ax", %progbits
+  10              	
+  11              	  .align  1
+  12              	  .type interrupt.ADC_IRQ_FIFO, %function
+  13              	  .global interrupt.ADC_IRQ_FIFO
+  14              	
+  15              	interrupt.ADC_IRQ_FIFO:
+  16 0000 2620     	  movs r0, #38
+  17 0002 FFF7FEBF 	  b    unused.interrupt
+  18              	
+  19              	@--------------------------------------------------------------------------------------------------
+  20              	@   INTERRUPT - UNUSED: BusFault
+  21              	@--------------------------------------------------------------------------------------------------
+  22              	
+  23              	  .section .text.interrupt.BusFault, "ax", %progbits
+  24              	
+  25              	  .align  1
+  26              	  .type interrupt.BusFault, %function
+  27              	  .global interrupt.BusFault
+  28              	
+  29              	interrupt.BusFault:
+  30 0000 0520     	  movs r0, #5
+  31 0002 FFF7FEBF 	  b    unused.interrupt
+  32              	
+  33              	@--------------------------------------------------------------------------------------------------
+  34              	@   INTERRUPT - UNUSED: MemManage
+  35              	@--------------------------------------------------------------------------------------------------
+  36              	
+  37              	  .section .text.interrupt.MemManage, "ax", %progbits
+  38              	
+  39              	  .align  1
+  40              	  .type interrupt.MemManage, %function
+  41              	  .global interrupt.MemManage
+  42              	
+  43              	interrupt.MemManage:
+  44 0000 0420     	  movs r0, #4
+  45 0002 FFF7FEBF 	  b    unused.interrupt
+  46              	
+  47              	@--------------------------------------------------------------------------------------------------
+  48              	@   INTERRUPT - UNUSED: TIMER_IRQ_2
+  49              	@--------------------------------------------------------------------------------------------------
+  50              	
+  51              	  .section .text.interrupt.TIMER_IRQ_2, "ax", %progbits
+  52              	
+  53              	  .align  1
+  54              	  .type interrupt.TIMER_IRQ_2, %function
+  55              	  .global interrupt.TIMER_IRQ_2
+  56              	
+  57              	interrupt.TIMER_IRQ_2:
+  58 0000 1220     	  movs r0, #18
+  59 0002 FFF7FEBF 	  b    unused.interrupt
+  60              	
+  61              	@--------------------------------------------------------------------------------------------------
+  62              	@   INTERRUPT - UNUSED: TIMER_IRQ_3
+  63              	@--------------------------------------------------------------------------------------------------
+  64              	
+  65              	  .section .text.interrupt.TIMER_IRQ_3, "ax", %progbits
+  66              	
+  67              	  .align  1
+  68              	  .type interrupt.TIMER_IRQ_3, %function
+  69              	  .global interrupt.TIMER_IRQ_3
+  70              	
+  71              	interrupt.TIMER_IRQ_3:
+  72 0000 1320     	  movs r0, #19
+  73 0002 FFF7FEBF 	  b    unused.interrupt
+  74              	
+  75              	@--------------------------------------------------------------------------------------------------
+  76              	@   INTERRUPT - UNUSED: TIMER_IRQ_0
+  77              	@--------------------------------------------------------------------------------------------------
+  78              	
+  79              	  .section .text.interrupt.TIMER_IRQ_0, "ax", %progbits
+  80              	
+  81              	  .align  1
+  82              	  .type interrupt.TIMER_IRQ_0, %function
+  83              	  .global interrupt.TIMER_IRQ_0
+  84              	
+  85              	interrupt.TIMER_IRQ_0:
+  86 0000 1020     	  movs r0, #16
+  87 0002 FFF7FEBF 	  b    unused.interrupt
+  88              	
+  89              	@--------------------------------------------------------------------------------------------------
+  90              	@   INTERRUPT - UNUSED: TIMER_IRQ_1
+  91              	@--------------------------------------------------------------------------------------------------
+  92              	
+  93              	  .section .text.interrupt.TIMER_IRQ_1, "ax", %progbits
+  94              	
+  95              	  .align  1
+  96              	  .type interrupt.TIMER_IRQ_1, %function
+  97              	  .global interrupt.TIMER_IRQ_1
+  98              	
+  99              	interrupt.TIMER_IRQ_1:
+ 100 0000 1120     	  movs r0, #17
+ 101 0002 FFF7FEBF 	  b    unused.interrupt
+ 102              	
+ 103              	@--------------------------------------------------------------------------------------------------
+ 104              	@   INTERRUPT - UNUSED: SIO_IRQ_PROC0
+ 105              	@--------------------------------------------------------------------------------------------------
+ 106              	
+ 107              	  .section .text.interrupt.SIO_IRQ_PROC0, "ax", %progbits
+ 108              	
+ 109              	  .align  1
+ 110              	  .type interrupt.SIO_IRQ_PROC0, %function
+ 111              	  .global interrupt.SIO_IRQ_PROC0
+ 112              	
+ 113              	interrupt.SIO_IRQ_PROC0:
+ 114 0000 1F20     	  movs r0, #31
+ 115 0002 FFF7FEBF 	  b    unused.interrupt
+ 116              	
+ 117              	@--------------------------------------------------------------------------------------------------
+ 118              	@   INTERRUPT - UNUSED: SIO_IRQ_PROC1
+ 119              	@--------------------------------------------------------------------------------------------------
+ 120              	
+ 121              	  .section .text.interrupt.SIO_IRQ_PROC1, "ax", %progbits
+ 122              	
+ 123              	  .align  1
+ 124              	  .type interrupt.SIO_IRQ_PROC1, %function
+ 125              	  .global interrupt.SIO_IRQ_PROC1
+ 126              	
+ 127              	interrupt.SIO_IRQ_PROC1:
+ 128 0000 2020     	  movs r0, #32
+ 129 0002 FFF7FEBF 	  b    unused.interrupt
+ 130              	
+ 131              	@--------------------------------------------------------------------------------------------------
+ 132              	@   INTERRUPT - UNUSED: USBCTRL_IRQ
+ 133              	@--------------------------------------------------------------------------------------------------
+ 134              	
+ 135              	  .section .text.interrupt.USBCTRL_IRQ, "ax", %progbits
+ 136              	
+ 137              	  .align  1
+ 138              	  .type interrupt.USBCTRL_IRQ, %function
+ 139              	  .global interrupt.USBCTRL_IRQ
+ 140              	
+ 141              	interrupt.USBCTRL_IRQ:
+ 142 0000 1520     	  movs r0, #21
+ 143 0002 FFF7FEBF 	  b    unused.interrupt
+ 144              	
+ 145              	@--------------------------------------------------------------------------------------------------
+ 146              	@   INTERRUPT - UNUSED: PIO1_IRQ_1
+ 147              	@--------------------------------------------------------------------------------------------------
+ 148              	
+ 149              	  .section .text.interrupt.PIO1_IRQ_1, "ax", %progbits
+ 150              	
+ 151              	  .align  1
+ 152              	  .type interrupt.PIO1_IRQ_1, %function
+ 153              	  .global interrupt.PIO1_IRQ_1
+ 154              	
+ 155              	interrupt.PIO1_IRQ_1:
+ 156 0000 1A20     	  movs r0, #26
+ 157 0002 FFF7FEBF 	  b    unused.interrupt
+ 158              	
+ 159              	@--------------------------------------------------------------------------------------------------
+ 160              	@   INTERRUPT - UNUSED: DebugMonitor
+ 161              	@--------------------------------------------------------------------------------------------------
+ 162              	
+ 163              	  .section .text.interrupt.DebugMonitor, "ax", %progbits
+ 164              	
+ 165              	  .align  1
+ 166              	  .type interrupt.DebugMonitor, %function
+ 167              	  .global interrupt.DebugMonitor
+ 168              	
+ 169              	interrupt.DebugMonitor:
+ 170 0000 0C20     	  movs r0, #12
+ 171 0002 FFF7FEBF 	  b    unused.interrupt
+ 172              	
+ 173              	@--------------------------------------------------------------------------------------------------
+ 174              	@   INTERRUPT - UNUSED: HardFault
+ 175              	@--------------------------------------------------------------------------------------------------
+ 176              	
+ 177              	  .section .text.interrupt.HardFault, "ax", %progbits
+ 178              	
+ 179              	  .align  1
+ 180              	  .type interrupt.HardFault, %function
+ 181              	  .global interrupt.HardFault
+ 182              	
+ 183              	interrupt.HardFault:
+ 184 0000 0320     	  movs r0, #3
+ 185 0002 FFF7FEBF 	  b    unused.interrupt
+ 186              	
+ 187              	@--------------------------------------------------------------------------------------------------
+ 188              	@   INTERRUPT - UNUSED: RTC_IRQ
+ 189              	@--------------------------------------------------------------------------------------------------
+ 190              	
+ 191              	  .section .text.interrupt.RTC_IRQ, "ax", %progbits
+ 192              	
+ 193              	  .align  1
+ 194              	  .type interrupt.RTC_IRQ, %function
+ 195              	  .global interrupt.RTC_IRQ
+ 196              	
+ 197              	interrupt.RTC_IRQ:
+ 198 0000 2920     	  movs r0, #41
+ 199 0002 FFF7FEBF 	  b    unused.interrupt
+ 200              	
+ 201              	@--------------------------------------------------------------------------------------------------
+ 202              	@   INTERRUPT - UNUSED: SPI0_IRQ
+ 203              	@--------------------------------------------------------------------------------------------------
+ 204              	
+ 205              	  .section .text.interrupt.SPI0_IRQ, "ax", %progbits
+ 206              	
+ 207              	  .align  1
+ 208              	  .type interrupt.SPI0_IRQ, %function
+ 209              	  .global interrupt.SPI0_IRQ
+ 210              	
+ 211              	interrupt.SPI0_IRQ:
+ 212 0000 2220     	  movs r0, #34
+ 213 0002 FFF7FEBF 	  b    unused.interrupt
+ 214              	
+ 215              	@--------------------------------------------------------------------------------------------------
+ 216              	@   INTERRUPT - UNUSED: IO_IRQ_BANK0
+ 217              	@--------------------------------------------------------------------------------------------------
+ 218              	
+ 219              	  .section .text.interrupt.IO_IRQ_BANK0, "ax", %progbits
+ 220              	
+ 221              	  .align  1
+ 222              	  .type interrupt.IO_IRQ_BANK0, %function
+ 223              	  .global interrupt.IO_IRQ_BANK0
+ 224              	
+ 225              	interrupt.IO_IRQ_BANK0:
+ 226 0000 1D20     	  movs r0, #29
+ 227 0002 FFF7FEBF 	  b    unused.interrupt
+ 228              	
+ 229              	@--------------------------------------------------------------------------------------------------
+ 230              	@   INTERRUPT - UNUSED: I2C0_IRQ
+ 231              	@--------------------------------------------------------------------------------------------------
+ 232              	
+ 233              	  .section .text.interrupt.I2C0_IRQ, "ax", %progbits
+ 234              	
+ 235              	  .align  1
+ 236              	  .type interrupt.I2C0_IRQ, %function
+ 237              	  .global interrupt.I2C0_IRQ
+ 238              	
+ 239              	interrupt.I2C0_IRQ:
+ 240 0000 2720     	  movs r0, #39
+ 241 0002 FFF7FEBF 	  b    unused.interrupt
+ 242              	
+ 243              	@--------------------------------------------------------------------------------------------------
+ 244              	@   INTERRUPT - UNUSED: IO_IRQ_QSPI
+ 245              	@--------------------------------------------------------------------------------------------------
+ 246              	
+ 247              	  .section .text.interrupt.IO_IRQ_QSPI, "ax", %progbits
+ 248              	
+ 249              	  .align  1
+ 250              	  .type interrupt.IO_IRQ_QSPI, %function
+ 251              	  .global interrupt.IO_IRQ_QSPI
+ 252              	
+ 253              	interrupt.IO_IRQ_QSPI:
+ 254 0000 1E20     	  movs r0, #30
+ 255 0002 FFF7FEBF 	  b    unused.interrupt
+ 256              	
+ 257              	@--------------------------------------------------------------------------------------------------
+ 258              	@   INTERRUPT - UNUSED: XIP_IRQ
+ 259              	@--------------------------------------------------------------------------------------------------
+ 260              	
+ 261              	  .section .text.interrupt.XIP_IRQ, "ax", %progbits
+ 262              	
+ 263              	  .align  1
+ 264              	  .type interrupt.XIP_IRQ, %function
+ 265              	  .global interrupt.XIP_IRQ
+ 266              	
+ 267              	interrupt.XIP_IRQ:
+ 268 0000 1620     	  movs r0, #22
+ 269 0002 FFF7FEBF 	  b    unused.interrupt
+ 270              	
+ 271              	@--------------------------------------------------------------------------------------------------
+ 272              	@   INTERRUPT - UNUSED: UART1_IRQ
+ 273              	@--------------------------------------------------------------------------------------------------
+ 274              	
+ 275              	  .section .text.interrupt.UART1_IRQ, "ax", %progbits
+ 276              	
+ 277              	  .align  1
+ 278              	  .type interrupt.UART1_IRQ, %function
+ 279              	  .global interrupt.UART1_IRQ
+ 280              	
+ 281              	interrupt.UART1_IRQ:
+ 282 0000 2520     	  movs r0, #37
+ 283 0002 FFF7FEBF 	  b    unused.interrupt
+ 284              	
+ 285              	@--------------------------------------------------------------------------------------------------
+ 286              	@   INTERRUPT - UNUSED: PIO1_IRQ_0
+ 287              	@--------------------------------------------------------------------------------------------------
+ 288              	
+ 289              	  .section .text.interrupt.PIO1_IRQ_0, "ax", %progbits
+ 290              	
+ 291              	  .align  1
+ 292              	  .type interrupt.PIO1_IRQ_0, %function
+ 293              	  .global interrupt.PIO1_IRQ_0
+ 294              	
+ 295              	interrupt.PIO1_IRQ_0:
+ 296 0000 1920     	  movs r0, #25
+ 297 0002 FFF7FEBF 	  b    unused.interrupt
+ 298              	
+ 299              	@--------------------------------------------------------------------------------------------------
+ 300              	@   INTERRUPT - UNUSED: PIO0_IRQ_0
+ 301              	@--------------------------------------------------------------------------------------------------
+ 302              	
+ 303              	  .section .text.interrupt.PIO0_IRQ_0, "ax", %progbits
+ 304              	
+ 305              	  .align  1
+ 306              	  .type interrupt.PIO0_IRQ_0, %function
+ 307              	  .global interrupt.PIO0_IRQ_0
+ 308              	
+ 309              	interrupt.PIO0_IRQ_0:
+ 310 0000 1720     	  movs r0, #23
+ 311 0002 FFF7FEBF 	  b    unused.interrupt
+ 312              	
+ 313              	@--------------------------------------------------------------------------------------------------
+ 314              	@   INTERRUPT - UNUSED: PIO0_IRQ_1
+ 315              	@--------------------------------------------------------------------------------------------------
+ 316              	
+ 317              	  .section .text.interrupt.PIO0_IRQ_1, "ax", %progbits
+ 318              	
+ 319              	  .align  1
+ 320              	  .type interrupt.PIO0_IRQ_1, %function
+ 321              	  .global interrupt.PIO0_IRQ_1
+ 322              	
+ 323              	interrupt.PIO0_IRQ_1:
+ 324 0000 1820     	  movs r0, #24
+ 325 0002 FFF7FEBF 	  b    unused.interrupt
+ 326              	
+ 327              	@--------------------------------------------------------------------------------------------------
+ 328              	@   INTERRUPT - UNUSED: SVC
+ 329              	@--------------------------------------------------------------------------------------------------
+ 330              	
+ 331              	  .section .text.interrupt.SVC, "ax", %progbits
+ 332              	
+ 333              	  .align  1
+ 334              	  .type interrupt.SVC, %function
+ 335              	  .global interrupt.SVC
+ 336              	
+ 337              	interrupt.SVC:
+ 338 0000 0B20     	  movs r0, #11
+ 339 0002 FFF7FEBF 	  b    unused.interrupt
+ 340              	
+ 341              	@--------------------------------------------------------------------------------------------------
+ 342              	@   INTERRUPT - UNUSED: UsageFault
+ 343              	@--------------------------------------------------------------------------------------------------
+ 344              	
+ 345              	  .section .text.interrupt.UsageFault, "ax", %progbits
+ 346              	
+ 347              	  .align  1
+ 348              	  .type interrupt.UsageFault, %function
+ 349              	  .global interrupt.UsageFault
+ 350              	
+ 351              	interrupt.UsageFault:
+ 352 0000 0620     	  movs r0, #6
+ 353 0002 FFF7FEBF 	  b    unused.interrupt
+ 354              	
+ 355              	@--------------------------------------------------------------------------------------------------
+ 356              	@   INTERRUPT - UNUSED: PendSV
+ 357              	@--------------------------------------------------------------------------------------------------
+ 358              	
+ 359              	  .section .text.interrupt.PendSV, "ax", %progbits
+ 360              	
+ 361              	  .align  1
+ 362              	  .type interrupt.PendSV, %function
+ 363              	  .global interrupt.PendSV
+ 364              	
+ 365              	interrupt.PendSV:
+ 366 0000 0E20     	  movs r0, #14
+ 367 0002 FFF7FEBF 	  b    unused.interrupt
+ 368              	
+ 369              	@--------------------------------------------------------------------------------------------------
+ 370              	@   INTERRUPT - UNUSED: CLOCKS_IRQ
+ 371              	@--------------------------------------------------------------------------------------------------
+ 372              	
+ 373              	  .section .text.interrupt.CLOCKS_IRQ, "ax", %progbits
+ 374              	
+ 375              	  .align  1
+ 376              	  .type interrupt.CLOCKS_IRQ, %function
+ 377              	  .global interrupt.CLOCKS_IRQ
+ 378              	
+ 379              	interrupt.CLOCKS_IRQ:
+ 380 0000 2120     	  movs r0, #33
+ 381 0002 FFF7FEBF 	  b    unused.interrupt
+ 382              	
+ 383              	@--------------------------------------------------------------------------------------------------
+ 384              	@   INTERRUPT - UNUSED: UART0_IRQ
+ 385              	@--------------------------------------------------------------------------------------------------
+ 386              	
+ 387              	  .section .text.interrupt.UART0_IRQ, "ax", %progbits
+ 388              	
+ 389              	  .align  1
+ 390              	  .type interrupt.UART0_IRQ, %function
+ 391              	  .global interrupt.UART0_IRQ
+ 392              	
+ 393              	interrupt.UART0_IRQ:
+ 394 0000 2420     	  movs r0, #36
+ 395 0002 FFF7FEBF 	  b    unused.interrupt
+ 396              	
+ 397              	@--------------------------------------------------------------------------------------------------
+ 398              	@   INTERRUPT - UNUSED: DMA_IRQ_1
+ 399              	@--------------------------------------------------------------------------------------------------
+ 400              	
+ 401              	  .section .text.interrupt.DMA_IRQ_1, "ax", %progbits
+ 402              	
+ 403              	  .align  1
+ 404              	  .type interrupt.DMA_IRQ_1, %function
+ 405              	  .global interrupt.DMA_IRQ_1
+ 406              	
+ 407              	interrupt.DMA_IRQ_1:
+ 408 0000 1C20     	  movs r0, #28
+ 409 0002 FFF7FEBF 	  b    unused.interrupt
+ 410              	
+ 411              	@--------------------------------------------------------------------------------------------------
+ 412              	@   INTERRUPT - UNUSED: DMA_IRQ_0
+ 413              	@--------------------------------------------------------------------------------------------------
+ 414              	
+ 415              	  .section .text.interrupt.DMA_IRQ_0, "ax", %progbits
+ 416              	
+ 417              	  .align  1
+ 418              	  .type interrupt.DMA_IRQ_0, %function
+ 419              	  .global interrupt.DMA_IRQ_0
+ 420              	
+ 421              	interrupt.DMA_IRQ_0:
+ 422 0000 1B20     	  movs r0, #27
+ 423 0002 FFF7FEBF 	  b    unused.interrupt
+ 424              	
+ 425              	@--------------------------------------------------------------------------------------------------
+ 426              	@   INTERRUPT - UNUSED: I2C1_IRQ
+ 427              	@--------------------------------------------------------------------------------------------------
+ 428              	
+ 429              	  .section .text.interrupt.I2C1_IRQ, "ax", %progbits
+ 430              	
+ 431              	  .align  1
+ 432              	  .type interrupt.I2C1_IRQ, %function
+ 433              	  .global interrupt.I2C1_IRQ
+ 434              	
+ 435              	interrupt.I2C1_IRQ:
+ 436 0000 2820     	  movs r0, #40
+ 437 0002 FFF7FEBF 	  b    unused.interrupt
+ 438              	
+ 439              	@--------------------------------------------------------------------------------------------------
+ 440              	@   INTERRUPT - UNUSED: SysTick
+ 441              	@--------------------------------------------------------------------------------------------------
+ 442              	
+ 443              	  .section .text.interrupt.SysTick, "ax", %progbits
+ 444              	
+ 445              	  .align  1
+ 446              	  .type interrupt.SysTick, %function
+ 447              	  .global interrupt.SysTick
+ 448              	
+ 449              	interrupt.SysTick:
+ 450 0000 0F20     	  movs r0, #15
+ 451 0002 FFF7FEBF 	  b    unused.interrupt
+ 452              	
+ 453              	@--------------------------------------------------------------------------------------------------
+ 454              	@   INTERRUPT - UNUSED: SPI1_IRQ
+ 455              	@--------------------------------------------------------------------------------------------------
+ 456              	
+ 457              	  .section .text.interrupt.SPI1_IRQ, "ax", %progbits
+ 458              	
+ 459              	  .align  1
+ 460              	  .type interrupt.SPI1_IRQ, %function
+ 461              	  .global interrupt.SPI1_IRQ
+ 462              	
+ 463              	interrupt.SPI1_IRQ:
+ 464 0000 2320     	  movs r0, #35
+ 465 0002 FFF7FEBF 	  b    unused.interrupt
+ 466              	
+ 467              	@--------------------------------------------------------------------------------------------------
+ 468              	@   INTERRUPT - UNUSED: PWM_IRQ_WRAP
+ 469              	@--------------------------------------------------------------------------------------------------
+ 470              	
+ 471              	  .section .text.interrupt.PWM_IRQ_WRAP, "ax", %progbits
+ 472              	
+ 473              	  .align  1
+ 474              	  .type interrupt.PWM_IRQ_WRAP, %function
+ 475              	  .global interrupt.PWM_IRQ_WRAP
+ 476              	
+ 477              	interrupt.PWM_IRQ_WRAP:
+ 478 0000 1420     	  movs r0, #20
+ 479 0002 FFF7FEBF 	  b    unused.interrupt
+ 480              	
+ 481              	@--------------------------------------------------------------------------------------------------
+ 482              	@   INTERRUPT - UNUSED: NMI
+ 483              	@--------------------------------------------------------------------------------------------------
+ 484              	
+ 485              	  .section .text.interrupt.NMI, "ax", %progbits
+ 486              	
+ 487              	  .align  1
+ 488              	  .type interrupt.NMI, %function
+ 489              	  .global interrupt.NMI
+ 490              	
+ 491              	interrupt.NMI:
+ 492 0000 0220     	  movs r0, #2
+ 493 0002 FFF7FEBF 	  b    unused.interrupt
+ 494              	
+ 495              	@--------------------------------------------------------------------------------------------------

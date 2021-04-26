@@ -1,0 +1,92 @@
+   1              	@————————————————————————————————�
+   2              	@   INTERRUPT VECTORS
+   3              	@————————————————————————————————�
+   4              	
+   5              		.syntax unified
+   6              		.cpu cortex-m0plus
+   7              		.thumb
+   8              	
+   9              	@————————————————————————————————�
+  10              	
+  11              	  .section isr.vectors, "a", %progbits
+  12              	
+  13              	@————————————————————————————————�
+  14              	
+  15 0000 00000000 	  .word __system_stack_end
+  16              	@--- ARM Core System Handler Vectors
+  17 0004 00000000 	  .word reset.handler @ 1
+  18 0008 00000000 	  .word interrupt.NMI @ 2
+  19 000c 00000000 	  .word interrupt.HardFault @ 3
+  20 0010 FFFFFFFF 	  .word -1 @ 4, reserved
+  21 0014 FFFFFFFF 	  .word -1 @ 5, reserved
+  22 0018 FFFFFFFF 	  .word -1 @ 6, reserved
+  23 001c FFFFFFFF 	  .word -1 @ 7, reserved
+  24 0020 FFFFFFFF 	  .word -1 @ 8, reserved
+  25 0024 FFFFFFFF 	  .word -1 @ 9, reserved
+  26 0028 FFFFFFFF 	  .word -1 @ 10, reserved
+  27 002c 00000000 	  .word interrupt.SVC @ 11
+  28 0030 FFFFFFFF 	  .word -1 @ 12
+  29 0034 FFFFFFFF 	  .word -1 @ 13, reserved
+  30 0038 00000000 	  .word interrupt.PendSV @ 14
+  31 003c 00000000 	  .word interrupt.SysTick @ 15
+  32              	@--- Non-Core Vectors
+  33 0040 00000000 	  .word interrupt.TIMER_IRQ_0 @ 16
+  34 0044 00000000 	  .word interrupt.TIMER_IRQ_1 @ 17
+  35 0048 00000000 	  .word interrupt.TIMER_IRQ_2 @ 18
+  36 004c 00000000 	  .word interrupt.TIMER_IRQ_3 @ 19
+  37 0050 00000000 	  .word interrupt.PWM_IRQ_WRAP @ 20
+  38 0054 00000000 	  .word interrupt.USBCTRL_IRQ @ 21
+  39 0058 00000000 	  .word interrupt.XIP_IRQ @ 22
+  40 005c 00000000 	  .word interrupt.PIO0_IRQ_0 @ 23
+  41 0060 00000000 	  .word interrupt.PIO0_IRQ_1 @ 24
+  42 0064 00000000 	  .word interrupt.PIO1_IRQ_0 @ 25
+  43 0068 00000000 	  .word interrupt.PIO1_IRQ_1 @ 26
+  44 006c 00000000 	  .word interrupt.DMA_IRQ_0 @ 27
+  45 0070 00000000 	  .word interrupt.DMA_IRQ_1 @ 28
+  46 0074 00000000 	  .word interrupt.IO_IRQ_BANK0 @ 29
+  47 0078 00000000 	  .word interrupt.IO_IRQ_QSPI @ 30
+  48 007c 00000000 	  .word interrupt.SIO_IRQ_PROC0 @ 31
+  49 0080 00000000 	  .word interrupt.SIO_IRQ_PROC1 @ 32
+  50 0084 00000000 	  .word interrupt.CLOCKS_IRQ @ 33
+  51 0088 00000000 	  .word interrupt.SPI0_IRQ @ 34
+  52 008c 00000000 	  .word interrupt.SPI1_IRQ @ 35
+  53 0090 00000000 	  .word interrupt.UART0_IRQ @ 36
+  54 0094 00000000 	  .word interrupt.UART1_IRQ @ 37
+  55 0098 00000000 	  .word interrupt.ADC_IRQ_FIFO @ 38
+  56 009c 00000000 	  .word interrupt.I2C0_IRQ @ 39
+  57 00a0 00000000 	  .word interrupt.I2C1_IRQ @ 40
+  58 00a4 00000000 	  .word interrupt.RTC_IRQ @ 41
+  59 00a8 FFFFFFFF 	  .word -1 @ 42, reserved
+  60 00ac FFFFFFFF 	  .word -1 @ 43, reserved
+  61 00b0 FFFFFFFF 	  .word -1 @ 44, reserved
+  62 00b4 FFFFFFFF 	  .word -1 @ 45, reserved
+  63 00b8 FFFFFFFF 	  .word -1 @ 46, reserved
+  64 00bc FFFFFFFF 	  .word -1 @ 47, reserved
+  65              	
+  66              	@————————————————————————————————�
+  67              	
+  68              	@BINARY_INFO_MARKER_START = 0x7188EBF2
+  69              	@BINARY_INFO_MARKER_END = 0xE71AA390
+  70              	
+  71              	//————————————————————————————————�
+  72              	
+  73              	@  .section .binary_info_header, "ax", %progbits
+  74              	@  .global __binary_info_start
+  75              	@  .global __binary_info_end
+  76              	@  .global data_cpy_table
+  77              	
+  78              	@binary_info_header:
+  79              	@.word BINARY_INFO_MARKER_START
+  80              	@.word __binary_info_start
+  81              	@.word __binary_info_end
+  82              	@.word data_cpy_table // we may need to decode pointers that are in RAM at runtime.
+  83              	@.word BINARY_INFO_MARKER_END
+  84              	
+  85              	@  .section .text, "ax", %progbits
+  86              	
+  87              	@__binary_info_start:
+  88              	@__binary_info_end:
+  89              	@data_cpy_table:
+  90              	@  .word 0
+  91              	
+  92              	@————————————————————————————————�

@@ -1,6 +1,4 @@
-{ "SOURCE-DIR" : ["sources"],
+{ "SOURCE-DIR" : ["sources", "../../dev-files/common-sources"],
 
-  "TEENSY" : "3.6",
-
-  "CPU-MHZ" : 180
+  "CPU-MHZ" : 125
 }

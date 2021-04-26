@@ -1,0 +1,57 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m0plus
+   3              		.thumb
+   4              	
+   5              	@--------------------------------------------------------------------------------------------------
+   6              	@                                                                                                  
+   7              	@                 R E S E T    H A N D L E R    ( D O U B L E    S T A C K    M O D E )            
+   8              	@                                                                                                  
+   9              	@--------------------------------------------------------------------------------------------------
+  10              	
+  11              	@--- This is stack for background task
+  12              	   BACKGROUND.STACK.SIZE = 512
+  13              	
+  14              		.section	.bss.background.task.stack, "aw", %nobits
+  15              	  .align	  3   @ Stack should be aligned on a 8-byte boundary
+  16              	
+  17              	background.task.stack:
+  18 0000 00000000 	  .space	BACKGROUND.STACK.SIZE
+  18      00000000 
+  18      00000000 
+  18      00000000 
+  18      00000000 
+  19              	
+  20              	@--------------------------------------------------------------------------------------------------
+  21              	@ See https://developer.arm.com/docs/dui0553/latest/2-the-cortex-m4-processor/21-programmers-model/
+  22              	
+  23              		.section	".reset", "ax", %progbits
+  24              	
+  25              	  .global reset.handler
+  26              	  .type reset.handler, %function
+  27              	
+  28              	reset.handler: @ Cortex M0 boots with interrupts enabled, in Thread mode
+  29              	@---------------------------------- Run boot, zero bss section, copy data section
+  30 0000 FFF7FEFF 	  bl    start.phase1
+  31              	@---------------------------------- Set PSP: this is stack for background task
+  32 0004 0848     	  ldr   r0,  =background.task.stack + BACKGROUND.STACK.SIZE
+  33 0006 80F30988 	  msr   psp, r0
+  34              	@---------------------------------- Set CONTROL register
+  35              	@ bit 0 : 0 -> Thread mode has privileged access, 1 -> Thread mode has unprivileged access
+  36              	@ bit 1 : 0 -> Use SP_main as the current stack, 1 -> In Thread mode, use SP_process as the current
+  37 000a 0222     	  movs  r2, #2
+  38 000c 82F31488 	  msr   CONTROL, r2
+  39              	@--- Software must use an ISB barrier instruction to ensure a write to the CONTROL register
+  40              	@ takes effect before the next instruction is executed.
+  41 0010 BFF36F8F 	  isb
+  42              	@---------------------------------- Run init routines, interrupt disabled
+  43 0014 72B6     	  cpsid i              @ Disable interrupts
+  44 0016 FFF7FEFF 	  bl    start.phase2
+  45 001a 62B6     	  cpsie i              @ Enable interrupts
+  46              	@---------------------------------- Run setup, loop
+  47 001c FFF7FEFF 	  bl    setup.function
+  48              	background.task:
+  49 0020 FFF7FEFF 	  bl    loop.function
+  50 0024 FCE7     	  b     background.task
+  51              	
+  52 0026 00000002 	@--------------------------------------------------------------------------------------------------
+  52      0000
