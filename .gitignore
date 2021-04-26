@@ -1,2 +1,5 @@
 
 *.pyc
+**/zBUILDS/*
+**/zPRODUCTS/*
+**/zSOURCES/*

@@ -1,12 +1,31 @@
 #include "all-headers.h"
 
-
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//--------------------------------------------------------------------------------------------------
 //  BOOT ROUTINE
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//--------------------------------------------------------------------------------------------------
 
 void startPhase1 (void) {
-   PSM_FRCE_ON = 0x1FFFF ;
+//---
+  RESETS_RESET = ~ (RESETS_RESET_io_qspi |
+            RESETS_RESET_pads_qspi |
+            RESETS_RESET_pll_usb |
+            RESETS_RESET_pll_sys) ;
+  const uint32_t reset = RESETS_RESET & ~(
+            RESETS_RESET_adc |
+            RESETS_RESET_rtc|
+            RESETS_RESET_spi0 |
+            RESETS_RESET_spi1 |
+            RESETS_RESET_uart0 |
+            RESETS_RESET_uart1 |
+            RESETS_RESET_usbctrl
+    );
+  RESETS_RESET &= ~reset ;
+
+  while (~RESETS_RESET_DONE & reset) {}
+
+  WATCHDOG_TICK = 0 ;
+
+//   PSM_FRCE_ON = 0x1FFFF ;
 
    for (volatile uint32_t i=0 ; i< 1 * 1000 * 1000 ; i++) {}
 
@@ -20,7 +39,18 @@ void startPhase1 (void) {
 //  iobank0_hw->io[25].ctrl = GPIO_FUNC_SIO << IO_BANK0_GPIO0_CTRL_FUNCSEL_LSB ;
   IO_BANK0_GPIO25_CTRL = 5 ;
 
+  while (1) {
   SIO_GPIO_OUT_SET = 1 << 25 ;
+//--- Wait...
+  for (volatile uint32_t i=0 ; i< 1 * 1000 * 1000 ; i++) {}
+//--- Drive GP25 low --> led is off
+//  sio_hw->gpio_clr = (1 << 25) ;
+  SIO_GPIO_OUT_CLR = 1 << 25 ;
+//--- Wait...
+  for (volatile uint32_t i=0 ; i< 1 * 1000 * 1000 ; i++) {}
+  }
+
+//  SIO_GPIO_OUT_SET = 1 << 25 ;
 
 //------------------------------------ Clear '.bss' section
 //   extern uint32_t __bss_start ;
@@ -43,9 +73,9 @@ void startPhase1 (void) {
 //   }
 }
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
-//   MICROCONTROLLER SERIAL NUMBER
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//--------------------------------------------------------------------------------------------------
+//   PHASE 2
+//--------------------------------------------------------------------------------------------------
 
 void startPhase2 (void) {
 //------------------------------------ Aller exécuter les routines d'initialisation de la section boot.routine.array
@@ -74,4 +104,4 @@ void startPhase2 (void) {
   }
 }
 
-//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//--------------------------------------------------------------------------------------------------
