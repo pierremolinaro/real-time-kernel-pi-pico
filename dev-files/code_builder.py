@@ -72,11 +72,6 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   make = makefile.Make (GOAL)
   make.mMacTextEditor = "BBEdit" # "Atom"
   allGoal = []
-#--------------------------------------------------------------------------- Install Linux UDEV rules ?
-  platform = dev_platform.getPlatform ()
-  if (platform == "linux") or (platform == "linux32") :
-    import udev_on_linux
-    udev_on_linux.installUDEVrulesOnLinux ()
 #--------------------------------------------------------------------------- Install compiler ?
   BASE_NAME = "arm-none-eabi"
   TOOL_DIR = download_and_install_gccarm.installGCCARMandGetToolDirectory ()
