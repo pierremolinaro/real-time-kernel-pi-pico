@@ -9,6 +9,7 @@ import sys, os, subprocess, shutil, json
 import makefile
 import common_definitions
 import download_and_install_gccarm
+import download_and_install_elf_to_uf2
 import dev_platform
 
 #---------------------------------------------------------------------------------------------------
@@ -86,6 +87,8 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   OBJCOPY_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-objcopy"]
   DISPLAY_OBJ_SIZE_TOOL = [TOOL_DIR + "/bin/" + BASE_NAME + "-size"]
   OBJDUMP_TOOL = TOOL_DIR + "/bin/" + BASE_NAME + "-objdump"
+#--------------------------------------------------------------------------- Install elf2uf2 ?
+  ELF2UF2_TOOL_PATH = download_and_install_elf_to_uf2.compile_install_elf2uf2 ()
 #--------------------------------------------------------------------------- Analyze JSON file
   print (makefile.BOLD_GREEN () + "--- Making " + projectDir + makefile.ENDC ())
   dictionaire = dictionaryFromJsonFile (projectDir + "/makefile.json")
@@ -357,7 +360,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   rule = makefile.Rule ([PRODUCT_FLASH + ".uf2"], "Converting elf to UF2 " + PRODUCT_FLASH + ".elf")
   rule.mDependences.append (PRODUCT_FLASH + ".elf")
   rule.mDependences.append ("makefile.json")
-  rule.mCommand.append ("../../dev-files/elf2uf2")
+  rule.mCommand.append (ELF2UF2_TOOL_PATH)
   rule.mCommand.append (PRODUCT_FLASH + ".elf")
   rule.mCommand.append (PRODUCT_FLASH + ".uf2")
 #   rule.mCommand.append ("../../dev-files/uf2conv.py")

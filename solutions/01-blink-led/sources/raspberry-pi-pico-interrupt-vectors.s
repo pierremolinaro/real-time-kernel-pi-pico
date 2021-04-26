@@ -17,9 +17,9 @@
   .word reset.handler @ 1
   .word interrupt.NMI @ 2
   .word interrupt.HardFault @ 3
-  .word -1 @ 4
-  .word -1 @ 5
-  .word -1 @ 6
+  .word -1 @ 4, reserved
+  .word -1 @ 5, reserved
+  .word -1 @ 6, reserved
   .word -1 @ 7, reserved
   .word -1 @ 8, reserved
   .word -1 @ 9, reserved
@@ -65,28 +65,28 @@
 
 @———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-BINARY_INFO_MARKER_START = 0x7188EBF2
-BINARY_INFO_MARKER_END = 0xE71AA390
+@BINARY_INFO_MARKER_START = 0x7188EBF2
+@BINARY_INFO_MARKER_END = 0xE71AA390
 
-@———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-  .section .binary_info_header, "ax", %progbits
-  .global __binary_info_start
-  .global __binary_info_end
-  .global data_cpy_table
+@  .section .binary_info_header, "ax", %progbits
+@  .global __binary_info_start
+@  .global __binary_info_end
+@  .global data_cpy_table
 
-binary_info_header:
-.word BINARY_INFO_MARKER_START
-.word __binary_info_start
-.word __binary_info_end
-.word data_cpy_table // we may need to decode pointers that are in RAM at runtime.
-.word BINARY_INFO_MARKER_END
+@binary_info_header:
+@.word BINARY_INFO_MARKER_START
+@.word __binary_info_start
+@.word __binary_info_end
+@.word data_cpy_table // we may need to decode pointers that are in RAM at runtime.
+@.word BINARY_INFO_MARKER_END
 
-  .section .text, "ax", %progbits
+@  .section .text, "ax", %progbits
 
-__binary_info_start:
-__binary_info_end:
-data_cpy_table:
-  .word 0
+@__binary_info_start:
+@__binary_info_end:
+@data_cpy_table:
+@  .word 0
 
 @———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
