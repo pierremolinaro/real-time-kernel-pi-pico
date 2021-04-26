@@ -1,4 +1,4 @@
 { "SOURCE-DIR" : ["sources", "../../dev-files/common-sources"],
 
-  "CPU-MHZ" : 125
+  "CPU-MHZ" : 25
 }
