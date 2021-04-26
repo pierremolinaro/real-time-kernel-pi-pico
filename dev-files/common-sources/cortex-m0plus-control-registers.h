@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------------------------
 
 //-------------------- SysTick Control and Status Register
-#define SYST_CSR (* ((volatile uint32_t *) (0xE0000000 + 0xE10)))
+#define SYST_CSR (* ((volatile uint32_t *) (0xE0000000 + 0xE010)))
 
   // Boolean field: Enable SysTick Timer
     static const uint32_t SYST_CSR_ENABLE = 1U << 0 ;
@@ -24,19 +24,19 @@
     static const uint32_t SYST_CSR_COUNTFLAG = 1U << 16 ;
 
 //-------------------- SysTick Reload Value Register
-#define SYST_RVR (* ((volatile uint32_t *) (0xE0000000 + 0xE14)))
+#define SYST_RVR (* ((volatile uint32_t *) (0xE0000000 + 0xE014)))
 
   // Field (width: 24 bits): Value to auto reload SysTick after reaching zero
     inline uint32_t SYST_RVR_RELOAD (const uint32_t inValue) { return (inValue & 16777215) << 0 ; }
 
 //-------------------- SysTick Current Value Register
-#define SYST_CVR (* ((volatile uint32_t *) (0xE0000000 + 0xE18)))
+#define SYST_CVR (* ((volatile uint32_t *) (0xE0000000 + 0xE018)))
 
   // Field (width: 24 bits): Current value
     inline uint32_t SYST_CVR_CURRENT (const uint32_t inValue) { return (inValue & 16777215) << 0 ; }
 
 //-------------------- SysTick Calibration Value Register
-#define SYST_CALIB (* ((const volatile uint32_t *) (0xE0000000 + 0xE1C)))
+#define SYST_CALIB (* ((const volatile uint32_t *) (0xE0000000 + 0xE01C)))
 
   // Field (width: 24 bits): Reload value to use for 10ms timing
     inline uint32_t SYST_CALIB_TENMS (const uint32_t inValue) { return (inValue & 16777215) << 0 ; }
