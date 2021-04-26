@@ -5,9 +5,9 @@
 #
 # This file must be placed at:
 #
-# /etc/udev/rules.d/49-teensy.rules    (preferred location)
+# /etc/udev/rules.d/49-raspberry-pi-pico.rules    (preferred location)
 #   or
-# /lib/udev/rules.d/49-teensy.rules    (req'd on some broken systems)
+# /lib/udev/rules.d/49-raspberry-pi-pico.rules    (req'd on some broken systems)
 #
 # To install, type this command in a terminal:
 #   sudo cp 49-teensy.rules /etc/udev/rules.d/49-teensy.rules
@@ -32,6 +32,6 @@ KERNEL=="ttyACM*", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="0478", MODE:="066
 #
 # Older modem proding (eg, Ubuntu 9.04) caused very slow serial device detection.
 # To fix, add this near top of /lib/udev/rules.d/77-nm-probe-modem-capabilities.rules
-#   SUBSYSTEMS=="usb", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="04[789]?", GOTO="nm_modem_probe_end" 
+#   SUBSYSTEMS=="usb", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="04[789]?", GOTO="nm_modem_probe_end"
 #
 

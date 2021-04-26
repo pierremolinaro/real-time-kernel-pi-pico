@@ -70,7 +70,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
 #--------------------------------------------------------------------------- Prepare
   os.chdir (projectDir)
   make = makefile.Make (GOAL)
-  make.mMacTextEditor = "TextWrangler" # "Atom"
+  make.mMacTextEditor = "BBEdit" # "Atom"
   allGoal = []
 #--------------------------------------------------------------------------- Install Linux UDEV rules ?
   platform = dev_platform.getPlatform ()
