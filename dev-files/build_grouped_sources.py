@@ -5,7 +5,7 @@ import sys, os
 
 #---------------------------------------------------------------------------------------------------
 
-separator = "//" + ("—" * 118) + "\n"
+separator = "//" + ("-" * 78) + "\n"
 #------------------------------ Destination file
 destinationFile = sys.argv [1]
 # print ("Dest " + destinationFile)

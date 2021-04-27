@@ -1,6 +1,22 @@
 #include "all-headers.h"
 
 //--------------------------------------------------------------------------------------------------
+//  Check CPU CLOCK
+//  CPU clock is defined in makefile.json
+//  and is reported in the CPU_MHZ compile time variable (in zSOURCES/base.h)
+//--------------------------------------------------------------------------------------------------
+
+#ifndef CPU_MHZ
+  #error "CPU_MHZ is not defined"
+#elif CPU_MHZ == 25
+  // Ok
+#elif CPU_MHZ == 125
+  // Ok
+#else
+  #error "Invalid CPU_MHZ value: required value: 25 or 125"
+#endif
+
+//--------------------------------------------------------------------------------------------------
 
 static const uint32_t XOSC_MHZ = 12 ; // Crystal on Raspberry Pi Pico is 12 MHz
 static const uint32_t MHZ = 1000 * 1000 ;

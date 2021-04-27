@@ -144,6 +144,8 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
           H_SOURCE_LIST.append (sourcePath)
         elif extension == ".s" :
           S_SOURCE_LIST.append (sourcePath)
+        elif extension == ".ld" :
+          pass # Ok
         elif extension != "" : # Ceci permet d'ignorer les fichés cachés (dont les noms commencent par un point)
           print (makefile.MAGENTA () + makefile.BOLD () + "Note: unhandled file " + sourcePath + makefile.ENDC ())
 #--------------------------------------------------------------------------- Build base header file

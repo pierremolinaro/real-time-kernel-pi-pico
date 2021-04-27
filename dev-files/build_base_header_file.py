@@ -6,7 +6,7 @@ import sys, os
 
 #---------------------------------------------------------------------------------------------------
 
-separator = "//" + ("—" * 118) + "\n"
+separator = "//" + ("-" * 78) + "\n"
 #------------------------------ Arg 1 is destination file
 destinationFile = sys.argv [1]
 #------------------------------ Arg 2 is processor frequency (in MHz)
