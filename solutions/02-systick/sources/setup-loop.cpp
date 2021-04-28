@@ -1,7 +1,7 @@
 #include "all-headers.h"
 
 //--------------------------------------------------------------------------------------------------
-// Led L2 is connected to PORTD:7 (active high)
+// Led on Raspberry Pi Pico is connected to GP25 (active high)
 
 void setup (void) {
 //--- Configure Systick
