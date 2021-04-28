@@ -74,7 +74,7 @@ def install_elf2uf2 (TOOL_DIR, TOOL_NAME) :
   if not os.path.exists (COMPILER_ARCHIVE_DIR + "/" + PICO_SDK):
     savedCurrentDir = os.getcwd ()
     os.chdir (COMPILER_ARCHIVE_DIR)
-    runCommand (["unzip", COMPILER_ARCHIVE_DIR + "/" + PICO_SDK + ".zip"])
+    runCommand (["unzip", "-q", COMPILER_ARCHIVE_DIR + "/" + PICO_SDK + ".zip"])
     os.chdir (savedCurrentDir)
   #------------------------------------------------------------------ Install
   TOOL_PATH = TOOL_DIR + "/" + TOOL_NAME

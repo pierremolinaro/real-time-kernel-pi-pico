@@ -6,10 +6,10 @@
 
 MEMORY {
   flash     (rx)  : ORIGIN = 0x10000000, LENGTH = 2048k
-  sram_low  (rwx) : ORIGIN = 0x20000000, LENGTH = 64k
-  sram_high (rwx) : ORIGIN = 0x20000000 + 64k, LENGTH = 192k
-  SCRATCH_X (rwx) : ORIGIN = 0x20040000, LENGTH = 4k
-  SCRATCH_Y (rwx) : ORIGIN = 0x20041000, LENGTH = 4k
+  sram_low  (rwx) : ORIGIN = 0x20000000, LENGTH = 128k
+  sram_high (rwx) : ORIGIN = 0x20000000 + 128k, LENGTH = 128k
+  SRAM4     (rwx) : ORIGIN = 0x20040000, LENGTH = 4k
+  SRAM5     (rwx) : ORIGIN = 0x20041000, LENGTH = 4k
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -47,7 +47,6 @@ SECTIONS {
     __boot2_start__ = . ;
     KEEP (*(.boot2)) ;
     __boot2_end__ = . ;
-    __logical_binary_start = .;
   /*-------------------- Vectors */
     __vectors_start = . ;
     KEEP (*(isr.vectors)) ;
@@ -93,6 +92,8 @@ SECTIONS {
     __code_end = . ;
   } > flash
 }
+
+/*------------------------------------------------------------------------------------------------*/
 
 ASSERT ((__boot2_end__ - __boot2_start__) == 256,
          "ERROR: Pico second stage bootloader must be 256 bytes in size")
@@ -156,13 +157,13 @@ __data_load_end   = LOADADDR (.data) + SIZEOF (.data) ;
 /*------------------------------------------------------------------------------------------------*/
 
 SECTIONS {
-  .system_stack :{
+  .system_stack : {
     . = ALIGN (8) ;
     __system_stack_start = . ;
-    . += 1024 ;
+    . += 4096 ;
     . = ALIGN (4) ;
     __system_stack_end = . ;
-  } > sram_low
+  } > SRAM4
 }
 
 /*------------------------------------------------------------------------------------------------*/
