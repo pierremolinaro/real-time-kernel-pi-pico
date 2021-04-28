@@ -51,9 +51,6 @@ SECTIONS {
     __vectors_start = . ;
     KEEP (*(isr.vectors)) ;
     __vectors_end = . ;
-    KEEP (*(.binary_info_header))
-    __binary_info_header_end = .;
-    KEEP (*(.reset))
   /*-------------------- Code */
     __code_start = . ;
     . = ALIGN(4) ;

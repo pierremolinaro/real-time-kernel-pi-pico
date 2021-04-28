@@ -419,7 +419,7 @@ for i in range (5, len (sys.argv)):
 #------------------------------ Destination file string
 cppFile = ""
 sFile  = "  .syntax unified\n"
-sFile += "  .cpu cortex-m4\n"
+sFile += "  .cpu cortex-m0plus\n"
 sFile += "  .thumb\n\n"
 #------------------------------ Explore header files
 interruptServiceList = []
@@ -586,8 +586,8 @@ for interruptSectionName in interruptSectionList :
   sFile += "  .type interrupt." + interruptSectionName + ", %function\n\n"
   sFile += "interrupt." + interruptSectionName + ":\n"
   sFile += "//----------------------------------------- Activity led On\n"
-  sFile += "  ldr   r0, =0x400FF084  // Address of GPIOC_PSOR control register\n"
-  sFile += "  movs  r1, # (1 << 5)   // Port D13 is PORTC:5\n"
+  sFile += "  ldr   r0, =0xD0000000 + 0x014  // Address of SIO_GPIO_OUT_SET control register\n"
+  sFile += "  ldr   r1, = (1 << 26)   // Port GP26 is ACTIVITY 0\n"
   sFile += "  str   r1, [r0]         // turn on\n"
   sFile += "//----------------------------------------- Goto interrupt function\n"
   sFile += "  b     interrupt.section." + interruptSectionName + "\n\n"

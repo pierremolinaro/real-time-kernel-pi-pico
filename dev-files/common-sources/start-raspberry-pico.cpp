@@ -495,6 +495,9 @@ void startPhase1 (void) {
   while ((reset & ~RESETS_RESET_DONE) != 0) {}
 //------------------------------------ Configure clocks
   clock_init () ;
+//------------------------------------ Configure VTOR Cortex-M0+ register
+  extern uint32_t __vectors_start ;
+  SCB_VTOR = uint32_t (& __vectors_start) ;
 //------------------------------------ Clear '.bss' section
   extern uint32_t __bss_start ;
   extern const uint32_t __bss_end ;

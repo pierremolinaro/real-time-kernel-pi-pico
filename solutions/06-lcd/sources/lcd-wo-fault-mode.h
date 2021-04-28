@@ -8,7 +8,7 @@
 
 void clearScreen (USER_MODE) ;
 
-void gotoLineColumn (USER_MODE_ const uint32_t inLine, const uint32_t inColumn) ;
+void gotoXY (USER_MODE_ const uint32_t inColumn, const uint32_t inLine) ;
 
 void printString (USER_MODE_ const char * inString) ;
 

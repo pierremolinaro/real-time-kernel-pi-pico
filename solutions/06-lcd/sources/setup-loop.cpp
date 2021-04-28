@@ -16,9 +16,9 @@ void loop (USER_MODE) {
   busyWaitDuring (MODE_ 500) ;
   gCount += 1 ;
   gCount %= 20 ;
-  gotoLineColumn (MODE_ 1, 0) ;
+  gotoXY (MODE_ 0, 1) ;
   printSpaces (MODE_ 2) ;
-  gotoLineColumn (MODE_ 1, 0) ;
+  gotoXY (MODE_ 0, 12) ;
   printUnsigned (MODE_ gCount) ;
   digitalToggle (BUILTIN_LED) ;
 }
