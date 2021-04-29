@@ -1,0 +1,635 @@
+   1              		.cpu cortex-m0plus
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 4
+   9              		.eabi_attribute 34, 0
+  10              		.eabi_attribute 18, 4
+  11              		.file	"lcd-wo-fault-mode.cpp"
+  12              		.section	.text._ZL27programLcd4BitDataBusOutputh,"ax",%progbits
+  13              		.align	1
+  14              		.syntax unified
+  15              		.code	16
+  16              		.thumb_func
+  17              		.fpu softvfp
+  18              		.type	_ZL27programLcd4BitDataBusOutputh, %function
+  19              	_ZL27programLcd4BitDataBusOutputh:
+  20              		@ args = 0, pretend = 0, frame = 0
+  21              		@ frame_needed = 0, uses_anonymous_args = 0
+  22 0000 70B5     		push	{r4, r5, r6, lr}
+  23 0002 0100     		movs	r1, r0
+  24 0004 0125     		movs	r5, #1
+  25 0006 0400     		movs	r4, r0
+  26 0008 2940     		ands	r1, r5
+  27 000a 0E20     		movs	r0, #14
+  28 000c FFF7FEFF 		bl	_Z12digitalWrite11DigitalPortb
+  29 0010 6108     		lsrs	r1, r4, #1
+  30 0012 2940     		ands	r1, r5
+  31 0014 0F20     		movs	r0, #15
+  32 0016 FFF7FEFF 		bl	_Z12digitalWrite11DigitalPortb
+  33 001a A108     		lsrs	r1, r4, #2
+  34 001c 2940     		ands	r1, r5
+  35 001e 1020     		movs	r0, #16
+  36 0020 FFF7FEFF 		bl	_Z12digitalWrite11DigitalPortb
+  37 0024 E108     		lsrs	r1, r4, #3
+  38 0026 2940     		ands	r1, r5
+  39 0028 1120     		movs	r0, #17
+  40 002a FFF7FEFF 		bl	_Z12digitalWrite11DigitalPortb
+  41              		@ sp needed
+  42 002e 70BD     		pop	{r4, r5, r6, pc}
+  43              		.size	_ZL27programLcd4BitDataBusOutputh, .-_ZL27programLcd4BitDataBusOutputh
+  44              		.section	.text._ZL10driveHighEv,"ax",%progbits
+  45              		.align	1
+  46              		.syntax unified
+  47              		.code	16
+  48              		.thumb_func
+  49              		.fpu softvfp
+  50              		.type	_ZL10driveHighEv, %function
+  51              	_ZL10driveHighEv:
+  52              		@ args = 0, pretend = 0, frame = 0
+  53              		@ frame_needed = 0, uses_anonymous_args = 0
+  54 0000 10B5     		push	{r4, lr}
+  55 0002 0121     		movs	r1, #1
+  56 0004 1220     		movs	r0, #18
+  57 0006 FFF7FEFF 		bl	_Z12digitalWrite11DigitalPortb
+  58              		@ sp needed
+  59 000a 10BD     		pop	{r4, pc}
+  60              		.size	_ZL10driveHighEv, .-_ZL10driveHighEv
+  61              		.section	.text._ZL9driveLowEv,"ax",%progbits
+  62              		.align	1
+  63              		.syntax unified
+  64              		.code	16
+  65              		.thumb_func
+  66              		.fpu softvfp
+  67              		.type	_ZL9driveLowEv, %function
+  68              	_ZL9driveLowEv:
+  69              		@ args = 0, pretend = 0, frame = 0
+  70              		@ frame_needed = 0, uses_anonymous_args = 0
+  71 0000 10B5     		push	{r4, lr}
+  72 0002 0021     		movs	r1, #0
+  73 0004 1220     		movs	r0, #18
+  74 0006 FFF7FEFF 		bl	_Z12digitalWrite11DigitalPortb
+  75              		@ sp needed
+  76 000a 10BD     		pop	{r4, pc}
+  77              		.size	_ZL9driveLowEv, .-_ZL9driveLowEv
+  78              		.section	.text._ZL16write8bitCommandh,"ax",%progbits
+  79              		.align	1
+  80              		.syntax unified
+  81              		.code	16
+  82              		.thumb_func
+  83              		.fpu softvfp
+  84              		.type	_ZL16write8bitCommandh, %function
+  85              	_ZL16write8bitCommandh:
+  86              		@ args = 0, pretend = 0, frame = 0
+  87              		@ frame_needed = 0, uses_anonymous_args = 0
+  88 0000 10B5     		push	{r4, lr}
+  89 0002 0400     		movs	r4, r0
+  90 0004 0120     		movs	r0, #1
+  91 0006 FFF7FEFF 		bl	_Z14busyWaitDuringm
+  92 000a 0021     		movs	r1, #0
+  93 000c 1320     		movs	r0, #19
+  94 000e FFF7FEFF 		bl	_Z12digitalWrite11DigitalPortb
+  95 0012 2009     		lsrs	r0, r4, #4
+  96 0014 FFF7FEFF 		bl	_ZL27programLcd4BitDataBusOutputh
+  97 0018 FFF7FEFF 		bl	_ZL10driveHighEv
+  98 001c 0120     		movs	r0, #1
+  99 001e FFF7FEFF 		bl	_Z14busyWaitDuringm
+ 100 0022 FFF7FEFF 		bl	_ZL9driveLowEv
+ 101 0026 0120     		movs	r0, #1
+ 102 0028 FFF7FEFF 		bl	_Z14busyWaitDuringm
+ 103 002c 2000     		movs	r0, r4
+ 104 002e FFF7FEFF 		bl	_ZL27programLcd4BitDataBusOutputh
+ 105 0032 FFF7FEFF 		bl	_ZL10driveHighEv
+ 106 0036 0120     		movs	r0, #1
+ 107 0038 FFF7FEFF 		bl	_Z14busyWaitDuringm
+ 108              		@ sp needed
+ 109 003c FFF7FEFF 		bl	_ZL9driveLowEv
+ 110 0040 10BD     		pop	{r4, pc}
+ 111              		.size	_ZL16write8bitCommandh, .-_ZL16write8bitCommandh
+ 112              		.section	.text._ZL9writeDatah,"ax",%progbits
+ 113              		.align	1
+ 114              		.syntax unified
+ 115              		.code	16
+ 116              		.thumb_func
+ 117              		.fpu softvfp
+ 118              		.type	_ZL9writeDatah, %function
+ 119              	_ZL9writeDatah:
+ 120              		@ args = 0, pretend = 0, frame = 0
+ 121              		@ frame_needed = 0, uses_anonymous_args = 0
+ 122 0000 10B5     		push	{r4, lr}
+ 123 0002 0400     		movs	r4, r0
+ 124 0004 0120     		movs	r0, #1
+ 125 0006 FFF7FEFF 		bl	_Z14busyWaitDuringm
+ 126 000a 0121     		movs	r1, #1
+ 127 000c 1320     		movs	r0, #19
+ 128 000e FFF7FEFF 		bl	_Z12digitalWrite11DigitalPortb
+ 129 0012 2009     		lsrs	r0, r4, #4
+ 130 0014 FFF7FEFF 		bl	_ZL27programLcd4BitDataBusOutputh
+ 131 0018 FFF7FEFF 		bl	_ZL10driveHighEv
+ 132 001c 0120     		movs	r0, #1
+ 133 001e FFF7FEFF 		bl	_Z14busyWaitDuringm
+ 134 0022 FFF7FEFF 		bl	_ZL9driveLowEv
+ 135 0026 0120     		movs	r0, #1
+ 136 0028 FFF7FEFF 		bl	_Z14busyWaitDuringm
+ 137 002c 2000     		movs	r0, r4
+ 138 002e FFF7FEFF 		bl	_ZL27programLcd4BitDataBusOutputh
+ 139 0032 FFF7FEFF 		bl	_ZL10driveHighEv
+ 140 0036 0120     		movs	r0, #1
+ 141 0038 FFF7FEFF 		bl	_Z14busyWaitDuringm
+ 142              		@ sp needed
+ 143 003c FFF7FEFF 		bl	_ZL9driveLowEv
+ 144 0040 10BD     		pop	{r4, pc}
+ 145              		.size	_ZL9writeDatah, .-_ZL9writeDatah
+ 146              		.section	.text._ZL25write4BitCommand_initModeh,"ax",%progbits
+ 147              		.align	1
+ 148              		.syntax unified
+ 149              		.code	16
+ 150              		.thumb_func
+ 151              		.fpu softvfp
+ 152              		.type	_ZL25write4BitCommand_initModeh, %function
+ 153              	_ZL25write4BitCommand_initModeh:
+ 154              		@ args = 0, pretend = 0, frame = 0
+ 155              		@ frame_needed = 0, uses_anonymous_args = 0
+ 156 0000 10B5     		push	{r4, lr}
+ 157 0002 0400     		movs	r4, r0
+ 158 0004 0120     		movs	r0, #1
+ 159 0006 FFF7FEFF 		bl	_Z23busyWaitDuring_initModem
+ 160 000a 0021     		movs	r1, #0
+ 161 000c 1320     		movs	r0, #19
+ 162 000e FFF7FEFF 		bl	_Z12digitalWrite11DigitalPortb
+ 163 0012 2000     		movs	r0, r4
+ 164 0014 FFF7FEFF 		bl	_ZL27programLcd4BitDataBusOutputh
+ 165 0018 FFF7FEFF 		bl	_ZL10driveHighEv
+ 166 001c 0120     		movs	r0, #1
+ 167 001e FFF7FEFF 		bl	_Z23busyWaitDuring_initModem
+ 168              		@ sp needed
+ 169 0022 FFF7FEFF 		bl	_ZL9driveLowEv
+ 170 0026 10BD     		pop	{r4, pc}
+ 171              		.size	_ZL25write4BitCommand_initModeh, .-_ZL25write4BitCommand_initModeh
+ 172              		.section	.text._ZL25write8bitCommand_initModeh,"ax",%progbits
+ 173              		.align	1
+ 174              		.syntax unified
+ 175              		.code	16
+ 176              		.thumb_func
+ 177              		.fpu softvfp
+ 178              		.type	_ZL25write8bitCommand_initModeh, %function
+ 179              	_ZL25write8bitCommand_initModeh:
+ 180              		@ args = 0, pretend = 0, frame = 0
+ 181              		@ frame_needed = 0, uses_anonymous_args = 0
+ 182 0000 10B5     		push	{r4, lr}
+ 183 0002 0400     		movs	r4, r0
+ 184 0004 0120     		movs	r0, #1
+ 185 0006 FFF7FEFF 		bl	_Z23busyWaitDuring_initModem
+ 186 000a 0021     		movs	r1, #0
+ 187 000c 1320     		movs	r0, #19
+ 188 000e FFF7FEFF 		bl	_Z12digitalWrite11DigitalPortb
+ 189 0012 2009     		lsrs	r0, r4, #4
+ 190 0014 FFF7FEFF 		bl	_ZL27programLcd4BitDataBusOutputh
+ 191 0018 FFF7FEFF 		bl	_ZL10driveHighEv
+ 192 001c 0120     		movs	r0, #1
+ 193 001e FFF7FEFF 		bl	_Z23busyWaitDuring_initModem
+ 194 0022 FFF7FEFF 		bl	_ZL9driveLowEv
+ 195 0026 0120     		movs	r0, #1
+ 196 0028 FFF7FEFF 		bl	_Z23busyWaitDuring_initModem
+ 197 002c 2000     		movs	r0, r4
+ 198 002e FFF7FEFF 		bl	_ZL27programLcd4BitDataBusOutputh
+ 199 0032 FFF7FEFF 		bl	_ZL10driveHighEv
+ 200 0036 0120     		movs	r0, #1
+ 201 0038 FFF7FEFF 		bl	_Z23busyWaitDuring_initModem
+ 202              		@ sp needed
+ 203 003c FFF7FEFF 		bl	_ZL9driveLowEv
+ 204 0040 10BD     		pop	{r4, pc}
+ 205              		.size	_ZL25write8bitCommand_initModeh, .-_ZL25write8bitCommand_initModeh
+ 206              		.section	.text._ZL8setupLCDv,"ax",%progbits
+ 207              		.align	1
+ 208              		.syntax unified
+ 209              		.code	16
+ 210              		.thumb_func
+ 211              		.fpu softvfp
+ 212              		.type	_ZL8setupLCDv, %function
+ 213              	_ZL8setupLCDv:
+ 214              		@ args = 0, pretend = 0, frame = 0
+ 215              		@ frame_needed = 0, uses_anonymous_args = 0
+ 216 0000 10B5     		push	{r4, lr}
+ 217 0002 0021     		movs	r1, #0
+ 218 0004 0E20     		movs	r0, #14
+ 219 0006 FFF7FEFF 		bl	_Z7pinMode11DigitalPort11DigitalMode
+ 220 000a 0021     		movs	r1, #0
+ 221 000c 0F20     		movs	r0, #15
+ 222 000e FFF7FEFF 		bl	_Z7pinMode11DigitalPort11DigitalMode
+ 223 0012 0021     		movs	r1, #0
+ 224 0014 1020     		movs	r0, #16
+ 225 0016 FFF7FEFF 		bl	_Z7pinMode11DigitalPort11DigitalMode
+ 226 001a 0021     		movs	r1, #0
+ 227 001c 1120     		movs	r0, #17
+ 228 001e FFF7FEFF 		bl	_Z7pinMode11DigitalPort11DigitalMode
+ 229 0022 0021     		movs	r1, #0
+ 230 0024 1320     		movs	r0, #19
+ 231 0026 FFF7FEFF 		bl	_Z7pinMode11DigitalPort11DigitalMode
+ 232 002a 0021     		movs	r1, #0
+ 233 002c 1220     		movs	r0, #18
+ 234 002e FFF7FEFF 		bl	_Z7pinMode11DigitalPort11DigitalMode
+ 235 0032 0F20     		movs	r0, #15
+ 236 0034 FFF7FEFF 		bl	_Z23busyWaitDuring_initModem
+ 237 0038 0320     		movs	r0, #3
+ 238 003a FFF7FEFF 		bl	_ZL25write4BitCommand_initModeh
+ 239 003e 0520     		movs	r0, #5
+ 240 0040 FFF7FEFF 		bl	_Z23busyWaitDuring_initModem
+ 241 0044 0320     		movs	r0, #3
+ 242 0046 FFF7FEFF 		bl	_ZL25write4BitCommand_initModeh
+ 243 004a 0120     		movs	r0, #1
+ 244 004c FFF7FEFF 		bl	_Z23busyWaitDuring_initModem
+ 245 0050 0320     		movs	r0, #3
+ 246 0052 FFF7FEFF 		bl	_ZL25write4BitCommand_initModeh
+ 247 0056 0220     		movs	r0, #2
+ 248 0058 FFF7FEFF 		bl	_ZL25write4BitCommand_initModeh
+ 249 005c 2820     		movs	r0, #40
+ 250 005e FFF7FEFF 		bl	_ZL25write8bitCommand_initModeh
+ 251 0062 0820     		movs	r0, #8
+ 252 0064 FFF7FEFF 		bl	_ZL25write8bitCommand_initModeh
+ 253 0068 0120     		movs	r0, #1
+ 254 006a FFF7FEFF 		bl	_ZL25write8bitCommand_initModeh
+ 255 006e 0620     		movs	r0, #6
+ 256 0070 FFF7FEFF 		bl	_ZL25write8bitCommand_initModeh
+ 257 0074 1C20     		movs	r0, #28
+ 258 0076 FFF7FEFF 		bl	_ZL25write8bitCommand_initModeh
+ 259 007a 0220     		movs	r0, #2
+ 260 007c FFF7FEFF 		bl	_ZL25write8bitCommand_initModeh
+ 261 0080 0C20     		movs	r0, #12
+ 262 0082 FFF7FEFF 		bl	_ZL25write8bitCommand_initModeh
+ 263              		@ sp needed
+ 264 0086 10BD     		pop	{r4, pc}
+ 265              		.size	_ZL8setupLCDv, .-_ZL8setupLCDv
+ 266              		.section	.text._Z11clearScreenv,"ax",%progbits
+ 267              		.align	1
+ 268              		.global	_Z11clearScreenv
+ 269              		.syntax unified
+ 270              		.code	16
+ 271              		.thumb_func
+ 272              		.fpu softvfp
+ 273              		.type	_Z11clearScreenv, %function
+ 274              	_Z11clearScreenv:
+ 275              		@ args = 0, pretend = 0, frame = 0
+ 276              		@ frame_needed = 0, uses_anonymous_args = 0
+ 277 0000 10B5     		push	{r4, lr}
+ 278 0002 0120     		movs	r0, #1
+ 279 0004 FFF7FEFF 		bl	_ZL16write8bitCommandh
+ 280              		@ sp needed
+ 281 0008 10BD     		pop	{r4, pc}
+ 282              		.size	_Z11clearScreenv, .-_Z11clearScreenv
+ 283              		.section	.text._Z6gotoXYmm,"ax",%progbits
+ 284              		.align	1
+ 285              		.global	_Z6gotoXYmm
+ 286              		.syntax unified
+ 287              		.code	16
+ 288              		.thumb_func
+ 289              		.fpu softvfp
+ 290              		.type	_Z6gotoXYmm, %function
+ 291              	_Z6gotoXYmm:
+ 292              		@ args = 0, pretend = 0, frame = 0
+ 293              		@ frame_needed = 0, uses_anonymous_args = 0
+ 294 0000 10B5     		push	{r4, lr}
+ 295 0002 0329     		cmp	r1, #3
+ 296 0004 09D8     		bhi	.L10
+ 297 0006 1328     		cmp	r0, #19
+ 298 0008 07D8     		bhi	.L10
+ 299 000a 0300     		movs	r3, r0
+ 300 000c 034A     		ldr	r2, .L12
+ 301 000e 803B     		subs	r3, r3, #128
+ 302 0010 505C     		ldrb	r0, [r2, r1]
+ 303 0012 C018     		adds	r0, r0, r3
+ 304 0014 C0B2     		uxtb	r0, r0
+ 305 0016 FFF7FEFF 		bl	_ZL16write8bitCommandh
+ 306              	.L10:
+ 307              		@ sp needed
+ 308 001a 10BD     		pop	{r4, pc}
+ 309              	.L13:
+ 310              		.align	2
+ 311              	.L12:
+ 312 001c 00000000 		.word	.LANCHOR0
+ 313              		.size	_Z6gotoXYmm, .-_Z6gotoXYmm
+ 314              		.section	.text._Z11printStringPKc,"ax",%progbits
+ 315              		.align	1
+ 316              		.global	_Z11printStringPKc
+ 317              		.syntax unified
+ 318              		.code	16
+ 319              		.thumb_func
+ 320              		.fpu softvfp
+ 321              		.type	_Z11printStringPKc, %function
+ 322              	_Z11printStringPKc:
+ 323              		@ args = 0, pretend = 0, frame = 0
+ 324              		@ frame_needed = 0, uses_anonymous_args = 0
+ 325 0000 10B5     		push	{r4, lr}
+ 326 0002 041E     		subs	r4, r0, #0
+ 327 0004 06D0     		beq	.L14
+ 328              	.L16:
+ 329 0006 2078     		ldrb	r0, [r4]
+ 330 0008 0028     		cmp	r0, #0
+ 331 000a 03D0     		beq	.L14
+ 332 000c FFF7FEFF 		bl	_ZL9writeDatah
+ 333 0010 0134     		adds	r4, r4, #1
+ 334 0012 F8E7     		b	.L16
+ 335              	.L14:
+ 336              		@ sp needed
+ 337 0014 10BD     		pop	{r4, pc}
+ 338              		.size	_Z11printStringPKc, .-_Z11printStringPKc
+ 339              		.section	.text._Z9printCharc,"ax",%progbits
+ 340              		.align	1
+ 341              		.global	_Z9printCharc
+ 342              		.syntax unified
+ 343              		.code	16
+ 344              		.thumb_func
+ 345              		.fpu softvfp
+ 346              		.type	_Z9printCharc, %function
+ 347              	_Z9printCharc:
+ 348              		@ args = 0, pretend = 0, frame = 0
+ 349              		@ frame_needed = 0, uses_anonymous_args = 0
+ 350 0000 10B5     		push	{r4, lr}
+ 351 0002 FFF7FEFF 		bl	_ZL9writeDatah
+ 352              		@ sp needed
+ 353 0006 10BD     		pop	{r4, pc}
+ 354              		.size	_Z9printCharc, .-_Z9printCharc
+ 355              		.section	.text._Z11printSpacesm,"ax",%progbits
+ 356              		.align	1
+ 357              		.global	_Z11printSpacesm
+ 358              		.syntax unified
+ 359              		.code	16
+ 360              		.thumb_func
+ 361              		.fpu softvfp
+ 362              		.type	_Z11printSpacesm, %function
+ 363              	_Z11printSpacesm:
+ 364              		@ args = 0, pretend = 0, frame = 0
+ 365              		@ frame_needed = 0, uses_anonymous_args = 0
+ 366 0000 10B5     		push	{r4, lr}
+ 367 0002 0400     		movs	r4, r0
+ 368              	.L26:
+ 369 0004 002C     		cmp	r4, #0
+ 370 0006 04D0     		beq	.L24
+ 371 0008 2020     		movs	r0, #32
+ 372 000a FFF7FEFF 		bl	_ZL9writeDatah
+ 373 000e 013C     		subs	r4, r4, #1
+ 374 0010 F8E7     		b	.L26
+ 375              	.L24:
+ 376              		@ sp needed
+ 377 0012 10BD     		pop	{r4, pc}
+ 378              		.size	_Z11printSpacesm, .-_Z11printSpacesm
+ 379              		.global	__aeabi_uidivmod
+ 380              		.global	__aeabi_uidiv
+ 381              		.global	__aeabi_idiv
+ 382              		.section	.text._Z13printUnsignedm,"ax",%progbits
+ 383              		.align	1
+ 384              		.global	_Z13printUnsignedm
+ 385              		.syntax unified
+ 386              		.code	16
+ 387              		.thumb_func
+ 388              		.fpu softvfp
+ 389              		.type	_Z13printUnsignedm, %function
+ 390              	_Z13printUnsignedm:
+ 391              		@ args = 0, pretend = 0, frame = 0
+ 392              		@ frame_needed = 0, uses_anonymous_args = 0
+ 393 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 394 0002 0400     		movs	r4, r0
+ 395 0004 0A27     		movs	r7, #10
+ 396 0006 0026     		movs	r6, #0
+ 397 0008 0E4D     		ldr	r5, .L33
+ 398              	.L30:
+ 399 000a 002E     		cmp	r6, #0
+ 400 000c 01D1     		bne	.L28
+ 401 000e A542     		cmp	r5, r4
+ 402 0010 09D8     		bhi	.L29
+ 403              	.L28:
+ 404 0012 2000     		movs	r0, r4
+ 405 0014 2900     		movs	r1, r5
+ 406 0016 FFF7FEFF 		bl	__aeabi_uidivmod
+ 407 001a 3030     		adds	r0, r0, #48
+ 408 001c C0B2     		uxtb	r0, r0
+ 409 001e 0C00     		movs	r4, r1
+ 410 0020 0126     		movs	r6, #1
+ 411 0022 FFF7FEFF 		bl	_ZL9writeDatah
+ 412              	.L29:
+ 413 0026 2800     		movs	r0, r5
+ 414 0028 0A21     		movs	r1, #10
+ 415 002a FFF7FEFF 		bl	__aeabi_uidiv
+ 416 002e 013F     		subs	r7, r7, #1
+ 417 0030 0500     		movs	r5, r0
+ 418 0032 002F     		cmp	r7, #0
+ 419 0034 E9D1     		bne	.L30
+ 420 0036 002E     		cmp	r6, #0
+ 421 0038 02D1     		bne	.L27
+ 422 003a 3020     		movs	r0, #48
+ 423 003c FFF7FEFF 		bl	_ZL9writeDatah
+ 424              	.L27:
+ 425              		@ sp needed
+ 426 0040 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 427              	.L34:
+ 428 0042 C046     		.align	2
+ 429              	.L33:
+ 430 0044 00CA9A3B 		.word	1000000000
+ 431              		.size	_Z13printUnsignedm, .-_Z13printUnsignedm
+ 432              		.global	__aeabi_uldivmod
+ 433              		.global	__aeabi_ldivmod
+ 434              		.section	.text._Z15printUnsigned64y,"ax",%progbits
+ 435              		.align	1
+ 436              		.global	_Z15printUnsigned64y
+ 437              		.syntax unified
+ 438              		.code	16
+ 439              		.thumb_func
+ 440              		.fpu softvfp
+ 441              		.type	_Z15printUnsigned64y, %function
+ 442              	_Z15printUnsigned64y:
+ 443              		@ args = 0, pretend = 0, frame = 24
+ 444              		@ frame_needed = 0, uses_anonymous_args = 0
+ 445 0000 0023     		movs	r3, #0
+ 446 0002 F0B5     		push	{r4, r5, r6, r7, lr}
+ 447 0004 87B0     		sub	sp, sp, #28
+ 448 0006 01AE     		add	r6, sp, #4
+ 449 0008 F374     		strb	r3, [r6, #19]
+ 450 000a 0A22     		movs	r2, #10
+ 451 000c 0023     		movs	r3, #0
+ 452 000e 0400     		movs	r4, r0
+ 453 0010 0D00     		movs	r5, r1
+ 454 0012 FFF7FEFF 		bl	__aeabi_uldivmod
+ 455 0016 3032     		adds	r2, r2, #48
+ 456 0018 B274     		strb	r2, [r6, #18]
+ 457 001a 2000     		movs	r0, r4
+ 458 001c 2900     		movs	r1, r5
+ 459 001e 0A22     		movs	r2, #10
+ 460 0020 0023     		movs	r3, #0
+ 461 0022 FFF7FEFF 		bl	__aeabi_uldivmod
+ 462 0026 1227     		movs	r7, #18
+ 463 0028 0500     		movs	r5, r0
+ 464 002a 0C00     		movs	r4, r1
+ 465              	.L38:
+ 466 002c 2B00     		movs	r3, r5
+ 467 002e 2343     		orrs	r3, r4
+ 468 0030 11D0     		beq	.L36
+ 469 0032 2800     		movs	r0, r5
+ 470 0034 2100     		movs	r1, r4
+ 471 0036 0A22     		movs	r2, #10
+ 472 0038 0023     		movs	r3, #0
+ 473 003a FFF7FEFF 		bl	__aeabi_uldivmod
+ 474 003e 013F     		subs	r7, r7, #1
+ 475 0040 3032     		adds	r2, r2, #48
+ 476 0042 F255     		strb	r2, [r6, r7]
+ 477 0044 2800     		movs	r0, r5
+ 478 0046 2100     		movs	r1, r4
+ 479 0048 0A22     		movs	r2, #10
+ 480 004a 0023     		movs	r3, #0
+ 481 004c FFF7FEFF 		bl	__aeabi_uldivmod
+ 482 0050 0500     		movs	r5, r0
+ 483 0052 0C00     		movs	r4, r1
+ 484 0054 EAE7     		b	.L38
+ 485              	.L36:
+ 486 0056 F019     		adds	r0, r6, r7
+ 487 0058 FFF7FEFF 		bl	_Z11printStringPKc
+ 488 005c 07B0     		add	sp, sp, #28
+ 489              		@ sp needed
+ 490 005e F0BD     		pop	{r4, r5, r6, r7, pc}
+ 491              		.size	_Z15printUnsigned64y, .-_Z15printUnsigned64y
+ 492              		.section	.text._Z11printSignedl,"ax",%progbits
+ 493              		.align	1
+ 494              		.global	_Z11printSignedl
+ 495              		.syntax unified
+ 496              		.code	16
+ 497              		.thumb_func
+ 498              		.fpu softvfp
+ 499              		.type	_Z11printSignedl, %function
+ 500              	_Z11printSignedl:
+ 501              		@ args = 0, pretend = 0, frame = 0
+ 502              		@ frame_needed = 0, uses_anonymous_args = 0
+ 503 0000 10B5     		push	{r4, lr}
+ 504 0002 041E     		subs	r4, r0, #0
+ 505 0004 03DA     		bge	.L42
+ 506 0006 2D20     		movs	r0, #45
+ 507 0008 FFF7FEFF 		bl	_ZL9writeDatah
+ 508 000c 6042     		rsbs	r0, r4, #0
+ 509              	.L42:
+ 510 000e FFF7FEFF 		bl	_Z13printUnsignedm
+ 511              		@ sp needed
+ 512 0012 10BD     		pop	{r4, pc}
+ 513              		.size	_Z11printSignedl, .-_Z11printSignedl
+ 514              		.section	.text._Z9printHex1m,"ax",%progbits
+ 515              		.align	1
+ 516              		.global	_Z9printHex1m
+ 517              		.syntax unified
+ 518              		.code	16
+ 519              		.thumb_func
+ 520              		.fpu softvfp
+ 521              		.type	_Z9printHex1m, %function
+ 522              	_Z9printHex1m:
+ 523              		@ args = 0, pretend = 0, frame = 0
+ 524              		@ frame_needed = 0, uses_anonymous_args = 0
+ 525 0000 0F23     		movs	r3, #15
+ 526 0002 0340     		ands	r3, r0
+ 527 0004 10B5     		push	{r4, lr}
+ 528 0006 D8B2     		uxtb	r0, r3
+ 529 0008 092B     		cmp	r3, #9
+ 530 000a 03D8     		bhi	.L44
+ 531 000c 3030     		adds	r0, r0, #48
+ 532              	.L46:
+ 533 000e FFF7FEFF 		bl	_ZL9writeDatah
+ 534              		@ sp needed
+ 535 0012 10BD     		pop	{r4, pc}
+ 536              	.L44:
+ 537 0014 3730     		adds	r0, r0, #55
+ 538 0016 FAE7     		b	.L46
+ 539              		.size	_Z9printHex1m, .-_Z9printHex1m
+ 540              		.section	.text._Z9printHex2m,"ax",%progbits
+ 541              		.align	1
+ 542              		.global	_Z9printHex2m
+ 543              		.syntax unified
+ 544              		.code	16
+ 545              		.thumb_func
+ 546              		.fpu softvfp
+ 547              		.type	_Z9printHex2m, %function
+ 548              	_Z9printHex2m:
+ 549              		@ args = 0, pretend = 0, frame = 0
+ 550              		@ frame_needed = 0, uses_anonymous_args = 0
+ 551 0000 10B5     		push	{r4, lr}
+ 552 0002 0400     		movs	r4, r0
+ 553 0004 0009     		lsrs	r0, r0, #4
+ 554 0006 FFF7FEFF 		bl	_Z9printHex1m
+ 555 000a 2000     		movs	r0, r4
+ 556 000c FFF7FEFF 		bl	_Z9printHex1m
+ 557              		@ sp needed
+ 558 0010 10BD     		pop	{r4, pc}
+ 559              		.size	_Z9printHex2m, .-_Z9printHex2m
+ 560              		.section	.text._Z9printHex4m,"ax",%progbits
+ 561              		.align	1
+ 562              		.global	_Z9printHex4m
+ 563              		.syntax unified
+ 564              		.code	16
+ 565              		.thumb_func
+ 566              		.fpu softvfp
+ 567              		.type	_Z9printHex4m, %function
+ 568              	_Z9printHex4m:
+ 569              		@ args = 0, pretend = 0, frame = 0
+ 570              		@ frame_needed = 0, uses_anonymous_args = 0
+ 571 0000 10B5     		push	{r4, lr}
+ 572 0002 0400     		movs	r4, r0
+ 573 0004 000A     		lsrs	r0, r0, #8
+ 574 0006 FFF7FEFF 		bl	_Z9printHex2m
+ 575 000a 2000     		movs	r0, r4
+ 576 000c FFF7FEFF 		bl	_Z9printHex2m
+ 577              		@ sp needed
+ 578 0010 10BD     		pop	{r4, pc}
+ 579              		.size	_Z9printHex4m, .-_Z9printHex4m
+ 580              		.section	.text._Z9printHex8m,"ax",%progbits
+ 581              		.align	1
+ 582              		.global	_Z9printHex8m
+ 583              		.syntax unified
+ 584              		.code	16
+ 585              		.thumb_func
+ 586              		.fpu softvfp
+ 587              		.type	_Z9printHex8m, %function
+ 588              	_Z9printHex8m:
+ 589              		@ args = 0, pretend = 0, frame = 0
+ 590              		@ frame_needed = 0, uses_anonymous_args = 0
+ 591 0000 10B5     		push	{r4, lr}
+ 592 0002 0400     		movs	r4, r0
+ 593 0004 000C     		lsrs	r0, r0, #16
+ 594 0006 FFF7FEFF 		bl	_Z9printHex4m
+ 595 000a 2000     		movs	r0, r4
+ 596 000c FFF7FEFF 		bl	_Z9printHex4m
+ 597              		@ sp needed
+ 598 0010 10BD     		pop	{r4, pc}
+ 599              		.size	_Z9printHex8m, .-_Z9printHex8m
+ 600              		.section	.text._Z10printHex16y,"ax",%progbits
+ 601              		.align	1
+ 602              		.global	_Z10printHex16y
+ 603              		.syntax unified
+ 604              		.code	16
+ 605              		.thumb_func
+ 606              		.fpu softvfp
+ 607              		.type	_Z10printHex16y, %function
+ 608              	_Z10printHex16y:
+ 609              		@ args = 0, pretend = 0, frame = 0
+ 610              		@ frame_needed = 0, uses_anonymous_args = 0
+ 611 0000 10B5     		push	{r4, lr}
+ 612 0002 0400     		movs	r4, r0
+ 613 0004 0800     		movs	r0, r1
+ 614 0006 FFF7FEFF 		bl	_Z9printHex8m
+ 615 000a 2000     		movs	r0, r4
+ 616 000c FFF7FEFF 		bl	_Z9printHex8m
+ 617              		@ sp needed
+ 618 0010 10BD     		pop	{r4, pc}
+ 619              		.size	_Z10printHex16y, .-_Z10printHex16y
+ 620              		.section	.rodata._ZZ6gotoXYmmE3tab,"a",%progbits
+ 621              		.set	.LANCHOR0,. + 0
+ 622              		.type	_ZZ6gotoXYmmE3tab, %object
+ 623              		.size	_ZZ6gotoXYmmE3tab, 4
+ 624              	_ZZ6gotoXYmmE3tab:
+ 625 0000 00       		.byte	0
+ 626 0001 40       		.byte	64
+ 627 0002 14       		.byte	20
+ 628 0003 54       		.byte	84
+ 629              		.section	init.routine.array,"aw",%progbits
+ 630              		.align	2
+ 631              		.type	_ZL20zzUniqueIdentifier_0, %object
+ 632              		.size	_ZL20zzUniqueIdentifier_0, 4
+ 633              	_ZL20zzUniqueIdentifier_0:
+ 634 0000 00000000 		.word	_ZL8setupLCDv
+ 635              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 7-2017-q4-major) 7.2.1 20170904 (release) [ARM

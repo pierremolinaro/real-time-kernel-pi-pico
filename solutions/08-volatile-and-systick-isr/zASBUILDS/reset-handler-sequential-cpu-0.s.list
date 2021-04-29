@@ -1,0 +1,65 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m0plus
+   3              		.thumb
+   4              	
+   5              	//-------------------------------------------------------------------------------------------------
+   6              	//  RESET HANDLER (DOUBLE STACK MODE) CPU 0
+   7              	//-------------------------------------------------------------------------------------------------
+   8              	
+   9              	//--- This is stack for background task
+  10              	   BACKGROUND.STACK.SIZE.CPU.0 = 512
+  11              	
+  12              		.section	.bss.background.task.stack, "aw", %nobits
+  13              	  .align	  3   // Stack should be aligned on a 8-byte boundary
+  14              	
+  15              	background.task.stack.cpu.0:
+  16 0000 00000000 	  .space	BACKGROUND.STACK.SIZE.CPU.0
+  16      00000000 
+  16      00000000 
+  16      00000000 
+  16      00000000 
+  17              	
+  18              	//-------------------------------------------------------------------------------------------------
+  19              	
+  20              	  .section	".text", "ax", %progbits
+  21              	
+  22              	  .global reset.handler.cpu.0
+  23              	  .type reset.handler.cpu.0, %function
+  24              	
+  25              	reset.handler.cpu.0: // Cortex M0 boots with interrupts enabled, in Thread mode
+  26              	//---------------------------------- Run boot, zero bss section, copy data section
+  27 0000 FFF7FEFF 	  bl    cpu.0.phase3.boot
+  28              	//---------------------------------- Set PSP: this is stack for background task
+  29 0004 0848     	  ldr   r0,  =background.task.stack.cpu.0 + BACKGROUND.STACK.SIZE.CPU.0
+  30 0006 80F30988 	  msr   psp, r0
+  31              	//---------------------------------- Set CONTROL register
+  32              	// bit 0 : 0 -> Thread mode has privileged access, 1 -> Thread mode has unprivileged access
+  33              	// bit 1 : 0 -> Use SP_main as the current stack, 1 -> In Thread mode, use SP_process as the curren
+  34 000a 0222     	  movs  r2, #2
+  35 000c 82F31488 	  msr   CONTROL, r2
+  36              	//--- Software must use an ISB barrier instruction to ensure a write to the CONTROL register
+  37              	// takes effect before the next instruction is executed.
+  38 0010 BFF36F8F 	  isb
+  39              	//---------------------------------- Run init routines, interrupt disabled
+  40 0014 72B6     	  cpsid i              // Disable interrupts
+  41 0016 FFF7FEFF 	  bl    cpu.0.phase3.init
+  42 001a 62B6     	  cpsie i              // Enable interrupts
+  43              	//---------------------------------- Run setup, loop
+  44 001c FFF7FEFF 	  bl    cpu.0.setup
+  45              	background.task:
+  46 0020 FFF7FEFF 	  bl    cpu.0.loop
+  47 0024 FCE7     	  b     background.task
+  48              	
+  49              	//-------------------------------------------------------------------------------------------------
+  50              	//  RESET HANDLER (DOUBLE STACK MODE) CPU 1
+  51              	//-------------------------------------------------------------------------------------------------
+  52              	
+  53              	  .section	".text", "ax", %progbits
+  54              	
+  55              	  .global reset.handler.cpu.1
+  56              	  .type reset.handler.cpu.1, %function
+  57              	
+  58              	reset.handler.cpu.1: // Cortex M0 boots with interrupts enabled, in Thread mode
+  59 0026 FEE7     	  b  reset.handler.cpu.1
+  60              	
+  61 0028 00020000 	//-------------------------------------------------------------------------------------------------

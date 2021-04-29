@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------------------------------------------
 
-void setup (USER_MODE) {
+void setup0 (USER_MODE) {
   printUnsigned (MODE_ millis (MODE)) ;
   gotoXY (MODE_ 0, 3) ;
   printHex8 (MODE_ scb_hw->vtor) ;
@@ -12,9 +12,9 @@ void setup (USER_MODE) {
 
 static uint32_t gDisplayTime = 0 ;
 
-void loop (USER_MODE) {
+void loop0 (USER_MODE) {
   if (gDisplayTime <= millis (MODE)) {
-    const uint32_t s = systick_cpu_0 (MODE) ;
+    const uint32_t s = systick_current_cpu (MODE) ;
     digitalToggle (L4_LED) ;
     gotoXY (MODE_ 0, 1) ;
     printUnsigned (MODE_ s) ;

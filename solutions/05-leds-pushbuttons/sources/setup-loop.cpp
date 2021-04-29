@@ -2,12 +2,12 @@
 
 //--------------------------------------------------------------------------------------------------
 
-void setup (USER_MODE) {
+void setup0 (USER_MODE) {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void loop (USER_MODE) {
+void loop0 (USER_MODE) {
 //--- Complement BUILTIN_LED output
   digitalToggle (BUILTIN_LED) ;
 //--- Wait...

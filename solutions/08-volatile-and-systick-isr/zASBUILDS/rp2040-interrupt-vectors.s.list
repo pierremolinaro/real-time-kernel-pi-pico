@@ -1,0 +1,80 @@
+   1              	//-------------------------------------------------------------------------------------------------
+   2              	//   INTERRUPT VECTORS
+   3              	//-------------------------------------------------------------------------------------------------
+   4              	
+   5              		.syntax unified
+   6              		.cpu cortex-m0plus
+   7              		.thumb
+   8              	
+   9              	//-------------------------------------------------------------------------------------------------
+  10              	// CPU 0
+  11              	//-------------------------------------------------------------------------------------------------
+  12              	
+  13              	  .section isr.vectors.cpu.0, "a", %progbits
+  14              	
+  15              	//-------------------------------------------------------------------------------------------------
+  16              	
+  17 0000 00000000 	  .word __system_stack_end_cpu_0
+  18              	//--- ARM Core System Handler Vectors
+  19 0004 00000000 	  .word reset.handler.cpu.0 // 1
+  20 0008 00000000 	  .word interrupt.NMI // 2
+  21 000c 00000000 	  .word interrupt.HardFault // 3
+  22 0010 FFFFFFFF 	  .word -1 // 4, reserved
+  23 0014 FFFFFFFF 	  .word -1 // 5, reserved
+  24 0018 FFFFFFFF 	  .word -1 // 6, reserved
+  25 001c FFFFFFFF 	  .word -1 // 7, reserved
+  26 0020 FFFFFFFF 	  .word -1 // 8, reserved
+  27 0024 FFFFFFFF 	  .word -1 // 9, reserved
+  28 0028 FFFFFFFF 	  .word -1 // 10, reserved
+  29 002c 00000000 	  .word interrupt.SVC // 11
+  30 0030 FFFFFFFF 	  .word -1 // 12, reserved
+  31 0034 FFFFFFFF 	  .word -1 // 13, reserved
+  32 0038 00000000 	  .word interrupt.PendSV // 14
+  33 003c 00000000 	  .word interrupt.SysTick // 15
+  34              	//--- Non-Core Vectors
+  35 0040 00000000 	  .word interrupt.TIMER_IRQ_0 // 16, IRQ 0
+  36 0044 00000000 	  .word interrupt.TIMER_IRQ_1 // 17, IRQ 1
+  37 0048 00000000 	  .word interrupt.TIMER_IRQ_2 // 18, IRQ 2
+  38 004c 00000000 	  .word interrupt.TIMER_IRQ_3 // 19, IRQ 3
+  39 0050 00000000 	  .word interrupt.PWM_IRQ_WRAP // 20, IRQ 4
+  40 0054 00000000 	  .word interrupt.USBCTRL_IRQ // 21, IRQ 5
+  41 0058 00000000 	  .word interrupt.XIP_IRQ // 22, IRQ 6
+  42 005c 00000000 	  .word interrupt.PIO0_IRQ_0 // 23, IRQ 7
+  43 0060 00000000 	  .word interrupt.PIO0_IRQ_1 // 24, IRQ 8
+  44 0064 00000000 	  .word interrupt.PIO1_IRQ_0 // 25, IRQ 9
+  45 0068 00000000 	  .word interrupt.PIO1_IRQ_1 // 26, IRQ 10
+  46 006c 00000000 	  .word interrupt.DMA_IRQ_0 // 27, IRQ 11
+  47 0070 00000000 	  .word interrupt.DMA_IRQ_1 // 28, IRQ 12
+  48 0074 00000000 	  .word interrupt.IO_IRQ_BANK0 // 29, IRQ 13
+  49 0078 00000000 	  .word interrupt.IO_IRQ_QSPI // 30, IRQ 14
+  50 007c 00000000 	  .word interrupt.SIO_IRQ_PROC0 // 31, IRQ 15
+  51 0080 00000000 	  .word interrupt.SIO_IRQ_PROC1 // 32, IRQ 16
+  52 0084 00000000 	  .word interrupt.CLOCKS_IRQ // 33, IRQ 17
+  53 0088 00000000 	  .word interrupt.SPI0_IRQ // 34, IRQ 18
+  54 008c 00000000 	  .word interrupt.SPI1_IRQ // 35, IRQ 19
+  55 0090 00000000 	  .word interrupt.UART0_IRQ // 36, IRQ 20
+  56 0094 00000000 	  .word interrupt.UART1_IRQ // 37, IRQ 21
+  57 0098 00000000 	  .word interrupt.ADC_IRQ_FIFO // 38, IRQ 22
+  58 009c 00000000 	  .word interrupt.I2C0_IRQ // 39, IRQ 23
+  59 00a0 00000000 	  .word interrupt.I2C1_IRQ // 40, IRQ 24
+  60 00a4 00000000 	  .word interrupt.RTC_IRQ // 41, IRQ 25
+  61 00a8 FFFFFFFF 	  .word -1 // 42, reserved, IRQ 26
+  62 00ac FFFFFFFF 	  .word -1 // 43, reserved, IRQ 27
+  63 00b0 FFFFFFFF 	  .word -1 // 44, reserved, IRQ 28
+  64 00b4 FFFFFFFF 	  .word -1 // 45, reserved, IRQ 29
+  65 00b8 FFFFFFFF 	  .word -1 // 46, reserved, IRQ 30
+  66 00bc FFFFFFFF 	  .word -1 // 47, reserved, IRQ 31
+  67              	
+  68              	//-------------------------------------------------------------------------------------------------
+  69              	// CPU 1
+  70              	//-------------------------------------------------------------------------------------------------
+  71              	
+  72              	  .section isr.vectors.cpu.1, "a", %progbits
+  73              	
+  74              	//-------------------------------------------------------------------------------------------------
+  75              	
+  76 0000 FFFFFFFF 	  .word -1 // __system_stack_end_cpu_1
+  77              	//--- ARM Core System Handler Vectors
+  78 0004 FFFFFFFF 	  .word -1 //reset.handler.cpu.1 // 1
+  79              	
+  80              	//-------------------------------------------------------------------------------------------------

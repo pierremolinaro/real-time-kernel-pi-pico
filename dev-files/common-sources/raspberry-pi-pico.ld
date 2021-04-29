@@ -5,11 +5,11 @@
 /*------------------------------------------------------------------------------------------------*/
 
 MEMORY {
-  flash     (rx)  : ORIGIN = 0x10000000, LENGTH = 2048k
-  sram_low  (rwx) : ORIGIN = 0x20000000, LENGTH = 128k
-  sram_high (rwx) : ORIGIN = 0x20000000 + 128k, LENGTH = 128k
-  SRAM4     (rwx) : ORIGIN = 0x20040000, LENGTH = 4k
-  SRAM5     (rwx) : ORIGIN = 0x20041000, LENGTH = 4k
+  flash       (rx)  : ORIGIN = 0x10000000, LENGTH = 2048k
+  global_vars (rwx) : ORIGIN = 0x20000000, LENGTH = 128k
+  heap        (rwx) : ORIGIN = 0x20000000 + 128k, LENGTH = 128k
+  SRAM4       (rwx) : ORIGIN = 0x20040000, LENGTH = 4k
+  SRAM5       (rwx) : ORIGIN = 0x20041000, LENGTH = 4k
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -120,7 +120,7 @@ SECTIONS {
     * (COMMON) ;
     . = ALIGN(4);
     __bss_end = . ;
-  } > sram_low
+  } > global_vars
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -148,7 +148,7 @@ SECTIONS {
     __teensy_can1_receive_ports_array_end = . ;
     . = ALIGN (4) ;
     __data_end = . ;
-  } > sram_low
+  } > global_vars
 }
 
 
@@ -191,7 +191,7 @@ SECTIONS {
 /*                                                                                                */
 /*------------------------------------------------------------------------------------------------*/
 
-__heap_start = ORIGIN (sram_high) ;
-__heap_end = ORIGIN(sram_high) + LENGTH(sram_high) ;
+__heap_start = ORIGIN (heap) ;
+__heap_end = ORIGIN(heap) + LENGTH(heap) ;
 
 /*------------------------------------------------------------------------------------------------*/

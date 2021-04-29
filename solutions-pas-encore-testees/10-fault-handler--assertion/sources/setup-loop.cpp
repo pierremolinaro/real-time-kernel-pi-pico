@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------------------------------------------
 
-void setup (USER_MODE) {
+void setup0 (USER_MODE) {
 //--- Programmer l'interruption sur front descendant sur le port PTD0 (CLIC de l'encodeur)
   PORTD_PCR (0) |= PORT_PCR_IRQC (10) ;
   NVIC_ENABLE_IRQ (ISRSlot::PORTD) ;
@@ -17,7 +17,7 @@ static volatile uint32_t gClicCount ;
 
 //--------------------------------------------------------------------------------------------------
 
-void loop (USER_MODE) {
+void loop0 (USER_MODE) {
   busyWaitDuring (MODE_ 1000) ;
   gotoLineColumn (MODE_ 0, 7) ;
   printUnsigned (MODE_ gDownCounter) ;

@@ -1,0 +1,381 @@
+   1              		.cpu cortex-m0plus
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 4
+   9              		.eabi_attribute 34, 0
+  10              		.eabi_attribute 18, 4
+  11              		.file	"start-raspberry-pico.cpp"
+  12              		.global	__aeabi_uldivmod
+  13              		.global	__aeabi_ldivmod
+  14              		.section	.text._ZL15clock_configure10ClockIndexmmmm.constprop.0,"ax",%progbits
+  15              		.align	1
+  16              		.syntax unified
+  17              		.code	16
+  18              		.thumb_func
+  19              		.fpu softvfp
+  20              		.type	_ZL15clock_configure10ClockIndexmmmm.constprop.0, %function
+  21              	_ZL15clock_configure10ClockIndexmmmm.constprop.0:
+  22              		@ args = 0, pretend = 0, frame = 0
+  23              		@ frame_needed = 0, uses_anonymous_args = 0
+  24 0000 70B5     		push	{r4, r5, r6, lr}
+  25 0002 0500     		movs	r5, r0
+  26 0004 0C00     		movs	r4, r1
+  27 0006 1002     		lsls	r0, r2, #8
+  28 0008 110E     		lsrs	r1, r2, #24
+  29 000a 1A00     		movs	r2, r3
+  30 000c 0023     		movs	r3, #0
+  31 000e FFF7FEFF 		bl	__aeabi_uldivmod
+  32 0012 0C23     		movs	r3, #12
+  33 0014 6B43     		muls	r3, r5
+  34 0016 174A     		ldr	r2, .L12
+  35 0018 9B18     		adds	r3, r3, r2
+  36 001a 5A68     		ldr	r2, [r3, #4]
+  37 001c 9042     		cmp	r0, r2
+  38 001e 00D9     		bls	.L2
+  39 0020 5860     		str	r0, [r3, #4]
+  40              	.L2:
+  41 0022 043D     		subs	r5, r5, #4
+  42 0024 1A68     		ldr	r2, [r3]
+  43 0026 012D     		cmp	r5, #1
+  44 0028 1FD8     		bhi	.L3
+  45 002a 012C     		cmp	r4, #1
+  46 002c 1DD1     		bne	.L3
+  47 002e 0321     		movs	r1, #3
+  48 0030 8A43     		bics	r2, r1
+  49 0032 1A60     		str	r2, [r3]
+  50 0034 2200     		movs	r2, r4
+  51              	.L4:
+  52 0036 9968     		ldr	r1, [r3, #8]
+  53 0038 1142     		tst	r1, r2
+  54 003a FCD0     		beq	.L4
+  55              	.L5:
+  56 003c E021     		movs	r1, #224
+  57 003e 1A68     		ldr	r2, [r3]
+  58 0040 8A43     		bics	r2, r1
+  59 0042 1A60     		str	r2, [r3]
+  60 0044 012D     		cmp	r5, #1
+  61 0046 09D8     		bhi	.L6
+  62 0048 1A68     		ldr	r2, [r3]
+  63 004a DD39     		subs	r1, r1, #221
+  64 004c 8A43     		bics	r2, r1
+  65 004e 2243     		orrs	r2, r4
+  66 0050 1A60     		str	r2, [r3]
+  67 0052 0122     		movs	r2, #1
+  68 0054 A240     		lsls	r2, r2, r4
+  69              	.L7:
+  70 0056 9968     		ldr	r1, [r3, #8]
+  71 0058 0A42     		tst	r2, r1
+  72 005a FCD0     		beq	.L7
+  73              	.L6:
+  74 005c 8022     		movs	r2, #128
+  75 005e 1968     		ldr	r1, [r3]
+  76 0060 1201     		lsls	r2, r2, #4
+  77 0062 0A43     		orrs	r2, r1
+  78 0064 1A60     		str	r2, [r3]
+  79              		@ sp needed
+  80 0066 5860     		str	r0, [r3, #4]
+  81 0068 70BD     		pop	{r4, r5, r6, pc}
+  82              	.L3:
+  83 006a 0349     		ldr	r1, .L12+4
+  84 006c 0A40     		ands	r2, r1
+  85 006e 1A60     		str	r2, [r3]
+  86 0070 E4E7     		b	.L5
+  87              	.L13:
+  88 0072 C046     		.align	2
+  89              	.L12:
+  90 0074 00800040 		.word	1073774592
+  91 0078 FFF7FFFF 		.word	-2049
+  92              		.size	_ZL15clock_configure10ClockIndexmmmm.constprop.0, .-_ZL15clock_configure10ClockIndexmmmm.con
+  93              		.section	.text.cpu.0.phase3.boot,"ax",%progbits
+  94              		.align	1
+  95              		.global	cpu.0.phase3.boot
+  96              		.syntax unified
+  97              		.code	16
+  98              		.thumb_func
+  99              		.fpu softvfp
+ 100              		.type	cpu.0.phase3.boot, %function
+ 101              	cpu.0.phase3.boot:
+ 102              		@ args = 0, pretend = 0, frame = 0
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104 0000 564B     		ldr	r3, .L33
+ 105 0002 574A     		ldr	r2, .L33+4
+ 106 0004 70B5     		push	{r4, r5, r6, lr}
+ 107 0006 1A60     		str	r2, [r3]
+ 108 0008 1A68     		ldr	r2, [r3]
+ 109 000a 5649     		ldr	r1, .L33+8
+ 110 000c 0A40     		ands	r2, r1
+ 111 000e 1968     		ldr	r1, [r3]
+ 112 0010 9143     		bics	r1, r2
+ 113 0012 1960     		str	r1, [r3]
+ 114              	.L15:
+ 115 0014 1000     		movs	r0, r2
+ 116 0016 9968     		ldr	r1, [r3, #8]
+ 117 0018 8843     		bics	r0, r1
+ 118 001a FBD1     		bne	.L15
+ 119 001c 524A     		ldr	r2, .L33+12
+ 120 001e 5349     		ldr	r1, .L33+16
+ 121 0020 9067     		str	r0, [r2, #120]
+ 122 0022 AA20     		movs	r0, #170
+ 123 0024 0001     		lsls	r0, r0, #4
+ 124 0026 0860     		str	r0, [r1]
+ 125 0028 2F20     		movs	r0, #47
+ 126 002a C860     		str	r0, [r1, #12]
+ 127 002c 0C68     		ldr	r4, [r1]
+ 128 002e 5048     		ldr	r0, .L33+20
+ 129 0030 2043     		orrs	r0, r4
+ 130 0032 0860     		str	r0, [r1]
+ 131              	.L16:
+ 132 0034 4868     		ldr	r0, [r1, #4]
+ 133 0036 0028     		cmp	r0, #0
+ 134 0038 FCDA     		bge	.L16
+ 135 003a 0120     		movs	r0, #1
+ 136 003c D16B     		ldr	r1, [r2, #60]
+ 137 003e 8143     		bics	r1, r0
+ 138 0040 D163     		str	r1, [r2, #60]
+ 139              	.L17:
+ 140 0042 516C     		ldr	r1, [r2, #68]
+ 141 0044 0129     		cmp	r1, #1
+ 142 0046 FCD1     		bne	.L17
+ 143 0048 0320     		movs	r0, #3
+ 144 004a 116B     		ldr	r1, [r2, #48]
+ 145 004c 8143     		bics	r1, r0
+ 146 004e 1163     		str	r1, [r2, #48]
+ 147              	.L18:
+ 148 0050 916B     		ldr	r1, [r2, #56]
+ 149 0052 0129     		cmp	r1, #1
+ 150 0054 FCD1     		bne	.L18
+ 151 0056 C022     		movs	r2, #192
+ 152 0058 1968     		ldr	r1, [r3]
+ 153 005a 9201     		lsls	r2, r2, #6
+ 154 005c 1143     		orrs	r1, r2
+ 155 005e 1960     		str	r1, [r3]
+ 156 0060 1968     		ldr	r1, [r3]
+ 157 0062 4448     		ldr	r0, .L33+24
+ 158 0064 0140     		ands	r1, r0
+ 159 0066 1960     		str	r1, [r3]
+ 160              	.L19:
+ 161 0068 1000     		movs	r0, r2
+ 162 006a 9968     		ldr	r1, [r3, #8]
+ 163 006c 8843     		bics	r0, r1
+ 164 006e 011E     		subs	r1, r0, #0
+ 165 0070 FAD1     		bne	.L19
+ 166 0072 0122     		movs	r2, #1
+ 167 0074 404B     		ldr	r3, .L33+28
+ 168 0076 5242     		rsbs	r2, r2, #0
+ 169 0078 5A60     		str	r2, [r3, #4]
+ 170 007a 0232     		adds	r2, r2, #2
+ 171 007c 9860     		str	r0, [r3, #8]
+ 172 007e 1A60     		str	r2, [r3]
+ 173 0080 7C32     		adds	r2, r2, #124
+ 174 0082 9A60     		str	r2, [r3, #8]
+ 175 0084 5A68     		ldr	r2, [r3, #4]
+ 176 0086 2131     		adds	r1, r1, #33
+ 177 0088 8A43     		bics	r2, r1
+ 178 008a 5A60     		str	r2, [r3, #4]
+ 179              	.L20:
+ 180 008c 1A68     		ldr	r2, [r3]
+ 181 008e 002A     		cmp	r2, #0
+ 182 0090 FCDA     		bge	.L20
+ 183 0092 C422     		movs	r2, #196
+ 184 0094 0821     		movs	r1, #8
+ 185 0096 D202     		lsls	r2, r2, #11
+ 186 0098 DA60     		str	r2, [r3, #12]
+ 187 009a 5A68     		ldr	r2, [r3, #4]
+ 188 009c 8A43     		bics	r2, r1
+ 189 009e 5A60     		str	r2, [r3, #4]
+ 190 00a0 0122     		movs	r2, #1
+ 191 00a2 364B     		ldr	r3, .L33+32
+ 192 00a4 5242     		rsbs	r2, r2, #0
+ 193 00a6 5A60     		str	r2, [r3, #4]
+ 194 00a8 0022     		movs	r2, #0
+ 195 00aa 9A60     		str	r2, [r3, #8]
+ 196 00ac 0132     		adds	r2, r2, #1
+ 197 00ae 1A60     		str	r2, [r3]
+ 198 00b0 2732     		adds	r2, r2, #39
+ 199 00b2 9A60     		str	r2, [r3, #8]
+ 200 00b4 5A68     		ldr	r2, [r3, #4]
+ 201 00b6 1931     		adds	r1, r1, #25
+ 202 00b8 8A43     		bics	r2, r1
+ 203 00ba 5A60     		str	r2, [r3, #4]
+ 204              	.L21:
+ 205 00bc 1A68     		ldr	r2, [r3]
+ 206 00be 002A     		cmp	r2, #0
+ 207 00c0 FCDA     		bge	.L21
+ 208 00c2 A422     		movs	r2, #164
+ 209 00c4 0824     		movs	r4, #8
+ 210 00c6 D202     		lsls	r2, r2, #11
+ 211 00c8 DA60     		str	r2, [r3, #12]
+ 212 00ca 5A68     		ldr	r2, [r3, #4]
+ 213 00cc 0221     		movs	r1, #2
+ 214 00ce A243     		bics	r2, r4
+ 215 00d0 5A60     		str	r2, [r3, #4]
+ 216 00d2 2B4B     		ldr	r3, .L33+36
+ 217 00d4 0420     		movs	r0, #4
+ 218 00d6 1A00     		movs	r2, r3
+ 219 00d8 FFF7FEFF 		bl	_ZL15clock_configure10ClockIndexmmmm.constprop.0
+ 220 00dc 294B     		ldr	r3, .L33+40
+ 221 00de 2A4A     		ldr	r2, .L33+44
+ 222 00e0 0121     		movs	r1, #1
+ 223 00e2 0520     		movs	r0, #5
+ 224 00e4 FFF7FEFF 		bl	_ZL15clock_configure10ClockIndexmmmm.constprop.0
+ 225 00e8 284B     		ldr	r3, .L33+48
+ 226 00ea 0021     		movs	r1, #0
+ 227 00ec 1A00     		movs	r2, r3
+ 228 00ee 0720     		movs	r0, #7
+ 229 00f0 FFF7FEFF 		bl	_ZL15clock_configure10ClockIndexmmmm.constprop.0
+ 230 00f4 254B     		ldr	r3, .L33+48
+ 231 00f6 2000     		movs	r0, r4
+ 232 00f8 1A00     		movs	r2, r3
+ 233 00fa 0021     		movs	r1, #0
+ 234 00fc FFF7FEFF 		bl	_ZL15clock_configure10ClockIndexmmmm.constprop.0
+ 235 0100 234B     		ldr	r3, .L33+52
+ 236 0102 224A     		ldr	r2, .L33+48
+ 237 0104 0021     		movs	r1, #0
+ 238 0106 0920     		movs	r0, #9
+ 239 0108 FFF7FEFF 		bl	_ZL15clock_configure10ClockIndexmmmm.constprop.0
+ 240 010c 1E4B     		ldr	r3, .L33+44
+ 241 010e 0620     		movs	r0, #6
+ 242 0110 1A00     		movs	r2, r3
+ 243 0112 0021     		movs	r1, #0
+ 244 0114 FFF7FEFF 		bl	_ZL15clock_configure10ClockIndexmmmm.constprop.0
+ 245 0118 1E4A     		ldr	r2, .L33+56
+ 246 011a 1F4B     		ldr	r3, .L33+60
+ 247 011c 1F48     		ldr	r0, .L33+64
+ 248 011e 9A60     		str	r2, [r3, #8]
+ 249 0120 0022     		movs	r2, #0
+ 250 0122 1400     		movs	r4, r2
+ 251 0124 1E4B     		ldr	r3, .L33+68
+ 252 0126 1B1A     		subs	r3, r3, r0
+ 253 0128 9B08     		lsrs	r3, r3, #2
+ 254 012a 0133     		adds	r3, r3, #1
+ 255 012c 9B00     		lsls	r3, r3, #2
+ 256              	.L24:
+ 257 012e 111D     		adds	r1, r2, #4
+ 258 0130 9942     		cmp	r1, r3
+ 259 0132 0ED1     		bne	.L22
+ 260 0134 0022     		movs	r2, #0
+ 261 0136 1B48     		ldr	r0, .L33+72
+ 262 0138 1B4B     		ldr	r3, .L33+76
+ 263 013a 1C4C     		ldr	r4, .L33+80
+ 264 013c 1B1A     		subs	r3, r3, r0
+ 265 013e 9B08     		lsrs	r3, r3, #2
+ 266 0140 0133     		adds	r3, r3, #1
+ 267 0142 9B00     		lsls	r3, r3, #2
+ 268              	.L23:
+ 269 0144 111D     		adds	r1, r2, #4
+ 270 0146 8B42     		cmp	r3, r1
+ 271 0148 07D0     		beq	.L14
+ 272 014a A558     		ldr	r5, [r4, r2]
+ 273 014c 8550     		str	r5, [r0, r2]
+ 274 014e 0A00     		movs	r2, r1
+ 275 0150 F8E7     		b	.L23
+ 276              	.L22:
+ 277 0152 8218     		adds	r2, r0, r2
+ 278 0154 1460     		str	r4, [r2]
+ 279 0156 0A00     		movs	r2, r1
+ 280 0158 E9E7     		b	.L24
+ 281              	.L14:
+ 282              		@ sp needed
+ 283 015a 70BD     		pop	{r4, r5, r6, pc}
+ 284              	.L34:
+ 285              		.align	2
+ 286              	.L33:
+ 287 015c 00C00040 		.word	1073790976
+ 288 0160 BFCDFFFF 		.word	-12865
+ 289 0164 FE7F3CFE 		.word	-29589506
+ 290 0168 00800040 		.word	1073774592
+ 291 016c 00400240 		.word	1073889280
+ 292 0170 00B0FA00 		.word	16429056
+ 293 0174 FFCFFFFF 		.word	-12289
+ 294 0178 00800240 		.word	1073905664
+ 295 017c 00C00240 		.word	1073922048
+ 296 0180 001BB700 		.word	12000000
+ 297 0184 40787D01 		.word	25000000
+ 298 0188 40597307 		.word	125000000
+ 299 018c 006CDC02 		.word	48000000
+ 300 0190 1BB70000 		.word	46875
+ 301 0194 00000000 		.word	__vectors_start_cpu_0
+ 302 0198 00ED00E0 		.word	-536810240
+ 303 019c 00000000 		.word	__bss_start
+ 304 01a0 00000000 		.word	__bss_end
+ 305 01a4 00000000 		.word	__data_start
+ 306 01a8 00000000 		.word	__data_end
+ 307 01ac 00000000 		.word	__data_load_start
+ 308              		.size	cpu.0.phase3.boot, .-cpu.0.phase3.boot
+ 309              		.section	.text.cpu.0.phase3.init,"ax",%progbits
+ 310              		.align	1
+ 311              		.global	cpu.0.phase3.init
+ 312              		.syntax unified
+ 313              		.code	16
+ 314              		.thumb_func
+ 315              		.fpu softvfp
+ 316              		.type	cpu.0.phase3.init, %function
+ 317              	cpu.0.phase3.init:
+ 318              		@ args = 0, pretend = 0, frame = 0
+ 319              		@ frame_needed = 0, uses_anonymous_args = 0
+ 320 0000 0023     		movs	r3, #0
+ 321 0002 70B5     		push	{r4, r5, r6, lr}
+ 322 0004 144D     		ldr	r5, .L42
+ 323 0006 154C     		ldr	r4, .L42+4
+ 324 0008 641B     		subs	r4, r4, r5
+ 325 000a A408     		lsrs	r4, r4, #2
+ 326 000c 0134     		adds	r4, r4, #1
+ 327 000e A400     		lsls	r4, r4, #2
+ 328              	.L38:
+ 329 0010 1E1D     		adds	r6, r3, #4
+ 330 0012 A642     		cmp	r6, r4
+ 331 0014 17D1     		bne	.L36
+ 332 0016 0023     		movs	r3, #0
+ 333 0018 114D     		ldr	r5, .L42+8
+ 334 001a 124C     		ldr	r4, .L42+12
+ 335 001c 641B     		subs	r4, r4, r5
+ 336 001e A408     		lsrs	r4, r4, #2
+ 337 0020 0134     		adds	r4, r4, #1
+ 338 0022 A400     		lsls	r4, r4, #2
+ 339              	.L37:
+ 340 0024 1E1D     		adds	r6, r3, #4
+ 341 0026 A642     		cmp	r6, r4
+ 342 0028 11D1     		bne	.L39
+ 343 002a 0023     		movs	r3, #0
+ 344 002c 0E4D     		ldr	r5, .L42+16
+ 345 002e 0F4C     		ldr	r4, .L42+20
+ 346 0030 641B     		subs	r4, r4, r5
+ 347 0032 A408     		lsrs	r4, r4, #2
+ 348 0034 0134     		adds	r4, r4, #1
+ 349 0036 A400     		lsls	r4, r4, #2
+ 350              	.L40:
+ 351 0038 1E1D     		adds	r6, r3, #4
+ 352 003a A642     		cmp	r6, r4
+ 353 003c 0BD0     		beq	.L35
+ 354 003e EB58     		ldr	r3, [r5, r3]
+ 355 0040 9847     		blx	r3
+ 356 0042 3300     		movs	r3, r6
+ 357 0044 F8E7     		b	.L40
+ 358              	.L36:
+ 359 0046 EB58     		ldr	r3, [r5, r3]
+ 360 0048 9847     		blx	r3
+ 361 004a 3300     		movs	r3, r6
+ 362 004c E0E7     		b	.L38
+ 363              	.L39:
+ 364 004e EB58     		ldr	r3, [r5, r3]
+ 365 0050 9847     		blx	r3
+ 366 0052 3300     		movs	r3, r6
+ 367 0054 E6E7     		b	.L37
+ 368              	.L35:
+ 369              		@ sp needed
+ 370 0056 70BD     		pop	{r4, r5, r6, pc}
+ 371              	.L43:
+ 372              		.align	2
+ 373              	.L42:
+ 374 0058 00000000 		.word	__boot_routine_array_start
+ 375 005c 00000000 		.word	__boot_routine_array_end
+ 376 0060 00000000 		.word	__constructor_array_start
+ 377 0064 00000000 		.word	__constructor_array_end
+ 378 0068 00000000 		.word	__init_routine_array_start
+ 379 006c 00000000 		.word	__init_routine_array_end
+ 380              		.size	cpu.0.phase3.init, .-cpu.0.phase3.init
+ 381              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 7-2017-q4-major) 7.2.1 20170904 (release) [ARM

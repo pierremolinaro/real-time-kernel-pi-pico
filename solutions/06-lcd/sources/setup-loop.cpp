@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------------------------------------------
 
-void setup (USER_MODE) {
+void setup0 (USER_MODE) {
   printString (MODE_ "Hello!") ;
 }
 
@@ -12,7 +12,7 @@ static uint32_t gCount ;
 
 //--------------------------------------------------------------------------------------------------
 
-void loop (USER_MODE) {
+void loop0 (USER_MODE) {
   busyWaitDuring (MODE_ 500) ;
   gCount += 1 ;
   gCount %= 20 ;

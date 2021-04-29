@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------------------------------------------
 
-void setup (USER_MODE) {
+void setup0 (USER_MODE) {
   printString (MODE_ "Hello!") ;
 }
 
@@ -10,7 +10,7 @@ void setup (USER_MODE) {
 
 static uint32_t gDisplayTime = 0 ;
 
-void loop (USER_MODE) {
+void loop0 (USER_MODE) {
   digitalWrite (L4_LED, !digitalRead (P4_PUSH_BUTTON)) ;
   if (gDisplayTime <= millis (MODE)) {
     const uint32_t s = systick (MODE) ;

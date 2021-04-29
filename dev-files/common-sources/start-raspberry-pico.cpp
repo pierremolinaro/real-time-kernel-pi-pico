@@ -375,7 +375,7 @@ static void clock_init (void) {
 // See in Arduino: rp2040/hardware/rp2040/1.1.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c
 //--------------------------------------------------------------------------------------------------
 
-void startPhase1 (void) {
+void cpu0Phase3Boot (void) {
 //------------------------------------ Reset peripherals
 //--- Reset peripherals, but 4
   const uint32_t perpheralsNotResetted =
@@ -425,10 +425,10 @@ const uint32_t reset = resets_hw->reset & ~(
 }
 
 //--------------------------------------------------------------------------------------------------
-//   PHASE 2
+//   INIT ROUTINE
 //--------------------------------------------------------------------------------------------------
 
-void startPhase2 (void) {
+void cpu0Phase3Init (void) {
 //--------------- Aller exécuter les routines d'initialisation de la section boot.routine.array
   extern void (* __boot_routine_array_start) (void) ;
   extern void (* __boot_routine_array_end) (void) ;

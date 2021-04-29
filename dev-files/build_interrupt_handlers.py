@@ -506,7 +506,7 @@ if serviceScheme == "svc" :
   sFile += "  .align   2\n"
   sFile += "  .global  svc.dispatcher.table\n\n"
   sFile += "svc.dispatcher.table:\n"
-  sFile += "  .word start.phase2 // 0\n"
+  sFile += "  .word cpu.0.phase3.init // 0\n"
   idx = 1
   for service in serviceList :
     sFile += "  .word service." + service + " // " + str (idx) + "\n"

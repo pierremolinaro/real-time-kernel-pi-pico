@@ -6,9 +6,9 @@
 
 //--------------------------------------------------------------------------------------------------
 
-void setup (USER_MODE) asm ("setup.function") ;
+void setup0 (USER_MODE) asm ("cpu.0.setup") ;
 
-void loop (USER_MODE) asm ("loop.function") ;
+void loop0 (USER_MODE) asm ("cpu.0.loop") ;
 
 //--------------------------------------------------------------------------------------------------
 

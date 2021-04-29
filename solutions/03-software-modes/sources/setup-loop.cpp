@@ -3,7 +3,7 @@
 //--------------------------------------------------------------------------------------------------
 // Led on Raspberry Pi Pico is connected to GP25 (active high)
 
-void setup (USER_MODE) {
+void setup0 (USER_MODE) {
 //--- Configure Systick
   startSystick (MODE) ;
 //--- Configure GP25 as output digital port
@@ -18,7 +18,7 @@ void setup (USER_MODE) {
 
 //--------------------------------------------------------------------------------------------------
 
-void loop (USER_MODE) {
+void loop0 (USER_MODE) {
 //--- Drive GP25 high --> led is on
   sio_hw->gpio_set = 1 << 25 ;
 //--- Wait...

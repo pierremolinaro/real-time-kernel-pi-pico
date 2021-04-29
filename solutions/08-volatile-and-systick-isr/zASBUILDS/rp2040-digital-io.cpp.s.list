@@ -1,0 +1,168 @@
+   1              		.cpu cortex-m0plus
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 4
+   9              		.eabi_attribute 34, 0
+  10              		.eabi_attribute 18, 4
+  11              		.file	"rp2040-digital-io.cpp"
+  12              		.section	.text._Z7pinMode11DigitalPort11DigitalMode,"ax",%progbits
+  13              		.align	1
+  14              		.global	_Z7pinMode11DigitalPort11DigitalMode
+  15              		.syntax unified
+  16              		.code	16
+  17              		.thumb_func
+  18              		.fpu softvfp
+  19              		.type	_Z7pinMode11DigitalPort11DigitalMode, %function
+  20              	_Z7pinMode11DigitalPort11DigitalMode:
+  21              		@ args = 0, pretend = 0, frame = 0
+  22              		@ frame_needed = 0, uses_anonymous_args = 0
+  23 0000 10B5     		push	{r4, lr}
+  24 0002 0400     		movs	r4, r0
+  25 0004 1D28     		cmp	r0, #29
+  26 0006 16DC     		bgt	.L1
+  27 0008 0329     		cmp	r1, #3
+  28 000a 14D8     		bhi	.L1
+  29 000c 0800     		movs	r0, r1
+  30 000e D021     		movs	r1, #208
+  31 0010 A200     		lsls	r2, r4, #2
+  32 0012 0906     		lsls	r1, r1, #24
+  33 0014 E300     		lsls	r3, r4, #3
+  34 0016 FFF7FEFF 		bl	__gnu_thumb1_case_uqi
+  35              	.L4:
+  36 001a 02       		.byte	(.L3-.L4)/2
+  37 001b 0F       		.byte	(.L5-.L4)/2
+  38 001c 17       		.byte	(.L6-.L4)/2
+  39 001d 1B       		.byte	(.L7-.L4)/2
+  40              		.p2align 1
+  41              	.L3:
+  42 001e 0E48     		ldr	r0, .L10
+  43 0020 1218     		adds	r2, r2, r0
+  44 0022 4320     		movs	r0, #67
+  45 0024 5060     		str	r0, [r2, #4]
+  46 0026 0122     		movs	r2, #1
+  47 0028 A240     		lsls	r2, r2, r4
+  48 002a 4A62     		str	r2, [r1, #36]
+  49 002c 8A61     		str	r2, [r1, #24]
+  50              	.L9:
+  51 002e 0B4A     		ldr	r2, .L10+4
+  52 0030 9B18     		adds	r3, r3, r2
+  53 0032 0522     		movs	r2, #5
+  54 0034 5A60     		str	r2, [r3, #4]
+  55              	.L1:
+  56              		@ sp needed
+  57 0036 10BD     		pop	{r4, pc}
+  58              	.L5:
+  59 0038 0748     		ldr	r0, .L10
+  60 003a 1218     		adds	r2, r2, r0
+  61 003c C320     		movs	r0, #195
+  62              	.L8:
+  63 003e 5060     		str	r0, [r2, #4]
+  64 0040 0122     		movs	r2, #1
+  65 0042 A240     		lsls	r2, r2, r4
+  66 0044 8A62     		str	r2, [r1, #40]
+  67 0046 F2E7     		b	.L9
+  68              	.L6:
+  69 0048 0348     		ldr	r0, .L10
+  70 004a 1218     		adds	r2, r2, r0
+  71 004c C720     		movs	r0, #199
+  72 004e F6E7     		b	.L8
+  73              	.L7:
+  74 0050 0148     		ldr	r0, .L10
+  75 0052 1218     		adds	r2, r2, r0
+  76 0054 CB20     		movs	r0, #203
+  77 0056 F2E7     		b	.L8
+  78              	.L11:
+  79              		.align	2
+  80              	.L10:
+  81 0058 00C00140 		.word	1073856512
+  82 005c 00400140 		.word	1073823744
+  83              		.size	_Z7pinMode11DigitalPort11DigitalMode, .-_Z7pinMode11DigitalPort11DigitalMode
+  84              		.section	.text._Z12digitalWrite11DigitalPortb,"ax",%progbits
+  85              		.align	1
+  86              		.global	_Z12digitalWrite11DigitalPortb
+  87              		.syntax unified
+  88              		.code	16
+  89              		.thumb_func
+  90              		.fpu softvfp
+  91              		.type	_Z12digitalWrite11DigitalPortb, %function
+  92              	_Z12digitalWrite11DigitalPortb:
+  93              		@ args = 0, pretend = 0, frame = 0
+  94              		@ frame_needed = 0, uses_anonymous_args = 0
+  95              		@ link register save eliminated.
+  96 0000 1D28     		cmp	r0, #29
+  97 0002 06DC     		bgt	.L12
+  98 0004 0123     		movs	r3, #1
+  99 0006 D022     		movs	r2, #208
+ 100 0008 8340     		lsls	r3, r3, r0
+ 101 000a 1206     		lsls	r2, r2, #24
+ 102 000c 0029     		cmp	r1, #0
+ 103 000e 01D0     		beq	.L14
+ 104 0010 5361     		str	r3, [r2, #20]
+ 105              	.L12:
+ 106              		@ sp needed
+ 107 0012 7047     		bx	lr
+ 108              	.L14:
+ 109 0014 9361     		str	r3, [r2, #24]
+ 110 0016 FCE7     		b	.L12
+ 111              		.size	_Z12digitalWrite11DigitalPortb, .-_Z12digitalWrite11DigitalPortb
+ 112              		.section	.text._Z11digitalRead11DigitalPort,"ax",%progbits
+ 113              		.align	1
+ 114              		.global	_Z11digitalRead11DigitalPort
+ 115              		.syntax unified
+ 116              		.code	16
+ 117              		.thumb_func
+ 118              		.fpu softvfp
+ 119              		.type	_Z11digitalRead11DigitalPort, %function
+ 120              	_Z11digitalRead11DigitalPort:
+ 121              		@ args = 0, pretend = 0, frame = 0
+ 122              		@ frame_needed = 0, uses_anonymous_args = 0
+ 123              		@ link register save eliminated.
+ 124 0000 1D28     		cmp	r0, #29
+ 125 0002 04DD     		ble	.L16
+ 126 0004 1E38     		subs	r0, r0, #30
+ 127 0006 4342     		rsbs	r3, r0, #0
+ 128 0008 5841     		adcs	r0, r0, r3
+ 129              	.L18:
+ 130 000a C0B2     		uxtb	r0, r0
+ 131              		@ sp needed
+ 132 000c 7047     		bx	lr
+ 133              	.L16:
+ 134 000e 0122     		movs	r2, #1
+ 135 0010 8240     		lsls	r2, r2, r0
+ 136 0012 D023     		movs	r3, #208
+ 137 0014 1000     		movs	r0, r2
+ 138 0016 1B06     		lsls	r3, r3, #24
+ 139 0018 5B68     		ldr	r3, [r3, #4]
+ 140 001a 1840     		ands	r0, r3
+ 141 001c 431E     		subs	r3, r0, #1
+ 142 001e 9841     		sbcs	r0, r0, r3
+ 143 0020 F3E7     		b	.L18
+ 144              		.size	_Z11digitalRead11DigitalPort, .-_Z11digitalRead11DigitalPort
+ 145              		.section	.text._Z13digitalToggle11DigitalPort,"ax",%progbits
+ 146              		.align	1
+ 147              		.global	_Z13digitalToggle11DigitalPort
+ 148              		.syntax unified
+ 149              		.code	16
+ 150              		.thumb_func
+ 151              		.fpu softvfp
+ 152              		.type	_Z13digitalToggle11DigitalPort, %function
+ 153              	_Z13digitalToggle11DigitalPort:
+ 154              		@ args = 0, pretend = 0, frame = 0
+ 155              		@ frame_needed = 0, uses_anonymous_args = 0
+ 156              		@ link register save eliminated.
+ 157 0000 1D28     		cmp	r0, #29
+ 158 0002 04DC     		bgt	.L19
+ 159 0004 0123     		movs	r3, #1
+ 160 0006 D022     		movs	r2, #208
+ 161 0008 8340     		lsls	r3, r3, r0
+ 162 000a 1206     		lsls	r2, r2, #24
+ 163 000c D361     		str	r3, [r2, #28]
+ 164              	.L19:
+ 165              		@ sp needed
+ 166 000e 7047     		bx	lr
+ 167              		.size	_Z13digitalToggle11DigitalPort, .-_Z13digitalToggle11DigitalPort
+ 168              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 7-2017-q4-major) 7.2.1 20170904 (release) [ARM

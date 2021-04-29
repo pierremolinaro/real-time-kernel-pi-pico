@@ -1,6 +1,0 @@
-{ "SOURCE-DIR" : ["sources", "../../dev-files/common-sources"],
-
-  "DEV-DIR" : "../../dev-files",
-
-  "CPU-MHZ" : 25
-}

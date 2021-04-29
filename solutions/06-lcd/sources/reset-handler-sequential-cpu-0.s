@@ -24,7 +24,7 @@ background.task.stack.cpu.0:
 
 reset.handler.cpu.0: // Cortex M0 boots with interrupts enabled, in Thread mode
 //---------------------------------- Run boot, zero bss section, copy data section
-  bl    start.phase1
+  bl    cpu.0.phase3.boot
 //---------------------------------- Set PSP: this is stack for background task
   ldr   r0,  =background.task.stack.cpu.0 + BACKGROUND.STACK.SIZE.CPU.0
   msr   psp, r0
@@ -38,12 +38,12 @@ reset.handler.cpu.0: // Cortex M0 boots with interrupts enabled, in Thread mode
   isb
 //---------------------------------- Run init routines, interrupt disabled
   cpsid i              // Disable interrupts
-  bl    start.phase2
+  bl    cpu.0.phase3.init
   cpsie i              // Enable interrupts
 //---------------------------------- Run setup, loop
-  bl    setup.function
+  bl    cpu.0.setup
 background.task:
-  bl    loop.function
+  bl    cpu.0.loop
   b     background.task
 
 //--------------------------------------------------------------------------------------------------

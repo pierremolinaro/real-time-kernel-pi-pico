@@ -29,7 +29,7 @@ MACRO_INIT_ROUTINE (activateSystickInterrupt) ;
 //   systick — ANY MODE
 //--------------------------------------------------------------------------------------------------
 
-uint32_t systick_cpu_0 (ANY_MODE) {
+uint32_t systick_current_cpu (ANY_MODE) {
   return systick_hw->cvr ;
 }
 
