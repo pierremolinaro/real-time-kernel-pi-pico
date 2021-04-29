@@ -48,9 +48,13 @@ SECTIONS {
     KEEP (*(.boot2)) ;
     __boot2_end__ = . ;
   /*-------------------- Vectors */
-    __vectors_start = . ;
-    KEEP (*(isr.vectors)) ;
-    __vectors_end = . ;
+    __vectors_start_cpu_0 = . ;
+    KEEP (*(isr.vectors.cpu.0)) ;
+    __vectors_end_cpu_0 = . ;
+    . = ALIGN (256) ;
+    __vectors_start_cpu_1 = . ;
+    KEEP (*(isr.vectors.cpu.1)) ;
+    __vectors_end_cpu_1 = . ;
   /*-------------------- Code */
     __code_start = . ;
     . = ALIGN(4) ;
@@ -94,6 +98,12 @@ SECTIONS {
 
 ASSERT ((__boot2_end__ - __boot2_start__) == 256,
          "ERROR: Pico second stage bootloader must be 256 bytes in size")
+
+ASSERT ((__vectors_start_cpu_0 % 256) == 0,
+         "ERROR: vector table of cpu 0 must be 256-byte aligned")
+
+ASSERT ((__vectors_start_cpu_1 % 256) == 0,
+         "ERROR: vector table of cpu 1 must be 256-byte aligned")
 
 /*------------------------------------------------------------------------------------------------*/
 /*                                                                                                */
@@ -149,18 +159,30 @@ __data_load_end   = LOADADDR (.data) + SIZEOF (.data) ;
 
 /*------------------------------------------------------------------------------------------------*/
 /*                                                                                                */
-/*                                System stack                                                    */
+/*                                System stacks                                                   */
 /*                                                                                                */
 /*------------------------------------------------------------------------------------------------*/
 
 SECTIONS {
-  .system_stack : {
+  .system_stack_cpu_0 : {
     . = ALIGN (8) ;
-    __system_stack_start = . ;
+    __system_stack_start_cpu_0 = . ;
     . += 4096 ;
     . = ALIGN (4) ;
-    __system_stack_end = . ;
+    __system_stack_end_cpu_0 = . ;
   } > SRAM4
+}
+
+/*------------------------------------------------------------------------------------------------*/
+
+SECTIONS {
+  .system_stack_cpu_1 : {
+    . = ALIGN (8) ;
+    __system_stack_start_cpu_1 = . ;
+    . += 4096 ;
+    . = ALIGN (4) ;
+    __system_stack_end_cpu_1 = . ;
+  } > SRAM5
 }
 
 /*------------------------------------------------------------------------------------------------*/

@@ -496,8 +496,8 @@ void startPhase1 (void) {
 //------------------------------------ Configure clocks
   clock_init () ;
 //------------------------------------ Configure VTOR Cortex-M0+ register
-  extern uint32_t __vectors_start ;
-  SCB_VTOR = uint32_t (& __vectors_start) ;
+  extern uint32_t __vectors_start_cpu_0 ;
+  SCB_VTOR = uint32_t (& __vectors_start_cpu_0) ;
 //------------------------------------ Clear '.bss' section
   extern uint32_t __bss_start ;
   extern const uint32_t __bss_end ;
