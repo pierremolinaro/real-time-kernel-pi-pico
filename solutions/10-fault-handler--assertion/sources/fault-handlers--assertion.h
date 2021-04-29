@@ -18,18 +18,6 @@ void MemManage_handler (FAULT_MODE) asm ("interrupt.section.MemManage") ;
 
 //--------------------------------------------------------------------------------------------------
 
-//$interrupt-section BusFault
-
-void BusFault_handler (FAULT_MODE) asm ("interrupt.section.BusFault") ;
-
-//--------------------------------------------------------------------------------------------------
-
-//$interrupt-section UsageFault
-
-void UsageFault_handler (FAULT_MODE) asm ("interrupt.section.UsageFault") ;
-
-//--------------------------------------------------------------------------------------------------
-
 void assertion (const bool inAssertion,
                 const uint32_t inMessageValue,
                 const char * inFileName,

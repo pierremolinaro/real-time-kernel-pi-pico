@@ -16,9 +16,9 @@ static void configureFaultRegisters (BOOT_MODE) {
 //      (1 << 17) | // BusFault exception enable bit, set to 1 to enable; set to 0 to disable
 //      (1 << 18) ; // UsageFault exception enable bit, set to 1 to enable; set to 0 to disable
 //---------- SCB_CCR register
-  SCB_CCR |=
-    (1 << 4) | // Enable UsageFault when the processor executes an SDIV or UDIV instruction with a divisor of 0
-    (1 << 3) ; // Enable UsageFault when a memory access to unaligned addresses are performed
+//   SCB_CCR |=
+//     (1 << 4) | // Enable UsageFault when the processor executes an SDIV or UDIV instruction with a divisor of 0
+//     (1 << 3) ; // Enable UsageFault when a memory access to unaligned addresses are performed
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -70,20 +70,20 @@ static void handleFault (FAULT_MODE_ const char * inTitle,  const uint32_t inLin
   uint32_t displayCounter = 0 ;
   bool encoderA = false ;
   bool display = true ;
-  pinMode (ENCODER_A, DigitalMode::INPUT_PULLUP) ;
-  pinMode (ENCODER_B, DigitalMode::INPUT_PULLUP) ;
+//   pinMode (ENCODER_A, DigitalMode::INPUT_PULLUP) ;
+//   pinMode (ENCODER_B, DigitalMode::INPUT_PULLUP) ;
   while (1) {
   //--- Wait
     busyWaitDuring_faultMode (MODE_ 1);
   //--- Handle encoder
-    const bool currentEncoderA = digitalRead (ENCODER_A) ;
+    const bool currentEncoderA = false ; // digitalRead (ENCODER_A) ;
     if (encoderA && !currentEncoderA) {
       display = true ;
-      if (digitalRead (ENCODER_B)) {
-        displayedPage = (displayedPage + 1) % 4 ;
-      }else{
-        displayedPage = (displayedPage + 3) % 4 ;
-      }
+//       if (digitalRead (ENCODER_B)) {
+//         displayedPage = (displayedPage + 1) % 4 ;
+//       }else{
+//         displayedPage = (displayedPage + 3) % 4 ;
+//       }
     }
     encoderA = currentEncoderA ;
   //--- Display
@@ -105,8 +105,8 @@ static void handleFault (FAULT_MODE_ const char * inTitle,  const uint32_t inLin
         gotoLineColumn_faultMode (MODE_ 1, 0) ;
         switch (displayedPage) {
         case 0 :
-          printString_faultMode (MODE_ "SHCSR: 0x") ;
-          printHex8_faultMode (MODE_ SCB_SHCSR) ;
+//           printString_faultMode (MODE_ "SHCSR: 0x") ;
+//           printHex8_faultMode (MODE_ SCB_SHCSR) ;
           gotoLineColumn_faultMode (MODE_ 2, 0) ;
           printString_faultMode (MODE_ "MMFSR: 0x") ;
           printHex2_faultMode (MODE_ MMFSR) ;
@@ -121,8 +121,8 @@ static void handleFault (FAULT_MODE_ const char * inTitle,  const uint32_t inLin
           printString_faultMode (MODE_ "BFAR: 0x") ;
           printHex8_faultMode (MODE_ BFAR) ;
           gotoLineColumn_faultMode (MODE_ 3, 0) ;
-          printString_faultMode (MODE_ "CCR: 0x") ;
-          printHex8_faultMode (MODE_ SCB_CCR) ;
+//           printString_faultMode (MODE_ "CCR: 0x") ;
+//           printHex8_faultMode (MODE_ SCB_CCR) ;
           break ;
         case 2 :
           printString_faultMode (MODE_ "AFSR: 0x") ;
@@ -179,24 +179,6 @@ void MemManage_handler (FAULT_MODE) {
   uint32_t linkRegisterValue ;
   asm ("mov %[result], lr" : [result] "=r" (linkRegisterValue) ) ;
   handleFault (MODE_ "MemManage", linkRegisterValue) ;
-}
-
-//--------------------------------------------------------------------------------------------------
-
-void BusFault_handler (FAULT_MODE) {
-//----------------- Init display
-  uint32_t linkRegisterValue ;
-  asm ("mov %[result], lr" : [result] "=r" (linkRegisterValue) ) ;
-  handleFault (MODE_ "BusFault", linkRegisterValue) ;
-}
-
-//--------------------------------------------------------------------------------------------------
-
-void UsageFault_handler (FAULT_MODE) {
-//----------------- Init display
-  uint32_t linkRegisterValue ;
-  asm ("mov %[result], lr" : [result] "=r" (linkRegisterValue) ) ;
-  handleFault (MODE_ "UsageFault", linkRegisterValue) ;
 }
 
 //--------------------------------------------------------------------------------------------------

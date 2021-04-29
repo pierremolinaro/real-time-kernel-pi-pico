@@ -30,19 +30,9 @@ void busyWaitUntil (USER_MODE_ const uint32_t inDeadlineMS) ;
 //   ANY MODE
 //--------------------------------------------------------------------------------------------------
 
-uint32_t systick (ANY_MODE) ;
+uint32_t systick_current_cpu (ANY_MODE) ;
 
 uint32_t millis (ANY_MODE) ;
-
-//--------------------------------------------------------------------------------------------------
-//   micros current value
-//--------------------------------------------------------------------------------------------------
-
-//$section time.micros
-
-uint64_t micros (USER_MODE) asm ("time.micros") ;
-
-uint64_t section_micros (SECTION_MODE) asm ("section.time.micros") ;
 
 //--------------------------------------------------------------------------------------------------
 //   INTERRUPT ROUTINE

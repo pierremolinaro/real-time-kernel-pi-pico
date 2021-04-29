@@ -10,29 +10,23 @@
 // http://esd.cs.ucr.edu/labs/interface/interface.html
 
 //--------------------------------------------------------------------------------------------------
-//   PORT CONFIGURATION                                                                                                *
+//   PORT CONFIGURATION
 //--------------------------------------------------------------------------------------------------
-//   LCD D4 : Teensy D16
-//   LCD D5 : Teensy D15
-//   LCD D6 : Teensy D14
-//   LCD D7 : Teensy D19
-//   LCD RS : Teensy D18
-//   LCD E  : Teensy D17
 
-static const DigitalPort LCD_D4 = DigitalPort::D16 ;
+static const DigitalPort LCD_D4 = DigitalPort::GP14 ;
 
-static const DigitalPort LCD_D5 = DigitalPort::D15 ;
+static const DigitalPort LCD_D5 = DigitalPort::GP15 ;
 
-static const DigitalPort LCD_D6 = DigitalPort::D14 ;
+static const DigitalPort LCD_D6 = DigitalPort::GP16 ;
 
-static const DigitalPort LCD_D7 = DigitalPort::D19 ;
+static const DigitalPort LCD_D7 = DigitalPort::GP17 ;
 
-static const DigitalPort LCD_RS = DigitalPort::D18 ;
+static const DigitalPort LCD_E  = DigitalPort::GP18 ;
 
-static const DigitalPort LCD_E  = DigitalPort::D17 ;
+static const DigitalPort LCD_RS = DigitalPort::GP19 ;
 
 //--------------------------------------------------------------------------------------------------
-//   UTILITY ROUTINES — ANY MODE                                                                                                  *
+//   UTILITY ROUTINES — ANY MODE
 //--------------------------------------------------------------------------------------------------
 
 static void driveHighE (void) {
