@@ -3,9 +3,7 @@
 	.thumb
 
 //--------------------------------------------------------------------------------------------------
-//
-//                 R E S E T    H A N D L E R    ( D O U B L E    S T A C K    M O D E )
-//
+//  RESET HANDLER (DOUBLE STACK MODE) CPU 0
 //--------------------------------------------------------------------------------------------------
 
 //--- This is stack for background task
@@ -19,7 +17,7 @@ background.task.stack.cpu.0:
 
 //--------------------------------------------------------------------------------------------------
 
-	.section	".reset", "ax", %progbits
+  .section	".text", "ax", %progbits
 
   .global reset.handler.cpu.0
   .type reset.handler.cpu.0, %function
@@ -47,5 +45,17 @@ reset.handler.cpu.0: // Cortex M0 boots with interrupts enabled, in Thread mode
 background.task:
   bl    loop.function
   b     background.task
+
+//--------------------------------------------------------------------------------------------------
+//  RESET HANDLER (DOUBLE STACK MODE) CPU 1
+//--------------------------------------------------------------------------------------------------
+
+  .section	".text", "ax", %progbits
+
+  .global reset.handler.cpu.1
+  .type reset.handler.cpu.1, %function
+
+reset.handler.cpu.1: // Cortex M0 boots with interrupts enabled, in Thread mode
+  b  reset.handler.cpu.1
 
 //--------------------------------------------------------------------------------------------------

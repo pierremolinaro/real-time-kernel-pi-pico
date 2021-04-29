@@ -9,8 +9,8 @@ inline static void __sev (void) {
 //--------------------------------------------------------------------------------------------------
 
 static inline void multicore_fifo_drain (void) {
-  while ((SIO_FIFO_ST & SIO_FIFO_ST_VLD) != 0) {
-    const uint32_t unused __attribute__((unused)) = SIO_FIFO_RD ;
+  while ((sio_hw->fifo_st & SIO_FIFO_ST_VLD_BITS) != 0) {
+    const uint32_t unused __attribute__((unused)) = sio_hw->fifo_rd ;
   }
 }
 
@@ -19,10 +19,10 @@ static inline void multicore_fifo_drain (void) {
 static inline void multicore_fifo_push_blocking (const uint32_t inData) {
 //--- We wait for the fifo to have some space
    // return !!(sio_hw->fifo_st & SIO_FIFO_ST_RDY_BITS);
-  while ((SIO_FIFO_ST & SIO_FIFO_ST_RDY) == 0) { }
+  while ((sio_hw->fifo_st & SIO_FIFO_ST_RDY_BITS) == 0) { }
 //  while (!multicore_fifo_wready ()) { }
 //--- Send data
-  SIO_FIFO_WR = inData ;  // Page 50
+  sio_hw->fifo_wr = inData ;  // Page 50
 //  sio_hw->fifo_wr = data;
 //--- Fire off an event to the other core
   __sev () ;
@@ -33,12 +33,12 @@ static inline void multicore_fifo_push_blocking (const uint32_t inData) {
 static uint32_t multicore_fifo_pop_blocking (void) {
 // If nothing there yet, we wait for an event first,
 // to try and avoid too much busy waiting
-  while ((SIO_FIFO_ST & SIO_FIFO_ST_VLD) == 0) {
+  while ((sio_hw->fifo_st & SIO_FIFO_ST_VLD_BITS) == 0) {
     __asm volatile ("wfe") ;
   }
 //  while (!multicore_fifo_rvalid()) { __wfe(); }
 //  return sio_hw->fifo_rd;
-  return SIO_FIFO_RD ;
+  return sio_hw->fifo_rd ;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -76,11 +76,11 @@ static void cpu1_code (void) {
   //--- Drive BUILTIN_LED high --> led is on
     digitalWrite (BUILTIN_LED, true) ;
   //--- Wait...
-    for (volatile uint32_t i=0 ; i< 1000 * 1000 ; i++) {}
+    for (volatile uint32_t i=0 ; i< 100 * 1000 ; i++) {}
   //--- Drive BUILTIN_LED low --> led is off
     digitalWrite (BUILTIN_LED, false) ;
   //--- Wait...
-    for (volatile uint32_t i=0 ; i< 5000 * 1000 ; i++) {}
+    for (volatile uint32_t i=0 ; i< 500 * 1000 ; i++) {}
   }
 }
 

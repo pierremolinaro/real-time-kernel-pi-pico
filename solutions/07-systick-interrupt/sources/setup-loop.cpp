@@ -6,7 +6,7 @@ void setup (USER_MODE) {
   printUnsigned (MODE_ millis (MODE)) ;
   digitalToggle (BUILTIN_LED) ;
   gotoXY (MODE_ 0, 3) ;
-  printHex8 (MODE_ SCB_VTOR) ;
+  printHex8 (MODE_ scb_hw->vtor) ;
 }
 
 //--------------------------------------------------------------------------------------------------

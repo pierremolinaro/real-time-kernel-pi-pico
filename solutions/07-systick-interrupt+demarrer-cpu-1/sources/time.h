@@ -22,7 +22,7 @@ void busyWaitUntil (USER_MODE_ const uint32_t inDeadlineMS) ;
 //   ANY MODE
 //--------------------------------------------------------------------------------------------------
 
-uint32_t systick (ANY_MODE) ;
+uint32_t systick_cpu_0 (ANY_MODE) ;
 
 uint32_t millis (ANY_MODE) ;
 

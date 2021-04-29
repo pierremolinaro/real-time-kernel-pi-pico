@@ -6,9 +6,9 @@
 
 void startSystick (USER_MODE) {
 //------------------------------------ Configure Systick
-  SYST_RVR = CPU_MHZ * 1000 - 1 ; // Underflow every ms
-  SYST_CVR = 0 ;
-  SYST_CSR = SYST_CSR_CLKSOURCE | SYST_CSR_ENABLE ;
+  systick_hw->rvr = CPU_MHZ * 1000 - 1 ; // Underflow every ms
+  systick_hw->cvr = 0 ;
+  systick_hw->csr = M0PLUS_SYST_CSR_CLKSOURCE_BITS | M0PLUS_SYST_CSR_ENABLE_BITS ;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -17,7 +17,8 @@ void startSystick (USER_MODE) {
 
 void busyWaitDuring (USER_MODE_ const uint32_t inDelayMS) {
   for (uint32_t i=0 ; i<inDelayMS ; i++) {
-    while ((SYST_CSR & SYST_CSR_COUNTFLAG) == 0) {} // Busy wait, polling COUNTFLAG
+ // Busy wait, polling COUNTFLAG
+    while ((systick_hw->csr & M0PLUS_SYST_CSR_COUNTFLAG_BITS) == 0) {}
   }
 }
 

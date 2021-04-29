@@ -47,3 +47,15 @@ background.task:
   b     background.task
 
 //--------------------------------------------------------------------------------------------------
+//  RESET HANDLER (DOUBLE STACK MODE) CPU 1
+//--------------------------------------------------------------------------------------------------
+
+  .section	".text", "ax", %progbits
+
+  .global reset.handler.cpu.1
+  .type reset.handler.cpu.1, %function
+
+reset.handler.cpu.1: // Cortex M0 boots with interrupts enabled, in Thread mode
+  b  reset.handler.cpu.1
+
+//--------------------------------------------------------------------------------------------------

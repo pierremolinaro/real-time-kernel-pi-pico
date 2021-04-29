@@ -6,9 +6,9 @@
 
 static void startSystick (BOOT_MODE) {
 //------------------------------------ Configure Systick
-  SYST_RVR = CPU_MHZ * 1000 - 1 ; // Underflow every ms
-  SYST_CVR = 0 ;
-  SYST_CSR = SYST_CSR_CLKSOURCE | SYST_CSR_ENABLE ;
+  systick_hw->rvr = CPU_MHZ * 1000 - 1 ; // Underflow every ms
+  systick_hw->cvr = 0 ;
+  systick_hw->csr = M0PLUS_SYST_CSR_CLKSOURCE_BITS | M0PLUS_SYST_CSR_ENABLE_BITS ;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ MACRO_BOOT_ROUTINE (startSystick) ;
 //--------------------------------------------------------------------------------------------------
 
 static void activateSystickInterrupt (INIT_MODE) {
-  SYST_CSR |= SYST_CSR_TICKINT ;
+  systick_hw->csr |= M0PLUS_SYST_CSR_TICKINT_BITS ;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -29,8 +29,8 @@ MACRO_INIT_ROUTINE (activateSystickInterrupt) ;
 //   systick — ANY MODE
 //--------------------------------------------------------------------------------------------------
 
-uint32_t systick (ANY_MODE) {
-  return SYST_CVR ;
+uint32_t systick_cpu_0 (ANY_MODE) {
+  return systick_hw->cvr ;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -39,7 +39,8 @@ uint32_t systick (ANY_MODE) {
 
 void busyWaitDuring_initMode (INIT_MODE_ const uint32_t inDelayMS) {
   for (uint32_t i=0 ; i<inDelayMS ; i++) {
-    while ((SYST_CSR & SYST_CSR_COUNTFLAG) == 0) {} // Busy wait, polling COUNTFLAG
+ // Busy wait, polling COUNTFLAG
+    while ((systick_hw->csr & M0PLUS_SYST_CSR_COUNTFLAG_BITS) == 0) {}
   }
 }
 
