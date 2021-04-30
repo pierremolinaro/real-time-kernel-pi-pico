@@ -72,13 +72,14 @@ static void multicore_launch_core1_raw (void (*cpu1Code)(void),
 //--------------------------------------------------------------------------------------------------
 
 static void cpu1_code (void) {
+  pinMode (DigitalPort::GP27, DigitalMode::OUTPUT) ;
   while (1) {
   //--- Drive BUILTIN_LED high --> led is on
-    digitalWrite (BUILTIN_LED, true) ;
+    digitalWrite (DigitalPort::GP27, true) ;
   //--- Wait...
     for (volatile uint32_t i=0 ; i< 100 * 1000 ; i++) {}
   //--- Drive BUILTIN_LED low --> led is off
-    digitalWrite (BUILTIN_LED, false) ;
+    digitalWrite (DigitalPort::GP27, false) ;
   //--- Wait...
     for (volatile uint32_t i=0 ; i< 500 * 1000 ; i++) {}
   }
