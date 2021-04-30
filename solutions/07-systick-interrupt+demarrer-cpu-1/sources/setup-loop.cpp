@@ -5,7 +5,7 @@
 void setup0 (USER_MODE) {
   printUnsigned (MODE_ millis (MODE)) ;
   gotoXY (MODE_ 0, 3) ;
-  printHex8 (MODE_ scb_hw->vtor) ;
+  printHex8 (MODE_ resets_hw->reset_done) ;
 }
 
 //--------------------------------------------------------------------------------------------------

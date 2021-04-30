@@ -100,41 +100,41 @@ static void handleFault (FAULT_MODE_ const char * inTitle,  const uint32_t inLin
         display = false ;
         initScreen_faultMode (MODE) ;
         printString_faultMode (MODE_ inTitle) ;
-        gotoLineColumn_faultMode (MODE_ 0, 19) ;
+        gotoXY_faultMode (MODE_ 19, 0) ;
         printUnsigned_faultMode (MODE_ displayedPage) ;
-        gotoLineColumn_faultMode (MODE_ 1, 0) ;
+        gotoXY_faultMode (MODE_ 0, 1) ;
         switch (displayedPage) {
         case 0 :
 //           printString_faultMode (MODE_ "SHCSR: 0x") ;
 //           printHex8_faultMode (MODE_ SCB_SHCSR) ;
-          gotoLineColumn_faultMode (MODE_ 2, 0) ;
+          gotoXY_faultMode (MODE_ 2, 0) ;
           printString_faultMode (MODE_ "MMFSR: 0x") ;
           printHex2_faultMode (MODE_ MMFSR) ;
-          gotoLineColumn_faultMode (MODE_ 3, 0) ;
+          gotoXY_faultMode (MODE_ 0, 3) ;
           printString_faultMode (MODE_ "MMFAR: 0x") ;
           printHex8_faultMode (MODE_ MMFAR) ;
           break ;
         case 1 :
           printString_faultMode (MODE_ "BFSR: 0x") ;
           printHex2_faultMode (MODE_ BFSR) ;
-          gotoLineColumn_faultMode (MODE_ 2, 0) ;
+          gotoXY_faultMode (MODE_ 0, 2) ;
           printString_faultMode (MODE_ "BFAR: 0x") ;
           printHex8_faultMode (MODE_ BFAR) ;
-          gotoLineColumn_faultMode (MODE_ 3, 0) ;
+          gotoXY_faultMode (MODE_ 0, 3) ;
 //           printString_faultMode (MODE_ "CCR: 0x") ;
 //           printHex8_faultMode (MODE_ SCB_CCR) ;
           break ;
         case 2 :
           printString_faultMode (MODE_ "AFSR: 0x") ;
           printHex8_faultMode (MODE_ AFSR) ;
-          gotoLineColumn_faultMode (MODE_ 2, 0) ;
+          gotoXY_faultMode (MODE_ 0, 2) ;
           printString_faultMode (MODE_ "UFSR: 0x") ;
           printHex4_faultMode (MODE_ UFSR) ;
           break ;
         case 3 :
           printString_faultMode (MODE_ "LR: 0x") ;
           printHex8_faultMode (MODE_ inLinkRegisterValue) ;
-          gotoLineColumn_faultMode (MODE_ 2, 0) ;
+          gotoXY_faultMode (MODE_ 0, 2) ;
           if ((inLinkRegisterValue & (1 << 2)) != 0) { // Fault occurs in user mode
             uint32_t psp ;
             asm ("mrs %[result], psp" : [result] "=r" (psp) ) ;
@@ -142,7 +142,7 @@ static void handleFault (FAULT_MODE_ const char * inTitle,  const uint32_t inLin
             printHex8_faultMode (MODE_ psp) ;
             uint32_t * framePtr = (uint32_t *) psp ;
             const uint32_t pc = framePtr [6] ;
-            gotoLineColumn_faultMode (MODE_ 3, 0) ;
+            gotoXY_faultMode (MODE_ 0, 3) ;
             printString_faultMode (MODE_ "PC: 0x") ;
             printHex8_faultMode (MODE_ pc) ;
           }else{ // Fault occurs in system mode
@@ -152,7 +152,7 @@ static void handleFault (FAULT_MODE_ const char * inTitle,  const uint32_t inLin
             printHex8_faultMode (MODE_ msp) ;
             uint32_t * framePtr = (uint32_t *) msp ;
             const uint32_t pc = framePtr [6] ;
-            gotoLineColumn_faultMode (MODE_ 3, 0) ;
+            gotoXY_faultMode (MODE_ 0, 3) ;
             printString_faultMode (MODE_ "PC: 0x") ;
             printHex8_faultMode (MODE_ pc) ;
           }
@@ -194,7 +194,7 @@ void unusedInterrupt (FAULT_MODE_ const uint32_t inInterruptIndex) {
   initScreen_faultMode (MODE) ;
 //----------------- Title
   printString_faultMode (MODE_ "Unhandled interrupt") ;
-  gotoLineColumn_faultMode (MODE_ 1, 0) ;
+  gotoXY_faultMode (MODE_ 0, 1) ;
   printUnsigned_faultMode (MODE_ inInterruptIndex) ;
 //----------------- Endless loop
   endlessLoop (MODE) ;
@@ -215,7 +215,7 @@ void section_assertionFailure (FAULT_MODE_
 //----------------- Title
   printString_faultMode (MODE_ "Assertion Failure") ;
 //----------------- Associated value
-  gotoLineColumn_faultMode (MODE_ 1, 0) ;
+  gotoXY_faultMode (MODE_ 0, 1) ;
   printString_faultMode (MODE_ "Value: ") ;
   printUnsigned_faultMode (MODE_ inMessageValue) ;
 //----------------- File
@@ -225,10 +225,10 @@ void section_assertionFailure (FAULT_MODE_
     idx -= 1 ;
     loop = inFileName [idx] != '/' ;
   }
-  gotoLineColumn_faultMode (MODE_ 2, 0) ;
+  gotoXY_faultMode (MODE_ 0, 2) ;
   printString_faultMode (MODE_ & inFileName [idx + 1]) ;
 //----------------- Line
-  gotoLineColumn_faultMode (MODE_ 3, 0) ;
+  gotoXY_faultMode (MODE_ 0, 3) ;
   printString_faultMode (MODE_ "Line: ") ;
   printUnsigned_faultMode (MODE_ (uint32_t) inLine) ;
 //----------------- Endless loop

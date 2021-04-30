@@ -596,7 +596,7 @@ for unusedInterruptName in interruptDictionary.keys () :
   sFile += asSeparator ()
   sFile += "//   INTERRUPT - UNUSED: " + unusedInterruptName + "\n"
   sFile += asSeparator () + "\n"
-  sFile += "  .section .text.interrupt." + unusedInterruptName + ", \"ax\", %progbits\n\n"
+  sFile += "  .section .unused.it.interrupt." + unusedInterruptName + ", \"ax\", %progbits\n\n"
   sFile += "  .align  1\n"
   sFile += "  .type interrupt." + unusedInterruptName + ", %function\n"
   sFile += "  .global interrupt." + unusedInterruptName + "\n\n"

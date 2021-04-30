@@ -88,7 +88,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   print (makefile.BOLD_GREEN () + "--- Making " + projectDir + makefile.ENDC ())
   dictionaire = dictionaryFromJsonFile (projectDir + "/makefile.json")
 #--- PLATFORM
-  linkerScript = "common-sources/raspberry-pi-pico.ld"
+  linkerScript = "sources-common/raspberry-pi-pico-flash.ld"
   platformName = "RASPBERRY_PI_PICO"
 #--- ASSERTION_GENERATION
   ASSERTION_GENERATION = False

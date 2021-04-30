@@ -10,7 +10,7 @@
 
 void clearScreen (USER_MODE) ;
 
-void gotoLineColumn (USER_MODE_ const uint32_t inLine, const uint32_t inColumn) ;
+void gotoXY (USER_MODE_ const uint32_t inColumn, const uint32_t inLine) ;
 
 void printString (USER_MODE_ const char * inString) ;
 
@@ -40,7 +40,7 @@ void printHex16 (USER_MODE_ const uint64_t inValue) ;
 
 void initScreen_faultMode (FAULT_MODE) ;
 
-void gotoLineColumn_faultMode (FAULT_MODE_ const uint32_t inLine, const uint32_t inColumn) ;
+void gotoXY_faultMode (FAULT_MODE_ const uint32_t inColumn, const uint32_t inLine) ;
 
 void printString_faultMode (FAULT_MODE_ const char * inString) ;
 

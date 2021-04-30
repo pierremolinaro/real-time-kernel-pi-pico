@@ -217,7 +217,7 @@ void clearScreen (USER_MODE) {
 // Line 2 : 20 -> 39
 // Line 3 : 84 -> 103
 
-void gotoLineColumn (USER_MODE_ const uint32_t inLine, const uint32_t inColumn) {
+void gotoXY (USER_MODE_ const uint32_t inColumn, const uint32_t inLine) {
   static const uint8_t tab [4] = {0, 64, 20, 84} ;
   if ((inLine < 4) && (inColumn < 20)) {
     write8bitCommand (MODE_ tab [inLine] + inColumn + 0x80U) ;
@@ -417,7 +417,7 @@ void initScreen_faultMode (FAULT_MODE) {
 
 //--------------------------------------------------------------------------------------------------
 
-void gotoLineColumn_faultMode (FAULT_MODE_ const uint32_t inLine, const uint32_t inColumn) {
+void gotoXY_faultMode (FAULT_MODE_ const uint32_t inColumn, const uint32_t inLine) {
   static const uint8_t tab [4] = {0, 64, 20, 84} ;
   if ((inLine < 4) && (inColumn < 20)) {
     write8bitCommand_faultMode (MODE_ tab [inLine] + inColumn + 0x80U) ;
