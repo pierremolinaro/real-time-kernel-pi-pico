@@ -55,8 +55,6 @@ SECTIONS {
     __vectors_start_cpu_1 = . ;
     KEEP (*(isr.vectors.cpu.1)) ;
     __vectors_end_cpu_1 = . ;
-  /*-------------------- Unused interruptions */
-    * (.unused.it.*) ;
   /*-------------------- Code */
     __code_start = . ;
     . = ALIGN(4) ;

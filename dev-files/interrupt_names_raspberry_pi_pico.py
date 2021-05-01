@@ -7,9 +7,6 @@ def interruptNames () :
   result = {}
   result ["NMI"] = 2
   result ["HardFault"] = 3
-  result ["MemManage"] = 4
-  result ["BusFault"] = 5
-  result ["UsageFault"] = 6
   result ["SVC"] = 11
   result ["DebugMonitor"] = 12
   result ["PendSV"] = 14

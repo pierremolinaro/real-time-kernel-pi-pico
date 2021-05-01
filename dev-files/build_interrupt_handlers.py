@@ -517,7 +517,8 @@ if serviceScheme == "svc" :
     sFile += "  .fnstart\n"
     sFile += "  svc #" + str (idx) + "\n"
     if service in boolServiceSet :
-      sFile += "  b   get.user.result\n\n"
+      sFile += "  ldr r3, = get.user.result\n"
+      sFile += "  bx  r3\n\n"
     else:
       sFile += "  bx  lr\n\n"
     sFile += ".Lfunc_end_" + service +":\n"
@@ -615,19 +616,22 @@ for interruptSectionName in interruptSectionList :
   sFile += "  ldr   r1, = (1 << 26)   // Port GP26 is ACTIVITY 0\n"
   sFile += "  str   r1, [r0]         // turn on\n"
   sFile += "//----------------------------------------- Goto interrupt function\n"
-  sFile += "  b     interrupt.section." + interruptSectionName + "\n\n"
+  sFile += "  ldr   r2, = interrupt.section." + interruptSectionName + "\n"
+  sFile += "  bx    r2\n\n"
 #------------------------------ Unused interrupts
 for unusedInterruptName in interruptDictionary.keys () :
   sFile += asSeparator ()
   sFile += "//   INTERRUPT - UNUSED: " + unusedInterruptName + "\n"
   sFile += asSeparator () + "\n"
-  sFile += "  .section .unused.it.interrupt." + unusedInterruptName + ", \"ax\", %progbits\n\n"
+  sFile += "  .section .text.interrupt." + unusedInterruptName + ", \"ax\", %progbits\n\n"
   sFile += "  .align  1\n"
   sFile += "  .type interrupt." + unusedInterruptName + ", %function\n"
   sFile += "  .global interrupt." + unusedInterruptName + "\n\n"
   sFile += "interrupt." + unusedInterruptName + ":\n"
   sFile += "  movs r0, #" + str (interruptDictionary [unusedInterruptName]) + "\n"
-  sFile += "  b    unused.interrupt\n\n"
+  sFile += "//----------------------------------------- Goto unused interrupt function\n"
+  sFile += "  ldr  r2, = unused.interrupt\n"
+  sFile += "  bx   r2\n\n"
 #------------------------------ Write destination file
 sFile += asSeparator ()
 f = open (destinationAssemblerFile, "wt")

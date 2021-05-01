@@ -12,12 +12,6 @@ void HardFault_handler (FAULT_MODE) asm ("interrupt.section.HardFault") ;
 
 //--------------------------------------------------------------------------------------------------
 
-//$interrupt-section MemManage
-
-void MemManage_handler (FAULT_MODE) asm ("interrupt.section.MemManage") ;
-
-//--------------------------------------------------------------------------------------------------
-
 void assertion (const bool inAssertion,
                 const uint32_t inMessageValue,
                 const char * inFileName,

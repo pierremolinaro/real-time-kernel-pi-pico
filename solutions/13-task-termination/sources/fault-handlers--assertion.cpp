@@ -173,15 +173,6 @@ void HardFault_handler (FAULT_MODE) {
 }
 
 //--------------------------------------------------------------------------------------------------
-
-void MemManage_handler (FAULT_MODE) {
-//----------------- Init display
-  uint32_t linkRegisterValue ;
-  asm ("mov %[result], lr" : [result] "=r" (linkRegisterValue) ) ;
-  handleFault (MODE_ "MemManage", linkRegisterValue) ;
-}
-
-//--------------------------------------------------------------------------------------------------
 //    UNUSED INTERRUPT
 //--------------------------------------------------------------------------------------------------
 
