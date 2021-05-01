@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 //--- This is stack for background task
-   BACKGROUND.STACK.SIZE.CPU.0 = 512
+   BACKGROUND.STACK.SIZE.CPU.0 = 32
 
 	.section	.bss.background.task.stack, "aw", %nobits
   .align	  3   // Stack should be aligned on a 8-byte boundary
@@ -44,6 +44,7 @@ background.task.cpu.0: // Only use R0, R1, R2, R3 and R12. Other registers are n
   ldr   r0, = 0xD0000000 + 0x018 // Address of GPIO_OUT_CLR control register
   ldr   r1, = (1 << 26)   // Port GP26
   str   r1, [r0]         // Turn off
+  wfi
   b     background.task.cpu.0
 
 //--------------------------------------------------------------------------------------------------
