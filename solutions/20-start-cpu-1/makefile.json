@@ -1,0 +1,16 @@
+{ "SOURCE-DIR" : [
+     "sources",
+     "../../dev-files/sources-common",
+     "../../dev-files/sources-digital-io"
+  ],
+
+  "DEV-DIR" : "../../dev-files",
+
+  "SERVICE-SCHEME" : "svc",
+
+  "SECTION-SCHEME" : "disableInterrupt",
+
+  "TASK-COUNT" : 4,
+
+  "CPU-MHZ" : 125
+}

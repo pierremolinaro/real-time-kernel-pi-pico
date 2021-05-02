@@ -110,12 +110,12 @@ def generateSVChandler ():
   sFile += "  ldr   r1, [r1]   //\n"
   sFile += "  mov   r12, r1\n"
   sFile += "//----------------------------------------- Restore R0, R1, R2 and R3 from saved stack\n"
-  sFile += "  ldmia r4!, {r0, r1, r2, r3}       // R4 incremented by 16\n"
+  sFile += "  ldmia r4!, {r0, r1, r2, r3} // R4 incremented by 16\n"
   sFile += "//----------------------------------------- R4 <- calling task context\n"
   sFile += "  ldr   r4, =var.running.task.control.block.ptr\n"
   sFile += "  ldr   r4, [r4]\n"
   sFile += "//----------------------------------------- Call service routine\n"
-  sFile += "  blx   r12                         // R4:calling task context address\n"
+  sFile += "  blx   r12         // R4:calling task context address\n"
   sFile += "//--- Continues in sequence to handle.context.switch\n\n"
   sFile += asSeparator ()
   sFile += "//\n"
@@ -147,15 +147,15 @@ def generateSVChandler ():
   sFile += "  cmp   r0, #0\n"
   sFile += "  beq   save.background.task.context\n"
   sFile += "//--- Save registers r4 to r11, PSP (stored in R12), LR\n"
-  sFile += "  stm r0!, {r4, r5, r6, r7}\n"
-  sFile += "  mov r4, r8\n"
-  sFile += "  mov r5, r9\n"
-  sFile += "  mov r6, r10\n"
-  sFile += "  mov r7, r11\n"
-  sFile += "  stm r0!, {r4, r5, r6, r7}\n"
-  sFile += "  mov r4, r12\n"
-  sFile += "  mov r5, lr\n"
-  sFile += "  stm r0!, {r4, r5}\n"
+  sFile += "  stm   r0!, {r4, r5, r6, r7}\n"
+  sFile += "  mov   r4, r8\n"
+  sFile += "  mov   r5, r9\n"
+  sFile += "  mov   r6, r10\n"
+  sFile += "  mov   r7, r11\n"
+  sFile += "  stm   r0!, {r4, r5, r6, r7}\n"
+  sFile += "  mov   r4, r12\n"
+  sFile += "  mov   r5, lr\n"
+  sFile += "  stm   r0!, {r4, r5}\n"
   sFile += "  b     perform.restore.context\n"
   sFile += "save.background.task.context:\n"
   sFile += "  ldr   r2, =var.background.task.context\n"
@@ -183,84 +183,6 @@ def generateSVChandler ():
   sFile += "  msr   psp, r2\n"
   sFile += "  bx    lr\n\n"
   return sFile
-
-#---------------------------------------------------------------------------------------------------
-
-# def generateBreakpointHandler () :
-#   sFile = asSeparator ()
-#   sFile += "//\n"
-#   sFile += "//                 B K P T    H A N D L E R    ( D O U B L E    S T A C K    M O D E )\n"
-#   sFile += "//\n"
-#   sFile += asSeparator ()
-#   sFile += "//\n"
-#   sFile += "//                    |                            |\n"
-#   sFile += "//          PSP+32 -> |----------------------------| \\\n"
-#   sFile += "//                    | xPSR                       |  |\n"
-#   sFile += "//          PSP+28 -> |----------------------------|  |\n"
-#   sFile += "//                    | PC (BKPT instruction)      |  |\n"
-#   sFile += "//          PSP+24 -> |----------------------------|  |\n"
-#   sFile += "//                    | LR                         |  |\n"
-#   sFile += "//          PSP+20 -> |----------------------------|  |\n"
-#   sFile += "//                    | R12                        |  |  Saved by interrupt response\n"
-#   sFile += "//          PSP+16 -> |----------------------------|  |\n"
-#   sFile += "//                    | R3                         |  |\n"
-#   sFile += "//          PSP+12 -> |----------------------------|  |\n"
-#   sFile += "//                    | R2                         |  |\n"
-#   sFile += "//          PSP+8  -> |----------------------------|  |\n"
-#   sFile += "//                    | R1                         |  |\n"
-#   sFile += "//          PSP+4  -> |----------------------------|  |\n"
-#   sFile += "//                    | R0                         |  |\n"
-#   sFile += "//          PSP    -> |----------------------------| /\n"
-#   sFile += "//\n"
-#   sFile += asSeparator () + "\n"
-#   sFile += "  .section  .text.interrupt.DebugMonitor, \"ax\", %progbits\n\n"
-#   sFile += "  .global interrupt.DebugMonitor\n"
-#   sFile += "  .type interrupt.DebugMonitor, %function\n\n"
-#   sFile += "interrupt.DebugMonitor:\n"
-#   sFile += "//--------------------- Save preserved registers\n"
-#   sFile += "  push  {r5, lr}\n"
-#   sFile += "//--------------------- R5 <- thread SP\n"
-#   sFile += "  mrs   r5, psp\n"
-#   sFile += "  ldmia r5, {r0, r1, r2, r3}\n"
-#   sFile += "//--------------------- LR <- Address of BKPT instruction\n"
-#   sFile += "  ldr   lr, [r5, #24]     // 24 : 6 stacked registers before saved PC\n"
-#   sFile += "//--------------------- Set return address to instruction following BKPT\n"
-#   sFile += "//  adds  lr, #2\n"
-#   sFile += "//  str   lr, [r5, #24]\n"
-#   sFile += "//--------------------- R12 <- address of dispatcher\n"
-#   sFile += "  ldr   r12, =section.dispatcher.table\n"
-#   sFile += "//--------------------- LR <- bits 0-7 of BKPT instruction\n"
-#   sFile += "  ldrb  lr, [lr, #-2]            // LR is service call index\n"
-#   sFile += "//--------------------- r12 <- address of routine to call\n"
-#   sFile += "  ldr   r12, [r12, lr, lsl #2]   // R12 = [R12 + LR * 4]\n"
-#   sFile += "//--------------------- Call service routine\n"
-#   sFile += "  blx   r12\n"
-#   sFile += "//--------------------- Set return code (from R0 to R3) in stacked registers\n"
-#   sFile += "  stmia r5!, {r0, r1, r2, r3}\n"
-#   sFile += "//--------------------- Restore preserved registers, return from interrupt\n"
-#   sFile += "  pop   {r5, pc}\n\n"
-#   return sFile
-
-#---------------------------------------------------------------------------------------------------
-
-# def generateBreakpointSection (sectionName, idx):
-#   sFile  = asSeparator () + "\n"
-#   sFile += "  .section .text." + section + ", \"ax\", %progbits\n"
-#   sFile += "  .global " + section +"\n"
-#   sFile += "  .align 1\n"
-#   sFile += "  .type " + section +", %function\n\n"
-#   sFile += section +":\n"
-#   sFile += "  .fnstart\n"
-#   sFile += "  mrs  r12, IPSR // r12 <- 0x??????00 in thread mode, 0x??????nn, nn ≠ 0 in handler mode\n"
-#   sFile += "  ands r12, #255\n"
-#   sFile += "  bne  section." + section + " // in handler mode, call implementation routine directly\n"
-#   sFile += "  bkpt #" + str (idx) + "\n"
-#   sFile += "  bx   lr\n\n"
-#   sFile += ".Lfunc_end_" + section +":\n"
-#   sFile += "  .size " + section +", .Lfunc_end_" + section +" - " + section +"\n"
-#   sFile += "  .cantunwind\n"
-#   sFile += "  .fnend\n\n"
-#   return sFile
 
 #---------------------------------------------------------------------------------------------------
 
@@ -359,38 +281,6 @@ def generateSoftwareInterruptSection (sectionName, idx):
 
 #---------------------------------------------------------------------------------------------------
 
-# def generateCppForBreakpointSection ():
-#   s = "#include \"all-headers.h\"\n\n"
-#   s += cppSeparator () + "\n"
-#   s += "static void enableDebugMonitorInterruption (BOOT_MODE) {\n"
-#   s += "//--- Enable DebugMonitor interrupt\n"
-#   s += "  #define DEMCR (* ((volatile uint32_t *) 0xE000EDFC))\n"
-#   s += "  DEMCR |= (1 << 16) ; // Set MON_EN\n"
-#   s += "}\n\n"
-#   s += cppSeparator () + "\n"
-#   s += "MACRO_BOOT_ROUTINE (enableDebugMonitorInterruption) ;\n\n"
-#   s += cppSeparator ()
-#   return s
-
-#---------------------------------------------------------------------------------------------------
-
-def generateCppForSoftwareInterruptSection ():
-  s = "#include \"all-headers.h\"\n\n"
-  s += cppSeparator () + "\n"
-  s += "static void enableSoftwareInterrupt (BOOT_MODE) {\n"
-  s += "//--- Enable software interrupt\n"
-  s += "  NVIC_ENABLE_IRQ (ISRSlot::SWINT) ;\n"
-  s += "//--- Make STIR register accessible in unprivileged mode\n"
-  s += "  #define CCR (* ((volatile uint32_t *) 0xE000ED14))\n"
-  s += "  CCR |= (1 << 1) ;\n"
-  s += "}\n\n"
-  s += cppSeparator () + "\n"
-  s += "MACRO_BOOT_ROUTINE (enableSoftwareInterrupt) ;\n\n"
-  s += cppSeparator ()
-  return s
-
-#---------------------------------------------------------------------------------------------------
-
 def generateDisableInterruptSection (sectionName):
   sFile  = asSeparator ()
   sFile += "//   SECTION - " + sectionName + "\n"
@@ -413,6 +303,62 @@ def generateDisableInterruptSection (sectionName):
   sFile += "  msr   PRIMASK, r6\n"
   sFile += "//--- Restore preserved registers and return\n"
   sFile += "  pop   {r6, pc}\n\n"
+  sFile += ".Lfunc_end_" + sectionName +":\n"
+  sFile += "  .size " + sectionName +", .Lfunc_end_" + sectionName +" - " + sectionName +"\n"
+  sFile += "  .cantunwind\n"
+  sFile += "  .fnend\n\n"
+  return sFile
+
+#---------------------------------------------------------------------------------------------------
+
+def generateDisableInterruptAndSpinLockSection (sectionName):
+  sFile  = asSeparator ()
+  sFile += "//   SECTION - " + sectionName + "\n"
+  sFile += asSeparator () + "\n"
+  sFile += "  .section .text." + sectionName + ", \"ax\", %progbits\n"
+  sFile += "  .global " + sectionName +"\n"
+  sFile += "  .align 1\n"
+  sFile += "  .type " + sectionName +", %function\n\n"
+  sFile += sectionName +":\n"
+  sFile += "  .fnstart\n"
+  sFile += "//--- Save preserved registers\n"
+  sFile += "  push  {r4, r5, r6, lr}\n"
+  sFile += "//--- Save interrupt enabled state\n"
+  sFile += "  mrs   r6, PRIMASK\n"
+  sFile += "//--- Disable interrupt\n"
+  sFile += "  cpsid i\n"
+  sFile += "//--- R4 <- Address of SPINLOCK STATUS (rp2040 datasheet, 2.3.1.7, page 42)\n"
+  sFile += "  ldr   r4, = 0xD0000000 + 0x05C\n"
+  sFile += "//--- R5 <- SPINLOCK STATUS\n"
+  sFile += "  ldr   r5, [r4]\n"
+  sFile += "//--- R5 <- 0 if spinlock 0 unlocked, 1 if spinlock 0 locked\n"
+  sFile += "  movs  r4, # 1\n"
+  sFile += "  ands  r5, r4 // Z flag <- spinlock state\n"
+  sFile += "//--- If already locked, call section directly\n"
+  sFile += "  beq   " + sectionName +".acquire.spinlock\n"
+  sFile += "//--- Call section, interrupts disabled\n"
+  sFile += "  bl    section." + sectionName + "\n"
+  sFile += "  b     " + sectionName +".exit\n"
+  sFile += sectionName +".acquire.spinlock:\n"
+  sFile += "//--- R4 <- Address of SPINLOCK 0 (rp2040 datasheet, 2.3.1.7, page 42)\n"
+  sFile += "  ldr   r4, = 0xD0000000 + 0x100\n"
+  sFile += "//--- Read: attempt to claim the lock. Read value is nonzero if the lock was\n"
+  sFile += "//    successfully claimed, or zero if the lock had already been claimed\n"
+  sFile += "//    by a previous read (rp2040 datasheet, section 2.3.1.3 page 30).\n"
+  sFile += sectionName +".spinlock.busy.wait:\n"
+  sFile += "  ldr   r5, [r4]\n"
+  sFile += "  cmp   r5, #0\n"
+  sFile += "  beq   " + sectionName +".spinlock.busy.wait\n"
+  sFile += "//--- Call section, interrupts disabled, spinlock successfully claimed\n"
+  sFile += "  bl    section." + sectionName + "\n"
+  sFile += "//--- Write (any value): release the lock (rp2040 datasheet, section 2.3.1.3 page 30).\n"
+  sFile += "//    The next attempt to claim the lock will be successful.\n"
+  sFile += "  str   r5, [r4]\n"
+  sFile += "//--- Restore interrupt state\n"
+  sFile += sectionName +".exit:\n"
+  sFile += "  msr   PRIMASK, r6\n"
+  sFile += "//--- Restore preserved registers and return\n"
+  sFile += "  pop   {r4, r5, r6, pc}\n\n"
   sFile += ".Lfunc_end_" + sectionName +":\n"
   sFile += "  .size " + sectionName +", .Lfunc_end_" + sectionName +" - " + sectionName +"\n"
   sFile += "  .cantunwind\n"
@@ -538,45 +484,18 @@ if serviceScheme == "svc" :
     sFile += "  .word service." + service + " // " + str (idx) + "\n"
     idx += 1
   sFile += "\n"
-#------------------------------ Generate section handler
-# if sectionScheme == "bkpt" :
-#   cppFile += generateCppForBreakpointSection ()
-#   sFile += generateBreakpointHandler ()
-#   del interruptDictionary ["DebugMonitor"]
-#   sFile += asSeparator ()
-#   sFile += "//   SECTIONS\n"
-#   idx = 0
-#   for section in sectionList :
-#     sFile += generateBreakpointSection (section, idx)
-#     idx += 1
-#   sFile += asSeparator ()
-#   sFile += "//    SECTION DISPATCHER TABLE\n"
-#   sFile += asSeparator () + "\n"
-#   sFile += "  .global section.dispatcher.table\n\n"
-#   sFile += "section.dispatcher.table:\n"
-#   idx = 0
-#   for section in sectionList :
-#     sFile += "  .word section." + section + " // " + str (idx) + "\n"
-#     idx += 1
-#   sFile += "\n"
-if sectionScheme == "swint" :
-  cppFile += generateCppForSoftwareInterruptSection ()
-  sFile += generateSoftwareInterruptandler ()
-  del interruptDictionary ["SWINT"]
-  sFile += asSeparator ()
-  sFile += "//   SECTIONS\n"
-  idx = 0
-  for section in sectionList :
-    sFile += generateSoftwareInterruptSection (section, idx)
-    idx += 1
-elif sectionScheme == "disableInterrupt" :
+#------------------------------ Sections
+if sectionScheme == "disableInterrupt" :
   for section in sectionList :
     sFile += generateDisableInterruptSection (section)
+elif sectionScheme == "disableInterrupt-spinlock" :
+  for section in sectionList :
+    sFile += generateDisableInterruptAndSpinLockSection (section)
 elif len (sectionList) > 0 :
   print (BOLD_RED ()
-         + "In the makefile.json file, the \"SECTION-SCHEME\" key has an invalid \"" + sectionScheme + "\" value; "
-         + "(possible value: \"disableInterrupt\", \"bkpt\", \"swint\")"
-         +  ENDC ())
+    + "In the makefile.json file, the \"SECTION-SCHEME\" key has an invalid \"" + sectionScheme + "\" value; "
+    + "(possible value: \"disableInterrupt\", \"disableInterrupt-spinlock\")"
+    +  ENDC ())
   sys.exit (1)
 #------------------------------ Interrupts as service
 for interruptServiceName in interruptServiceList :

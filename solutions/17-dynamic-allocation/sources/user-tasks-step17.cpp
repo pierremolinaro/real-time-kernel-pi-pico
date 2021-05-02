@@ -3,41 +3,60 @@
 //--------------------------------------------------------------------------------------------------
 
 static const uint32_t BUFFER_SIZE = 200 ;
-static const uint8_t * gBuffer [BUFFER_SIZE] ;
-static volatile uint32_t gCount = 0 ;
-static volatile uint32_t gReadIndex = 0 ;
-static Semaphore gMutex (1) ;
-static Semaphore gReadSemaphore (0) ;
-static Semaphore gWriteSemaphore (BUFFER_SIZE) ;
 
 //--------------------------------------------------------------------------------------------------
 
-static void pushInBuffer (USER_MODE_ const uint8_t * inObject) {
-  gWriteSemaphore.P (MODE) ;
-  gMutex.P (MODE) ;
-    const uint32_t writeIndex = (gCount + gReadIndex) % BUFFER_SIZE ;
-    gBuffer [writeIndex] = inObject ;
-    gCount += 1 ;
-  gMutex.V (MODE) ;
-  gReadSemaphore.V (MODE) ;
-}
+class Buffer {
+//--- Default constructor
+  public: Buffer (void) :
+  mBuffer (),
+  mCount (0),
+  mReadIndex (0),
+  mMutex (1),
+  mReadSemaphore (0),
+  mWriteSemaphore (BUFFER_SIZE) {
+  }
 
-//--------------------------------------------------------------------------------------------------
+//--- append
+  public: void append (USER_MODE_ const uint8_t * inObject) {
+    mWriteSemaphore.P (MODE) ;
+    mMutex.P (MODE) ;
+      const uint32_t writeIndex = (mCount + mReadIndex) % BUFFER_SIZE ;
+      mBuffer [writeIndex] = inObject ;
+      mCount += 1 ;
+    mMutex.V (MODE) ;
+    mReadSemaphore.V (MODE) ;
+  }
 
-static const uint8_t * removeFromBuffer (USER_MODE) {
-  gReadSemaphore.P (MODE) ;
-  gMutex.P (MODE) ;
-    const uint8_t * result = gBuffer [gReadIndex] ;
-    gCount -= 1 ;
-    gReadIndex = (gReadIndex + 1) % BUFFER_SIZE ;
-  gMutex.V (MODE) ;
-  gWriteSemaphore.V (MODE) ;
-  return result ;
-}
+//--- remove
+  public: const uint8_t * remove (USER_MODE) {
+    mReadSemaphore.P (MODE) ;
+    mMutex.P (MODE) ;
+      const uint8_t * result = mBuffer [mReadIndex] ;
+      mCount -= 1 ;
+      mReadIndex = (mReadIndex + 1) % BUFFER_SIZE ;
+    mMutex.V (MODE) ;
+    mWriteSemaphore.V (MODE) ;
+    return result ;
+  }
+
+//--- Private properties
+  private: const uint8_t * mBuffer [BUFFER_SIZE] ;
+  private: volatile uint32_t mCount = 0 ;
+  private: volatile uint32_t mReadIndex = 0 ;
+  private: Semaphore mMutex ;
+  private: Semaphore mReadSemaphore ;
+  private: Semaphore mWriteSemaphore ;
+
+//--- No copy
+  private: Buffer (const Buffer &) = delete ;
+  private: Buffer & operator = (const Buffer &) = delete ;
+} ;
 
 //--------------------------------------------------------------------------------------------------
 
 static volatile uint32_t gProducerCount = 0 ;
+static Buffer gBuffer ;
 
 //--------------------------------------------------------------------------------------------------
 
@@ -46,7 +65,7 @@ static void producerTask (USER_MODE) {
   while (1) {
     if (digitalRead (P4_PUSH_BUTTON)) {
       const uint8_t * object = new uint8_t [bufferSize] ;
-      pushInBuffer (MODE_ object) ;
+      gBuffer.append (MODE_ object) ;
       gProducerCount += 1 ;
       bufferSize += 1 ;
       if (bufferSize == 50) {
@@ -66,7 +85,7 @@ static volatile uint32_t gConsumerCount = 0 ;
 
 static void consumerTask (USER_MODE) {
   while (1) {
-    const uint8_t * object = removeFromBuffer (MODE) ;
+    const uint8_t * object = gBuffer.remove (MODE) ;
     delete [] object ;
     gConsumerCount += 1 ;
   }
@@ -107,4 +126,3 @@ static void initTasks (INIT_MODE) {
 MACRO_INIT_ROUTINE (initTasks) ;
 
 //--------------------------------------------------------------------------------------------------
-

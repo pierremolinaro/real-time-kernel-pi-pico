@@ -48,15 +48,3 @@ background.task.cpu.0: // Only use R0, R1, R2, R3 and R12. Other registers are n
   b     background.task.cpu.0
 
 //--------------------------------------------------------------------------------------------------
-//  RESET HANDLER (DOUBLE STACK MODE) CPU 1
-//--------------------------------------------------------------------------------------------------
-
-  .section	".text", "ax", %progbits
-
-  .global reset.handler.cpu.1
-  .type reset.handler.cpu.1, %function
-
-reset.handler.cpu.1: // Cortex M0 boots with interrupts enabled, in Thread mode
-  b  reset.handler.cpu.1
-
-//--------------------------------------------------------------------------------------------------
