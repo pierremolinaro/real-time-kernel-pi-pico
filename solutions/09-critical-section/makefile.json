@@ -4,7 +4,7 @@
 
   "DEV-DIR" : "../../dev-files",
 
-  "SECTION-SCHEME" : "disableInterrupt",
+  "SECTION-SCHEME" : "disable-interrupts",
 
   "CPU-MHZ" : 25
 }

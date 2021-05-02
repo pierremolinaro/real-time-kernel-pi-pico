@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 #---------------------------------------------------------------------------------------------------
 
-import sys, interrupt_names_raspberry_pi_pico
+import sys, os, interrupt_names_raspberry_pi_pico
 
 #---------------------------------------------------------------------------------------------------
 
@@ -185,212 +185,6 @@ def generateSVChandler ():
   return sCode
 
 #---------------------------------------------------------------------------------------------------
-
-def generateSoftwareInterruptandler () :
-  sCode = asSeparator ()
-  sCode += "//\n"
-  sCode += "//     SECTIONS: Software Interrupt Handler (two stack mode)\n"
-  sCode += "//\n"
-  sCode += asSeparator ()
-  sCode += "//\n"
-  sCode += "//                    |                            |\n"
-  sCode += "//          PSP+32 -> |----------------------------| -\n"
-  sCode += "//                    | xPSR                       |  |\n"
-  sCode += "//          PSP+28 -> |----------------------------|  |\n"
-  sCode += "//                    | PC                         |  |\n"
-  sCode += "//          PSP+24 -> |----------------------------|  |\n"
-  sCode += "//                    | LR                         |  |\n"
-  sCode += "//          PSP+20 -> |----------------------------|  |\n"
-  sCode += "//                    | R12                        |  |  Saved by interrupt response\n"
-  sCode += "//          PSP+16 -> |----------------------------|  |\n"
-  sCode += "//                    | R3                         |  |\n"
-  sCode += "//          PSP+12 -> |----------------------------|  |\n"
-  sCode += "//                    | R2                         |  |\n"
-  sCode += "//          PSP+8  -> |----------------------------|  |\n"
-  sCode += "//                    | R1                         |  |\n"
-  sCode += "//          PSP+4  -> |----------------------------|  |\n"
-  sCode += "//                    | R0                         |  |\n"
-  sCode += "//          PSP    -> |----------------------------| -\n"
-  sCode += "//\n"
-  sCode += asSeparator () + "\n"
-  sCode += "  .section  .text.interrupt.SWINT, \"ax\", %progbits\n\n"
-  sCode += "  .global interrupt.SWINT\n"
-  sCode += "  .type interrupt.SWINT, %function\n\n"
-  sCode += "interrupt.SWINT:\n"
-  sCode += "//--------------------- Save preserved registers\n"
-  sCode += "  push  {r5, lr}\n"
-  sCode += "//--------------------- R5 <- thread SP\n"
-  sCode += "  mrs   r5, psp\n"
-  sCode += "//--------------------- Restore R0, R1, R2 and R3 from saved stack\n"
-  sCode += "  ldmia r5, {r0, r1, r2, r3}\n"
-  sCode += "//--------------------- R12 <- Address section routine\n"
-  sCode += "  ldr   r12, [r5, #16]     // 16 : 4 stacked registers before saved R12\n"
-  sCode += "//--------------------- Call section routine\n"
-  sCode += "  blx   r12\n"
-  sCode += "//--------------------- Set return code (from R0 to R3) in stacked registers\n"
-  sCode += "  stmia r5!, {r0, r1, r2, r3}    // R5 is thread SP\n"
-  sCode += "//--------------------- Set R12 stacked register to 0\n"
-  sCode += "  mov   r0, #0\n"
-  sCode += "  str   r0, [r5]\n"
-  sCode += "//--------------------- Restore preserved registers, return from interrupt\n"
-  sCode += "  pop   {r5, pc}\n\n"
-  sCode += asSeparator () + "\n"
-  sCode += "  .section  .text.direct.call.or.call.software.interrupt, \"ax\", %progbits\n\n"
-  sCode += "  .type direct.call.or.call.software.interrupt, %function\n\n"
-  sCode += "direct.call.or.call.software.interrupt: // R12 contains the address of section implementation function\n"
-  sCode += "//--------------------- Save preserved registers\n"
-  sCode += "  push {r6, r7}\n"
-  sCode += "  mrs  r6, IPSR          // IPSR[8...0] ≠ 0 in handler mode, = 0 in thread mode\n"
-  sCode += "  mov  r7, #511\n"
-  sCode += "  tst  r6, r7\n"
-  sCode += "  bne  direct.call\n"
-  sCode += "//--------------------- Software interrupt\n"
-  sCode += "  ldr  r6, = 0xE000EF00  // Address of STIR control register\n"
-  sCode += "  movs r7, # (80 - 16)   // Software Interrupt has number #80\n"
-  sCode += "  str  r7, [r6]          // Generate Software Interrupt\n"
-  sCode += "//--------------------- Wait for the exception is carried out\n"
-  sCode += "wait.software.interrupt.done: // R12 is reset by interrupt handler\n"
-  sCode += "  cmp  r12, #0\n"
-  sCode += "  bne  wait.software.interrupt.done\n"
-  sCode += "//--------------------- Restore preserved registers\n"
-  sCode += "  pop  {r6, r7}\n"
-  sCode += "  bx   lr\n"
-  sCode += "//--------------------- Direct call\n"
-  sCode += "direct.call:\n"
-  sCode += "  pop  {r6, r7}\n"
-  sCode += "  bx   r12              // in handler mode, call implementation routine directly\n\n"
-  return sCode
-
-#---------------------------------------------------------------------------------------------------
-
-def generateSoftwareInterruptSection (sectionName, idx):
-  sCode  = asSeparator () + "\n"
-  sCode += "  .section .text." + sectionName + ", \"ax\", %progbits\n"
-  sCode += "  .global " + sectionName +"\n"
-  sCode += "  .align 1\n"
-  sCode += "  .type " + sectionName +", %function\n\n"
-  sCode += sectionName +":\n"
-  sCode += "  .fnstart\n"
-  sCode += "  ldr  r12, =section." + sectionName + "\n"
-  sCode += "  b    direct.call.or.call.software.interrupt\n\n"
-  sCode += ".Lfunc_end_" + sectionName +":\n"
-  sCode += "  .size " + sectionName +", .Lfunc_end_" + sectionName +" - " + sectionName +"\n"
-  sCode += "  .cantunwind\n"
-  sCode += "  .fnend\n\n"
-  return sCode
-
-#---------------------------------------------------------------------------------------------------
-
-def generateDisableInterruptSection (sectionName):
-  sCode  = asSeparator ()
-  sCode += "//   SECTION - " + sectionName + "\n"
-  sCode += asSeparator () + "\n"
-  sCode += "  .section .text." + sectionName + ", \"ax\", %progbits\n"
-  sCode += "  .global " + sectionName +"\n"
-  sCode += "  .align 1\n"
-  sCode += "  .type " + sectionName +", %function\n\n"
-  sCode += sectionName +":\n"
-  sCode += "  .fnstart\n"
-  sCode += "//--- Save preserved registers\n"
-  sCode += "  push  {r6, lr}\n"
-  sCode += "//--- Save interrupt enabled state\n"
-  sCode += "  mrs   r6, PRIMASK\n"
-  sCode += "//--- Disable interrupt\n"
-  sCode += "  cpsid i\n"
-  sCode += "//--- Call section, interrupts disabled\n"
-  sCode += "  bl    section." + sectionName + "\n"
-  sCode += "//--- Restore interrupt state\n"
-  sCode += "  msr   PRIMASK, r6\n"
-  sCode += "//--- Restore preserved registers and return\n"
-  sCode += "  pop   {r6, pc}\n\n"
-  sCode += ".Lfunc_end_" + sectionName +":\n"
-  sCode += "  .size " + sectionName +", .Lfunc_end_" + sectionName +" - " + sectionName +"\n"
-  sCode += "  .cantunwind\n"
-  sCode += "  .fnend\n\n"
-  return ("", sCode)
-
-#---------------------------------------------------------------------------------------------------
-
-def generateDisableInterruptAndSpinLockHeader () :
-  sCode  = asSeparator ()
-  sCode += "//   SECTION VARIABLES\n\n"
-  sCode += "	.section	.bss.spinlock.acquired, \"aw\", %nobits\n\n"
-  sCode += "  .global	  spinlock.acquired\n\n"
-  sCode += "spinlock.acquired: // C type: uint8_t [2]\n"
-  sCode += "  .space	2\n\n"
-  return ("", sCode)
-
-#---------------------------------------------------------------------------------------------------
-
-def generateDisableInterruptAndSpinLockSection (sectionName):
-  sCode  = asSeparator ()
-  sCode += "//   SECTION - " + sectionName + "\n"
-  sCode += asSeparator () + "\n"
-  sCode += "  .section .text." + sectionName + ", \"ax\", %progbits\n"
-  sCode += "  .global " + sectionName +"\n"
-  sCode += "  .align 1\n"
-  sCode += "  .type " + sectionName +", %function\n\n"
-  sCode += sectionName +":\n"
-  sCode += "  .fnstart\n"
-  sCode += "//--- Save preserved registers\n"
-  sCode += "  push  {r4, r5, r6, r7, lr}\n"
-  sCode += "//--- Save interrupt enabled state\n"
-  sCode += "  mrs   r6, PRIMASK\n"
-  sCode += "//--- Disable interrupt\n"
-  sCode += "  cpsid i\n"
-  sCode += "//--- R4 <- Address of CPUID control register (rp2040 datasheet, 2.3.1.7, page 42)\n"
-  sCode += "  ldr   r4, = 0xD0000000 + 0\n"
-  sCode += "//--- R5 <- Value of CPUID control register\n"
-  sCode += "  ldr   r5, [r4] // R5 <- 0 for CPU 0, 1 for CPU 1\n"
-  sCode += "//--- R7 <- Address for spinlock.acquired 16-bit variable (uint8_t [2])\n"
-  sCode += "  ldr   r7, = spinlock.acquired\n"
-  sCode += "//--- R7 <- Address for spinlock.acquired 8-bit variable for current cpu\n"
-  sCode += "  adds  r7, r5\n"
-  sCode += "//--- R5 <- Value of spinlock.acquired 8-bit variable for current cpu\n"
-  sCode += "  ldrb r5, [r7]\n"
-  sCode += "//--- R5 <- 1 if Already acquired by this CPU, 0 otherwise\n"
-  sCode += "  cmp  r5, #0\n"
-  sCode += "//--- If already locked, call section directly\n"
-  sCode += "  beq   " + sectionName +".acquire.spinlock\n"
-  sCode += "//--- Call section, interrupts disabled\n"
-  sCode += "  bl    section." + sectionName + "\n"
-  sCode += "  b     " + sectionName +".exit\n"
-  sCode += sectionName +".acquire.spinlock:\n"
-  sCode += "//--- Set spinlock.acquired 8-bit variable for current cpu\n"
-  sCode += "  movs  r5, #1\n"
-  sCode += "  strb  r5, [r7]\n"
-  sCode += "//--- R4 <- Address of SPINLOCK 0 (rp2040 datasheet, 2.3.1.7, page 42)\n"
-  sCode += "  ldr   r4, = 0xD0000000 + 0x100\n"
-  sCode += "//--- Read: attempt to claim the lock. Read value is nonzero if the lock was\n"
-  sCode += "//    successfully claimed, or zero if the lock had already been claimed\n"
-  sCode += "//    by a previous read (rp2040 datasheet, section 2.3.1.3 page 30).\n"
-  sCode += sectionName +".spinlock.busy.wait:\n"
-  sCode += "  ldr   r5, [r4]\n"
-  sCode += "  cmp   r5, #0\n"
-  sCode += "  beq   " + sectionName +".spinlock.busy.wait\n"
-  sCode += "@  dmb\n"
-  sCode += "//--- Call section, interrupts disabled, spinlock successfully claimed\n"
-  sCode += "  bl    section." + sectionName + "\n"
-  sCode += "//--- Write (any value): release the lock (rp2040 datasheet, section 2.3.1.3 page 30).\n"
-  sCode += "//    The next attempt to claim the lock will be successful.\n"
-  sCode += "  str   r5, [r4]\n"
-  sCode += "//--- Clear spinlock.acquired 8-bit variable for current cpu\n"
-  sCode += "  movs  r5, # 0\n"
-  sCode += "  strb  r5, [r7]\n"
-  sCode += "@  dmb\n"
-  sCode += "//----------- Exit\n"
-  sCode += sectionName +".exit:\n"
-  sCode += "//--- Restore interrupt state\n"
-  sCode += "  msr   PRIMASK, r6\n"
-  sCode += "//--- Restore preserved registers and return\n"
-  sCode += "  pop   {r4, r5, r6, r7, pc}\n\n"
-  sCode += ".Lfunc_end_" + sectionName +":\n"
-  sCode += "  .size " + sectionName +", .Lfunc_end_" + sectionName +" - " + sectionName +"\n"
-  sCode += "  .cantunwind\n"
-  sCode += "  .fnend\n\n"
-  return ("", sCode)
-
-#---------------------------------------------------------------------------------------------------
 #    ENTRY POINT
 #---------------------------------------------------------------------------------------------------
 
@@ -406,7 +200,7 @@ destinationAssemblerFile = sys.argv [2]
 #------------------------------ Service scheme
 serviceScheme = sys.argv [3]
 #------------------------------ Section scheme
-sectionScheme = sys.argv [4]
+requiredSectionScheme = sys.argv [4]
 #------------------------------ Header files
 headerFiles = []
 for i in range (5, len (sys.argv)):
@@ -464,13 +258,6 @@ if (len (serviceList) > 0) and (serviceScheme == "") :
          + "entry (asoociated value: \"svc\")"
          +  ENDC ())
   sys.exit (1)
-#------------------------------ Has sections ?
-if (len (sectionList) > 0) and (sectionScheme == "") :
-  print (BOLD_RED ()
-         + "As the project defines section(s), the makefile.json file should have a \"SECTION-SCHEME\" "
-         + "entry (possible associated value: \"disableInterrupt\", \"bkpt\", \"swint\")"
-         +  ENDC ())
-  sys.exit (1)
 #------------------------------ Services
 if serviceScheme == "svc" :
   sFile += generateSVChandler ()
@@ -509,26 +296,43 @@ if serviceScheme == "svc" :
     sFile += "  .word service." + service + " // " + str (idx) + "\n"
     idx += 1
   sFile += "\n"
-#------------------------------ Sections
-if sectionScheme == "disableInterrupt" :
-  for section in sectionList :
-    (cppCode, sCode) = generateDisableInterruptSection (section)
-    cppFile += cppCode
-    sFile += sCode
-elif sectionScheme == "disableInterrupt-spinlock" :
-  (cppCode, sCode) = generateDisableInterruptAndSpinLockHeader ()
+#------------------------------ Find all section schemes
+DEV_FILES_DIR = os.path.dirname (os.path.realpath (__file__))
+SECTION_SCHEME_DIR = DEV_FILES_DIR + "/generators-section"
+# print ("SECTION_SCHEME_DIR " + SECTION_SCHEME_DIR)
+allSectionSchemes = []
+foundSectionScheme = False
+for root, dirs, files in os.walk (SECTION_SCHEME_DIR) :
+  for name in dirs:
+    # print ("DIR " + name)
+    allSectionSchemes.append (name)
+    if name == requiredSectionScheme :
+      foundSectionScheme = True
+#------------------------------ Has sections ?
+if (len (sectionList) > 0) and (requiredSectionScheme == "") :
+  s = "As the project defines section(s), the makefile.json file should have a \"SECTION-SCHEME\" "
+  s += "entry, possible associated value:\n"
+  for name in allSectionSchemes :
+    s += "  - \"" + name + "\"\n"
+  print (BOLD_RED () + s +  ENDC ())
+  sys.exit (1)
+elif (not foundSectionScheme) and (requiredSectionScheme != "") :
+  s = "In the makefile.json file, the \"SECTION-SCHEME\" entry "
+  s += "value (\"" + requiredSectionScheme + "\") is not implemented; "
+  s += "possible associated value:\n"
+  for name in allSectionSchemes :
+    s += "  - \"" + name + "\"\n"
+  print (BOLD_RED () + s +  ENDC ())
+  sys.exit (1)
+#------------------------------ Generate sections
+if foundSectionScheme and (requiredSectionScheme != "") :
+  SELECTED_SECTION_SCHEME_DIR = SECTION_SCHEME_DIR + "/" + requiredSectionScheme
+  #   print ("SELECTED_SECTION_SCHEME_DIR : " + SELECTED_SECTION_SCHEME_DIR)
+  sys.path.append (SELECTED_SECTION_SCHEME_DIR)
+  import section_generator
+  (cppCode, sCode) = section_generator.buildInterruptHandlerCode (sectionList)
   cppFile += cppCode
   sFile += sCode
-  for section in sectionList :
-    (cppCode, sCode) = generateDisableInterruptAndSpinLockSection (section)
-    cppFile += cppCode
-    sFile += sCode
-elif len (sectionList) > 0 :
-  print (BOLD_RED ()
-    + "In the makefile.json file, the \"SECTION-SCHEME\" key has an invalid \"" + sectionScheme + "\" value; "
-    + "(possible value: \"disableInterrupt\", \"disableInterrupt-spinlock\")"
-    +  ENDC ())
-  sys.exit (1)
 #------------------------------ Interrupts as service
 for interruptServiceName in interruptServiceList :
   sFile += asSeparator ()

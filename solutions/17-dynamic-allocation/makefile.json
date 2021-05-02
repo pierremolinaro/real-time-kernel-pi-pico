@@ -6,7 +6,7 @@
 
   "SERVICE-SCHEME" : "svc",
 
-  "SECTION-SCHEME" : "disableInterrupt",
+  "SECTION-SCHEME" : "disable-interrupts",
 
   "TASK-COUNT" : 3,
 

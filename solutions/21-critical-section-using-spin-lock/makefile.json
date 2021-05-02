@@ -6,7 +6,7 @@
 
   "SERVICE-SCHEME" : "svc",
 
-  "SECTION-SCHEME" : "disableInterrupt-spinlock",
+  "SECTION-SCHEME" : "disable-interrupts-spinlock",
 
   "TASK-COUNT" : 4,
 
