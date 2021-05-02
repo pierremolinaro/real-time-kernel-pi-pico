@@ -173,9 +173,9 @@ static void displayTask (USER_MODE) {
 
 //--------------------------------------------------------------------------------------------------
 
-static uint64_t gStack0 [64] ;
-static uint64_t gStack1 [64] ;
-static uint64_t gStack2 [64] ;
+static uint64_t gStack0 [128] ;
+static uint64_t gStack1 [128] ;
+static uint64_t gStack2 [128] ;
 static uint64_t gStackIntermediateTask [128] ;
 
 //--------------------------------------------------------------------------------------------------
