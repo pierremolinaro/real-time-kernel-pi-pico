@@ -348,7 +348,7 @@ def generateDisableInterruptAndSpinLockSection (sectionName):
   sCode += "  adds  r7, r5\n"
   sCode += "//--- R5 <- Value of spinlock.acquired 8-bit variable for current cpu\n"
   sCode += "  ldrb r5, [r7]\n"
-  sCode += "//--- R5 <- 1 if Already acquired by this CPU, 0 otrherwise\n"
+  sCode += "//--- R5 <- 1 if Already acquired by this CPU, 0 otherwise\n"
   sCode += "  cmp  r5, #0\n"
   sCode += "//--- If already locked, call section directly\n"
   sCode += "  beq   " + sectionName +".acquire.spinlock\n"

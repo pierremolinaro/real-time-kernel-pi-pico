@@ -1,4 +1,6 @@
-{ "SOURCE-DIR" : ["sources", "../../dev-files/sources-common"],
+{ "SOURCE-DIR" : ["sources"],
+
+  "SOURCES-IN-DEV-DIR" : ["sources-common"],
 
   "DEV-DIR" : "../../dev-files",
 

@@ -67,10 +67,12 @@ def dictionaryFromJsonFile (file) :
 #---------------------------------------------------------------------------------------------------
 
 def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
+  DEV_FILES_DIR = os.path.dirname (os.path.realpath (__file__))
+#   print ("DEV_FILES_DIR: " + DEV_FILES_DIR)
 #--------------------------------------------------------------------------- Prepare
   os.chdir (projectDir)
   make = makefile.Make (GOAL)
-  make.mMacTextEditor = "BBEdit" # "Atom"
+#   make.mMacTextEditor = "BBEdit" # "Atom"
   allGoal = []
 #--------------------------------------------------------------------------- Install compiler ?
   BASE_NAME = "arm-none-eabi"
@@ -102,6 +104,10 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   SOURCE_FILE_DIRECTORIES = []
   if dictionaire.has_key ("SOURCE-DIR") :
     SOURCE_FILE_DIRECTORIES = dictionaire ["SOURCE-DIR"]
+  if dictionaire.has_key ("SOURCES-IN-DEV-DIR") :
+    sourcesInDevDir = dictionaire ["SOURCES-IN-DEV-DIR"]
+    for d in sourcesInDevDir :
+      SOURCE_FILE_DIRECTORIES.append (DEV_FILES_DIR + "/" + d)
 #--- GROUP_SOURCES
   GROUP_SOURCES = False
   if dictionaire.has_key ("GROUP-SOURCES") :
@@ -128,7 +134,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   PRODUCT_DIR = common_definitions.productDirectory ()
   ASBUILD_DIR = common_definitions.asDirectory ()
 #--------------------------------------------------------------------------- Build source lists
-  includeDirsInCompilerCommand = ["-I", GENERATED_SOURCE_DIR, "-I", projectDir]
+  includeDirsInCompilerCommand = ["-I", GENERATED_SOURCE_DIR] #, "-I", projectDir]
   H_SOURCE_LIST = []
   CPP_SOURCE_LIST = []
   S_SOURCE_LIST = []
@@ -154,7 +160,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   rule = makefile.Rule ([baseHeader_file], "Build base header file")
   rule.mOpenSourceOnError = False
   rule.mDependences.append ("makefile.json")
-  rule.mCommand += ["../../dev-files/build_base_header_file.py", baseHeader_file, str (CPU_MHZ), TASK_COUNT, platformName, "1" if ASSERTION_GENERATION else "0"]
+  rule.mCommand += [DEV_FILES_DIR + "/build_base_header_file.py", baseHeader_file, str (CPU_MHZ), TASK_COUNT, platformName, "1" if ASSERTION_GENERATION else "0"]
   rule.mPriority = -1
   make.addRule (rule)
 #--------------------------------------------------------------------------- Build all header file
@@ -164,22 +170,22 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   rule.mOpenSourceOnError = False
   rule.mDependences.append ("makefile.json")
   rule.mDependences += H_SOURCE_LIST
-  rule.mCommand += ["../../dev-files/build_all_header_file.py", allHeaders_file, allHeadersSecondaryDependenceFile]
+  rule.mCommand += [DEV_FILES_DIR + "/build_all_header_file.py", allHeaders_file, allHeadersSecondaryDependenceFile]
   rule.mCommand += H_SOURCE_LIST
   rule.enterSecondaryDependanceFile (allHeadersSecondaryDependenceFile, make)
   rule.mPriority = -1
   make.addRule (rule)
 #--------------------------------------------------------------------------- Build interrupt handler files
-  interruptHandlerSFile = GENERATED_SOURCE_DIR + "/interrupt-handlers.s"
-  interruptHandlerCppFile = GENERATED_SOURCE_DIR + "/interrupt-handler-helper.cpp"
+  interruptHandlerSFile = GENERATED_SOURCE_DIR + "/interrupt-handlers-assembly.s"
+  interruptHandlerCppFile = GENERATED_SOURCE_DIR + "/interrupt-handlers-cpp.cpp"
   S_SOURCE_LIST.append (interruptHandlerSFile)
   CPP_SOURCE_LIST.append (interruptHandlerCppFile)
   rule = makefile.Rule ([interruptHandlerSFile, interruptHandlerCppFile], "Build interrupt files")
   rule.mOpenSourceOnError = False
   rule.mDependences += H_SOURCE_LIST
   rule.mDependences.append ("makefile.json")
-  rule.mDependences.append ("../../dev-files/build_interrupt_handlers.py")
-  rule.mCommand += ["../../dev-files/build_interrupt_handlers.py"]
+  rule.mDependences.append (DEV_FILES_DIR + "/build_interrupt_handlers.py")
+  rule.mCommand += [DEV_FILES_DIR + "/build_interrupt_handlers.py"]
   rule.mCommand += [interruptHandlerCppFile]
   rule.mCommand += [interruptHandlerSFile]
   rule.mCommand += [serviceScheme]
@@ -194,7 +200,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
     rule.mOpenSourceOnError = False
     rule.mDependences += CPP_SOURCE_LIST
     rule.mDependences.append ("makefile.json")
-    rule.mCommand += ["../../dev-files/build_grouped_sources.py", allSourceFile]
+    rule.mCommand += [DEV_FILES_DIR + "/build_grouped_sources.py", allSourceFile]
     rule.mCommand += CPP_SOURCE_LIST
     rule.mPriority = -1
     make.addRule (rule)
@@ -250,7 +256,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
     rule = makefile.Rule ([objdumpPythonFile], "Building " + source + ".objdump.py")
     rule.mDependences.append (objectFile)
     rule.mDependences.append ("makefile.json")
-    rule.mCommand += ["../../dev-files/build_objdump.py", OBJDUMP_TOOL, source, objdumpPythonFile]
+    rule.mCommand += [DEV_FILES_DIR + "/build_objdump.py", OBJDUMP_TOOL, source, objdumpPythonFile]
     rule.mPriority = -1
     make.addRule (rule)
     allGoal.append (objdumpPythonFile)
@@ -316,7 +322,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
       asObjectFileList.append (listingFile)
 #--------------------------------------------------------------------------- Link for internal flash
   PRODUCT_FLASH = PRODUCT_DIR + "/product"
-  LINKER_SCRIPT_INTERNAL_FLASH = "../../dev-files/" + linkerScript
+  LINKER_SCRIPT_INTERNAL_FLASH = DEV_FILES_DIR + "/" + linkerScript
   allGoal.append (PRODUCT_FLASH + ".elf")
 #--- Add link rule
   rule = makefile.Rule ([PRODUCT_FLASH + ".elf"], "Linking " + PRODUCT_FLASH + ".elf")
@@ -387,7 +393,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
     print ("  RAM + STACK: " + str (numbers [2]) + " bytes")
 #----------------------------------------------- Run ?
   if GOAL == "run":
-    FLASH_PI_PICO = ["../../dev-files/uf2conv.py", "-d", "/dev/cu.usbmodem14301", "--deploy", PRODUCT_FLASH + ".uf2"]
+    FLASH_PI_PICO = [DEV_FILES_DIR + "/uf2conv.py", "-d", "/dev/cu.usbmodem14301", "--deploy", PRODUCT_FLASH + ".uf2"]
     print (makefile.BOLD_BLUE () + "Flashing Raspberry Pi Pico..." + makefile.ENDC ())
     runProcess (FLASH_PI_PICO)
     print (makefile.BOLD_GREEN () + "Success" + makefile.ENDC ())
