@@ -48,11 +48,3 @@ background.task.cpu.0: // Only use R0, R1, R2, R3 and R12. Other registers are n
   b     background.task.cpu.0
 
 //--------------------------------------------------------------------------------------------------
-
-	.section	.bss.spinlock.acquired, "aw", %nobits
-  .global	  spinlock.acquired
-
-spinlock.acquired:
-  .space	2
-
-//--------------------------------------------------------------------------------------------------
