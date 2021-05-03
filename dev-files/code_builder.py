@@ -128,6 +128,14 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   sectionScheme = ""
   if dictionaire.has_key ("SECTION-SCHEME") :
     sectionScheme = dictionaire ["SECTION-SCHEME"]
+#--- IRQ SECTION
+  irqSectionScheme = ""
+  if dictionaire.has_key ("IRQ-SECTION-SCHEME") :
+    irqSectionScheme = dictionaire ["IRQ-SECTION-SCHEME"]
+#--- UNUSED IRQ
+  unusedIRQScheme = ""
+  if dictionaire.has_key ("UNUSED-IRQ-SCHEME") :
+    unusedIRQScheme = dictionaire ["UNUSED-IRQ-SCHEME"]
 #--------------------------------------------------------------------------- Directories
   BUILD_DIR = common_definitions.buildDirectory ()
   GENERATED_SOURCE_DIR = common_definitions.generatedSourceDirectory ()
@@ -190,6 +198,8 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   rule.mCommand += [interruptHandlerSFile]
   rule.mCommand += [serviceScheme]
   rule.mCommand += [sectionScheme]
+  rule.mCommand += [irqSectionScheme]
+  rule.mCommand += [unusedIRQScheme]
   rule.mCommand += H_SOURCE_LIST
   rule.mPriority = -1
   make.addRule (rule)

@@ -4,6 +4,10 @@
 
   "DEV-DIR" : "../../dev-files",
 
+  "UNUSED-IRQ-SCHEME" : "goto-fault-handler",
+
+  "IRQ-SECTION-SCHEME" : "branch",
+
   "SERVICE-SCHEME" : "svc",
 
   "SECTION-SCHEME" : "disable-interrupts-spinlock",

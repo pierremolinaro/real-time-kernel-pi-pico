@@ -4,5 +4,7 @@
 
   "DEV-DIR" : "../../dev-files",
 
-  "CPU-MHZ" : 25
+  "UNUSED-IRQ-SCHEME" : "endless-loop",
+
+  "CPU-MHZ" : 125
 }

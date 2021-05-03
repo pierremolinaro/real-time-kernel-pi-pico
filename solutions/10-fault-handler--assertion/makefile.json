@@ -4,7 +4,11 @@
 
   "DEV-DIR" : "../../dev-files",
 
+  "UNUSED-IRQ-SCHEME" : "goto-fault-handler",
+
+  "IRQ-SECTION-SCHEME" : "branch",
+
   "SECTION-SCHEME" : "disable-interrupts",
 
-  "CPU-MHZ" : 25
+  "CPU-MHZ" : 125
 }

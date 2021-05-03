@@ -176,7 +176,8 @@ void HardFault_handler (FAULT_MODE) {
 //    UNUSED INTERRUPT
 //--------------------------------------------------------------------------------------------------
 
-void unusedInterrupt (FAULT_MODE_ const uint32_t inInterruptIndex) asm ("unused.interrupt") ;
+void unusedInterrupt (FAULT_MODE_ const uint32_t inInterruptIndex)
+          asm ("unused.interrupt.in.fault.handler") ;
 
 void unusedInterrupt (FAULT_MODE_ const uint32_t inInterruptIndex) {
 //----------------- Init Systick (LCD display requires an 1 ms timer)

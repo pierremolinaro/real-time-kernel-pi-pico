@@ -2,7 +2,9 @@
 
   "SOURCES-IN-DEV-DIR" : ["sources-common"],
 
+  "UNUSED-IRQ-SCHEME" : "endless-loop",
+
   "DEV-DIR" : "../../dev-files",
 
-  "CPU-MHZ" : 25
+  "CPU-MHZ" : 125
 }

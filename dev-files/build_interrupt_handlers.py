@@ -51,9 +51,13 @@ destinationAssemblerFile = sys.argv [2]
 requiredServiceScheme = sys.argv [3]
 #------------------------------ Section scheme
 requiredSectionScheme = sys.argv [4]
+#------------------------------ IRQ Section scheme
+requiredIRQSectionScheme = sys.argv [5]
+#------------------------------ Unused Interrupt scheme
+unusedInterruptScheme = sys.argv [6]
 #------------------------------ Header files
 headerFiles = []
-for i in range (5, len (sys.argv)):
+for i in range (7, len (sys.argv)):
   headerFiles.append (sys.argv [i])
 #print headerFiles
 #------------------------------ Destination file string
@@ -177,36 +181,100 @@ if foundSectionScheme and (requiredSectionScheme != "") :
   cppFile += cppCode
   sFile += sCode
 #------------------------------ INTERRUPTS AS SECTION ----------------------------------
-for interruptSectionName in interruptSectionList :
-  sFile += asSeparator ()
-  sFile += "//   INTERRUPT - SECTION: " + interruptSectionName + "\n"
-  sFile += asSeparator () + "\n"
-  sFile += "  .section .text.interrupt." + interruptSectionName + ", \"ax\", %progbits\n\n"
-  sFile += "  .align  1\n"
-  sFile += "  .global interrupt." + interruptSectionName + "\n"
-  sFile += "  .type interrupt." + interruptSectionName + ", %function\n\n"
-  sFile += "interrupt." + interruptSectionName + ":\n"
-  sFile += "//----------------------------------------- Activity led On\n"
-  sFile += "  ldr   r0, =0xD0000000 + 0x014  // Address of SIO_GPIO_OUT_SET control register\n"
-  sFile += "  ldr   r1, = (1 << 26)   // Port GP26 is ACTIVITY 0\n"
-  sFile += "  str   r1, [r0]         // turn on\n"
-  sFile += "//----------------------------------------- Goto interrupt function\n"
-  sFile += "  ldr   r2, = interrupt.section." + interruptSectionName + "\n"
-  sFile += "  bx    r2\n\n"
+#------------------------------ Find all irq section schemes
+IRQ_SECTION_SCHEME_DIR = DEV_FILES_DIR + "/generators-irq-section"
+# print ("IRQ_SECTION_SCHEME_DIR " + IRQ_SECTION_SCHEME_DIR)
+allIRQSectionSchemes = []
+foundIRQSectionScheme = False
+for root, dirs, files in os.walk (IRQ_SECTION_SCHEME_DIR) :
+  for name in dirs:
+    # print ("DIR " + name)
+    allIRQSectionSchemes.append (name)
+    if name == requiredIRQSectionScheme :
+      foundIRQSectionScheme = True
+#------------------------------ Has irq sections ?
+if (len (interruptSectionList) > 0) and (requiredIRQSectionScheme == "") :
+  s = "As the project defines section(s), the makefile.json file should have a \"SECTION-SCHEME\" "
+  s += "entry, possible associated value:\n"
+  for name in allIRQSectionSchemes :
+    s += "  - \"" + name + "\"\n"
+  print (BOLD_RED () + s +  ENDC ())
+  sys.exit (1)
+elif (not foundIRQSectionScheme) and (requiredIRQSectionScheme != "") :
+  s = "In the makefile.json file, the \"SECTION-SCHEME\" entry "
+  s += "value (\"" + requiredIRQSectionScheme + "\") is not implemented; "
+  s += "possible associated value:\n"
+  for name in allIRQSectionSchemes :
+    s += "  - \"" + name + "\"\n"
+  print (BOLD_RED () + s +  ENDC ())
+  sys.exit (1)
+#------------------------------ Generate irq sections
+if foundIRQSectionScheme and (requiredIRQSectionScheme != "") :
+  SELECTED_IRQ_SECTION_SCHEME_DIR = IRQ_SECTION_SCHEME_DIR + "/" + requiredIRQSectionScheme
+  #   print ("SELECTED_IRQ_SECTION_SCHEME_DIR : " + SELECTED_IRQ_SECTION_SCHEME_DIR)
+  sys.path.append (SELECTED_IRQ_SECTION_SCHEME_DIR)
+  import irq_section_generator
+  (cppCode, sCode) = irq_section_generator.buildSectionInterruptCode (interruptSectionList)
+  cppFile += cppCode
+  sFile += sCode
+#------------------------------ UNUSED INTERRUPTS --------------------------------------
+#------------------------------ Find all unused interrupt schemes
+UNUSED_IRQ_SCHEME_DIR = DEV_FILES_DIR + "/generators-unused-irq"
+# print ("UNUSED_IRQ_SCHEME_DIR " + UNUSED_IRQ_SCHEME_DIR)
+allUnusedInterruptSchemes = []
+foundUnusedInterruptScheme = False
+for root, dirs, files in os.walk (UNUSED_IRQ_SCHEME_DIR) :
+  for name in dirs:
+    # print ("DIR " + name)
+    allUnusedInterruptSchemes.append (name)
+    if name == unusedInterruptScheme :
+      foundUnusedInterruptScheme = True
+#------------------------------ Has unused interrupt(s) ?
+if (interruptDictionary) and (unusedInterruptScheme == "") :
+  s = "As the project defines unused interrupt(s), the makefile.json file should have a \"UNUSED-IRQ-SCHEME\" "
+  s += "entry, possible associated value:\n"
+  for name in allUnusedInterruptSchemes :
+    s += "  - \"" + name + "\"\n"
+  print (BOLD_RED () + s +  ENDC ())
+  sys.exit (1)
+elif (not foundUnusedInterruptScheme) and (unusedInterruptScheme != "") :
+  s = "In the makefile.json file, the \"UNUSED-IRQ-SCHEME\" entry "
+  s += "value (\"" + unusedInterruptScheme + "\") is not implemented; "
+  s += "possible associated value:\n"
+  for name in allUnusedInterruptSchemes :
+    s += "  - \"" + name + "\"\n"
+  print (BOLD_RED () + s +  ENDC ())
+  sys.exit (1)
+#------------------------------ Generate irq sections
+if foundUnusedInterruptScheme and (unusedInterruptScheme != "") :
+  SELECTED_UNUSED_IRQ_SCHEME_DIR = UNUSED_IRQ_SCHEME_DIR + "/" + unusedInterruptScheme
+  #   print ("SELECTED_UNUSED_IRQ_SCHEME_DIR : " + SELECTED_UNUSED_IRQ_SCHEME_DIR)
+  sys.path.append (SELECTED_UNUSED_IRQ_SCHEME_DIR)
+  import unused_irq_generator
+  (cppCode, sCode) = unused_irq_generator.buildUnusedInterruptCode (interruptDictionary)
+  cppFile += cppCode
+  sFile += sCode
+
+
+
+
+
+
+
 #------------------------------ Unused interrupts
-for unusedInterruptName in interruptDictionary.keys () :
-  sFile += asSeparator ()
-  sFile += "//   INTERRUPT - UNUSED: " + unusedInterruptName + "\n"
-  sFile += asSeparator () + "\n"
-  sFile += "  .section .text.interrupt." + unusedInterruptName + ", \"ax\", %progbits\n\n"
-  sFile += "  .align  1\n"
-  sFile += "  .type interrupt." + unusedInterruptName + ", %function\n"
-  sFile += "  .global interrupt." + unusedInterruptName + "\n\n"
-  sFile += "interrupt." + unusedInterruptName + ":\n"
-  sFile += "  movs r0, #" + str (interruptDictionary [unusedInterruptName]) + "\n"
-  sFile += "//----------------------------------------- Goto unused interrupt function\n"
-  sFile += "  ldr  r2, = unused.interrupt\n"
-  sFile += "  bx   r2\n\n"
+# for unusedInterruptName in interruptDictionary.keys () :
+#   sFile += asSeparator ()
+#   sFile += "//   INTERRUPT - UNUSED: " + unusedInterruptName + "\n"
+#   sFile += asSeparator () + "\n"
+#   sFile += "  .section .text.interrupt." + unusedInterruptName + ", \"ax\", %progbits\n\n"
+#   sFile += "  .align  1\n"
+#   sFile += "  .type interrupt." + unusedInterruptName + ", %function\n"
+#   sFile += "  .global interrupt." + unusedInterruptName + "\n\n"
+#   sFile += "interrupt." + unusedInterruptName + ":\n"
+#   sFile += "  movs r0, #" + str (interruptDictionary [unusedInterruptName]) + "\n"
+#   sFile += "//----------------------------------------- Goto unused interrupt function\n"
+#   sFile += "  ldr  r2, = unused.interrupt\n"
+#   sFile += "  bx   r2\n\n"
 #------------------------------ Write destination file
 sFile += asSeparator ()
 f = open (destinationAssemblerFile, "wt")
