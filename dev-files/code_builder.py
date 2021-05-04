@@ -9,7 +9,6 @@ import sys, os, subprocess, shutil, json
 import makefile
 import common_definitions
 import download_and_install_gccarm
-import dev_platform
 
 #---------------------------------------------------------------------------------------------------
 #   Run process and wait for termination
@@ -157,6 +156,10 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   unusedIRQScheme = ""
   if "UNUSED-IRQ-SCHEME" in dictionaire :
     unusedIRQScheme = dictionaire ["UNUSED-IRQ-SCHEME"]
+#--- DEPLOYMENT
+  selectedDeployments = []
+  if "DEPLOYMENT" in dictionaire :
+    selectedDeployments = dictionaire ["DEPLOYMENT"]
 #--------------------------------------------------------------------------- Directories
   BUILD_DIR = common_definitions.buildDirectory ()
   GENERATED_SOURCE_DIR = common_definitions.generatedSourceDirectory ()
@@ -357,9 +360,17 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   for name in os.listdir (TARGET_DIR + "/deployments") :
     if not name.startswith ('.') :
       deploymentSet.add (name)
+#--------------------------------------------------------------------- - Check selected deployments
+  for deployment in selectedDeployments :
+    if not deployment in deploymentSet :
+      s = "Invalid deployment \"" + deployment + "\"; possible values:\n"
+      for dep in deploymentSet :
+        s += "  - \"" + dep + "\"\n"
+      print (makefile.BOLD_RED () + s + makefile.ENDC ())
+      sys.exit (1)
 #--------------------------------------------------------------------------- Build deployment files
   runGoalDictionary = dict ()
-  for deployment in deploymentSet :
+  for deployment in selectedDeployments :
     runGoalDictionary ["run-" + deployment] = deployment
     LINKER_SCRIPT = TARGET_DIR + "/deployments/" + deployment + "/linker-script.ld"
     PRODUCT = PRODUCT_DIR + "/deployment-" + deployment
@@ -452,8 +463,8 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     makefile.runCommand (DISPLAY_OBJ_SIZE_TOOL + objectFileList + ["-t"], "Display Object Size", False, verbose)
 #---------------------------------------------------------------------------- "All" or "run"
   if GOAL == "all" :
-    for deploymentKey in runGoalDictionary.keys () :
-      deployment = runGoalDictionary [deploymentKey]
+    for deployment in selectedDeployments :
+#       deployment = runGoalDictionary [deploymentKey]
       PRODUCT = PRODUCT_DIR + "/deployment-" + deployment
       s = runProcessAndGetOutput (DISPLAY_OBJ_SIZE_TOOL + ["-t"] + [PRODUCT + ".elf"])
       secondLine = s.split('\n')[1]

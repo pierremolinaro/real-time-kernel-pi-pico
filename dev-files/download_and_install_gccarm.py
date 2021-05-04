@@ -9,7 +9,7 @@ import urllib
 
 import archive_directory
 import tool_directory
-import dev_platform
+import host_platform
 
 #---------------------------------------------------------------------------------------------------
 #   FOR PRINTING IN COLOR
@@ -34,7 +34,7 @@ class bcolors:
 
 def distributionGCC () :
   gcc = "gcc-arm-none-eabi-7-2017-q4-major"
-  if dev_platform.getPlatform () == "linux32" :
+  if host_platform.getPlatform () == "linux32" :
     gcc = "gcc-arm-none-eabi-5_4-2016q3"
   return gcc
 
@@ -44,9 +44,9 @@ def distributionGCC () :
 
 def compilerArchiveURL () :
   baseURL = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/"
-  PLATFORM = dev_platform.getPlatform ()
+  PLATFORM = host_platform.getPlatform ()
   distribution = "7-2017q4/gcc-arm-none-eabi-7-2017-q4-major-" + PLATFORM + ".tar.bz2"
-  if dev_platform.getPlatform () == "linux32" :
+  if host_platform.getPlatform () == "linux32" :
     distribution = "5_4-2016q3/gcc-arm-none-eabi-5_4-2016q3-20160926-linux.tar.bz2"
   return baseURL + distribution
 

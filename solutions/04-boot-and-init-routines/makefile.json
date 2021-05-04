@@ -1,5 +1,7 @@
 { "TARGET" : "RP2040",
 
+  "DEPLOYMENT" : ["flash"],
+
   "SOURCE-DIR" : ["sources"],
 
   "SOURCES-IN-DEV-DIR" : ["sources-common"],

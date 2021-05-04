@@ -5,11 +5,11 @@
 
 import os, subprocess, sys
 import urllib
+
 #---------------------------------------------------------------------------------------------------
 
 import archive_directory
 import tool_directory
-import dev_platform
 
 #---------------------------------------------------------------------------------------------------
 #   FOR PRINTING IN COLOR
