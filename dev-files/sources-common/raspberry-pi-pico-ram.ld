@@ -31,6 +31,7 @@ SECTIONS {
     *(.rel.*);
     *(.igot.plt);
     *(rel.ARM.*);
+    *(.boot2) ;
   }
 }
 
@@ -40,13 +41,14 @@ SECTIONS {
 /*                                                                                                */
 /*------------------------------------------------------------------------------------------------*/
 
+ENTRY(ram.entry.point)
+
 SECTIONS {
   .text : {
-  /*-------------------- BOOT2 */
-    __boot2_start__ = . ;
-    KEEP (*(.boot2)) ;
-    __boot2_end__ = . ;
+  /*-------------------- Entry point in RAM should be at the beginning of the RAM */
+    KEEP (*(.reset.in.ram)) ;
   /*-------------------- Vectors */
+    . = ALIGN (256) ;
     __vectors_start_cpu_0 = . ;
     KEEP (*(isr.vectors.cpu.0)) ;
     __vectors_end_cpu_0 = . ;
@@ -98,9 +100,6 @@ SECTIONS {
 }
 
 /*------------------------------------------------------------------------------------------------*/
-
-ASSERT ((__boot2_end__ - __boot2_start__) == 256,
-         "ERROR: Pico second stage bootloader must be 256 bytes in size")
 
 ASSERT ((__vectors_start_cpu_0 % 256) == 0,
          "ERROR: vector table of cpu 0 must be 256-byte aligned")
