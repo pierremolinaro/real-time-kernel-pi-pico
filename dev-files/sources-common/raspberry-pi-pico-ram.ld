@@ -5,8 +5,7 @@
 /*------------------------------------------------------------------------------------------------*/
 
 MEMORY {
-  flash       (rx)  : ORIGIN = 0x10000000, LENGTH = 2048k
-  global_vars (rwx) : ORIGIN = 0x20000000, LENGTH = 128k
+  code_global_vars (rwx) : ORIGIN = 0x20000000, LENGTH = 128k
   heap        (rwx) : ORIGIN = 0x20000000 + 128k, LENGTH = 128k
   SRAM4       (rwx) : ORIGIN = 0x20040000, LENGTH = 4k
   SRAM5       (rwx) : ORIGIN = 0x20041000, LENGTH = 4k
@@ -51,6 +50,14 @@ SECTIONS {
     __vectors_start_cpu_0 = . ;
     KEEP (*(isr.vectors.cpu.0)) ;
     __vectors_end_cpu_0 = . ;
+  /*-------------------- BSS */
+    . = ALIGN(4);
+    __bss_start = . ;
+    * (.bss*) ;
+    . = ALIGN(4);
+    * (COMMON) ;
+    . = ALIGN(4);
+    __bss_end = . ;
   /*-------------------- Code */
     __code_start = . ;
     . = ALIGN(4) ;
@@ -87,7 +94,7 @@ SECTIONS {
     . = ALIGN(4);
   /*-------------------- End */
     __code_end = . ;
-  } > flash
+  } > code_global_vars
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -100,24 +107,6 @@ ASSERT ((__vectors_start_cpu_0 % 256) == 0,
 
 /*------------------------------------------------------------------------------------------------*/
 /*                                                                                                */
-/*                          BSS (uninitialized data)                                              */
-/*                                                                                                */
-/*------------------------------------------------------------------------------------------------*/
-
-SECTIONS {
-  .bss : {
-    . = ALIGN(4);
-    __bss_start = . ;
-    * (.bss*) ;
-    . = ALIGN(4);
-    * (COMMON) ;
-    . = ALIGN(4);
-    __bss_end = . ;
-  } > global_vars
-}
-
-/*------------------------------------------------------------------------------------------------*/
-/*                                                                                                */
 /*                          Data (initialized data)                                               */
 /*                                                                                                */
 /*------------------------------------------------------------------------------------------------*/
@@ -127,21 +116,9 @@ SECTIONS {
     . = ALIGN (4) ;
     __data_start = . ;
     * (.data*) ;
-  /*-------------------- Teensy CAN 0 receive ports */
-    . = ALIGN (4) ;
-    __teensy_can0_receive_ports_array_start = . ;
-    * (teensy.CAN0.receive.ports.section) ;
-    . = ALIGN (4) ;
-    __teensy_can0_receive_ports_array_end = . ;
-  /*-------------------- Teensy CAN 1 receive ports */
-    . = ALIGN (4) ;
-    __teensy_can1_receive_ports_array_start = . ;
-    * (teensy.CAN1.receive.ports.section) ;
-    . = ALIGN (4) ;
-    __teensy_can1_receive_ports_array_end = . ;
     . = ALIGN (4) ;
     __data_end = . ;
-  } > global_vars
+  } > code_global_vars
 }
 
 

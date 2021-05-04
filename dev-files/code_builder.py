@@ -77,6 +77,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
 #--------------------------------------------------------------------------- Install compiler ?
   BASE_NAME = "arm-none-eabi"
   TOOL_DIR = download_and_install_gccarm.installGCCARMandGetToolDirectory ()
+#--------------------------------------------------------------------------- Configure compiler
   AS_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-as", "-mthumb", "-mcpu=cortex-m0plus"]
   COMPILER_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-gcc", "-mthumb", "-mcpu=cortex-m0plus"]
   LD_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-ld"]
@@ -89,52 +90,54 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
 #--------------------------------------------------------------------------- Analyze JSON file
   print (makefile.BOLD_GREEN () + "--- Making " + projectDir + makefile.ENDC ())
   dictionaire = dictionaryFromJsonFile (projectDir + "/makefile.json")
+#   print ("JSON DICTIONARY: ")
+#   print (dictionaire)
 #--- PLATFORM
   linkerScript = "sources-common/raspberry-pi-pico-flash.ld"
   platformName = "RASPBERRY_PI_PICO"
-#--- ASSERTION_GENERATION
-  ASSERTION_GENERATION = False
-  if dictionaire.has_key ("ASSERTION-GENERATION") and dictionaire ["ASSERTION-GENERATION"] :
-    ASSERTION_GENERATION = True
 #--- CPU_MHZ
   CPU_MHZ = 0
-  if dictionaire.has_key ("CPU-MHZ") :
+  if "CPU-MHZ" in dictionaire:
     CPU_MHZ = dictionaire ["CPU-MHZ"]
+#--- ASSERTION_GENERATION
+  ASSERTION_GENERATION = False
+  if "ASSERTION-GENERATION" in dictionaire :
+    ASSERTION_GENERATION = dictionaire ["ASSERTION-GENERATION"]
 #--- SOURCE_FILE_DIRECTORIES
   SOURCE_FILE_DIRECTORIES = []
-  if dictionaire.has_key ("SOURCE-DIR") :
+  if "SOURCE-DIR" in dictionaire :
     SOURCE_FILE_DIRECTORIES = dictionaire ["SOURCE-DIR"]
-  if dictionaire.has_key ("SOURCES-IN-DEV-DIR") :
+  if "SOURCES-IN-DEV-DIR" in dictionaire :
     sourcesInDevDir = dictionaire ["SOURCES-IN-DEV-DIR"]
     for d in sourcesInDevDir :
       SOURCE_FILE_DIRECTORIES.append (DEV_FILES_DIR + "/" + d)
 #--- GROUP_SOURCES
   GROUP_SOURCES = False
-  if dictionaire.has_key ("GROUP-SOURCES") :
+  if "GROUP-SOURCES" in dictionaire:
     GROUP_SOURCES = dictionaire ["GROUP-SOURCES"]
 #--- TASK_COUNT
   TASK_COUNT = "0" # Means TASK_COUNT is not defined by JSON file
-  if dictionaire.has_key ("TASK-COUNT") :
+  if "TASK-COUNT" in dictionaire :
     TASK_COUNT = str (dictionaire ["TASK-COUNT"])
 #--- LTO
   usesLTO = False
-  if dictionaire.has_key ("LTO") and dictionaire ["LTO"] :
-    usesLTO = True
+  if "LTO" in dictionaire :
+    usesLTO = dictionaire ["LTO"]
 #--- SERVICE
   serviceScheme = ""
-  if dictionaire.has_key ("SERVICE-SCHEME") :
+  if "SERVICE-SCHEME" in dictionaire :
     serviceScheme = dictionaire ["SERVICE-SCHEME"]
 #--- SECTION
   sectionScheme = ""
-  if dictionaire.has_key ("SECTION-SCHEME") :
+  if "SECTION-SCHEME" in dictionaire :
     sectionScheme = dictionaire ["SECTION-SCHEME"]
 #--- IRQ SECTION
   irqSectionScheme = ""
-  if dictionaire.has_key ("IRQ-SECTION-SCHEME") :
+  if "IRQ-SECTION-SCHEME" in dictionaire :
     irqSectionScheme = dictionaire ["IRQ-SECTION-SCHEME"]
 #--- UNUSED IRQ
   unusedIRQScheme = ""
-  if dictionaire.has_key ("UNUSED-IRQ-SCHEME") :
+  if "UNUSED-IRQ-SCHEME" in dictionaire :
     unusedIRQScheme = dictionaire ["UNUSED-IRQ-SCHEME"]
 #--------------------------------------------------------------------------- Directories
   BUILD_DIR = common_definitions.buildDirectory ()
@@ -374,6 +377,8 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   rule.mDependences.append (PRODUCT_FLASH + ".elf")
   rule.mDependences.append ("makefile.json")
   rule.mCommand.append (ELF2UF2_TOOL_PATH)
+  if showCommand :
+    rule.mCommand.append ("-v")
   rule.mCommand.append (PRODUCT_FLASH + ".elf")
   rule.mCommand.append (PRODUCT_FLASH + ".uf2")
   make.addRule (rule)

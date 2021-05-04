@@ -36,7 +36,7 @@ def runCommand (cmd) :
   str = "+"
   for s in cmd:
     str += " " + s
-  print bcolors.BOLD_BLUE + str + bcolors.ENDC
+  print (bcolors.BOLD_BLUE + str + bcolors.ENDC)
   returncode = subprocess.call (cmd)
   if returncode != 0 :
     sys.exit (returncode)
@@ -47,7 +47,7 @@ def runCommand (cmd) :
 
 def downloadArchive (archiveURL, archivePath):
   print ("URL: "+ archiveURL)
-  print "Downloading..."
+  print ("Downloading...")
   runCommand (["curl", "--fail", "-L", archiveURL, "-o", archivePath])
 
 #---------------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ def downloadArchive (archiveURL, archivePath):
 #---------------------------------------------------------------------------------------------------
 
 def install_elf2uf2 (TOOL_DIR, TOOL_NAME) :
-  print bcolors.BOLD_GREEN + "Installing elf2uf2..." + bcolors.ENDC
+  print (bcolors.BOLD_GREEN + "Installing elf2uf2..." + bcolors.ENDC)
   #------------------------------------------------------------------ Archive dir
   COMPILER_ARCHIVE_DIR = archive_directory.createAndGetArchiveDirectory ()
   PICO_SDK = "pico-sdk-master"
