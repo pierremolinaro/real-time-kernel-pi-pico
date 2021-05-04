@@ -44,7 +44,7 @@ def runProcessAndGetOutput (command) :
   return result
 
 #---------------------------------------------------------------------------------------------------
-#   dictionaryFromJsonFile                                                                                             *
+#   dictionaryFromJsonFile
 #---------------------------------------------------------------------------------------------------
 
 def dictionaryFromJsonFile (file) :
@@ -66,7 +66,7 @@ def dictionaryFromJsonFile (file) :
 #   buildCode
 #---------------------------------------------------------------------------------------------------
 
-def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
+def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   DEV_FILES_DIR = os.path.dirname (os.path.realpath (__file__))
 #   print ("DEV_FILES_DIR: " + DEV_FILES_DIR)
 #--------------------------------------------------------------------------- Prepare
@@ -74,6 +74,32 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   make = makefile.Make (GOAL)
 #   make.mMacTextEditor = "BBEdit" # "Atom"
   allGoal = []
+#--------------------------------------------------------------------------- Analyze JSON file
+  print (makefile.BOLD_GREEN () + "--- Making " + projectDir + makefile.ENDC ())
+  dictionaire = dictionaryFromJsonFile (projectDir + "/makefile.json")
+#   print ("JSON DICTIONARY: ")
+#   print (dictionaire)
+#--------------------------------------------------------------------------- Find target
+  targetNameSet = set ()
+  foundIRQSectionScheme = False
+  for name in os.listdir (DEV_FILES_DIR + "/targets") :
+    if not name.startswith ('.') :
+      targetNameSet.add (name)
+  if not "TARGET" in dictionaire:
+    s = "\"TARGET\" is not defined in the makefile.json file; possible values:\n"
+    for target in targetNameSet :
+      s += "  -  \"" + target + "\"\n"
+    print (makefile.BOLD_RED () + s + makefile.ENDC ())
+    sys.exit (1)
+  targetName = dictionaire ["TARGET"]
+  if not targetName in targetNameSet :
+    s = "In the makefile.json file, \"TARGET\" value \"" + targetName + "\" is invalid; "
+    s += "possible values:\n"
+    for target in targetNameSet :
+      s += "  -  \"" + target + "\"\n"
+    print (makefile.BOLD_RED () + s + makefile.ENDC ())
+    sys.exit (1)
+  TARGET_DIR = DEV_FILES_DIR + "/targets/" + targetName
 #--------------------------------------------------------------------------- Install compiler ?
   BASE_NAME = "arm-none-eabi"
   TOOL_DIR = download_and_install_gccarm.installGCCARMandGetToolDirectory ()
@@ -87,14 +113,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   OBJDUMP_TOOL = TOOL_DIR + "/bin/" + BASE_NAME + "-objdump"
 #--------------------------------------------------------------------------- Install elf2uf2 ?
   ELF2UF2_TOOL_PATH = download_and_install_elf_to_uf2.compile_install_elf2uf2 ()
-#--------------------------------------------------------------------------- Analyze JSON file
-  print (makefile.BOLD_GREEN () + "--- Making " + projectDir + makefile.ENDC ())
-  dictionaire = dictionaryFromJsonFile (projectDir + "/makefile.json")
-#   print ("JSON DICTIONARY: ")
-#   print (dictionaire)
-#--- PLATFORM
-  linkerScript = "sources-common/raspberry-pi-pico-flash.ld"
-  platformName = "RASPBERRY_PI_PICO"
+#--------------------------------------------------------------------------- Parse JSON dictinary
 #--- CPU_MHZ
   CPU_MHZ = 0
   if "CPU-MHZ" in dictionaire:
@@ -103,14 +122,15 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   ASSERTION_GENERATION = False
   if "ASSERTION-GENERATION" in dictionaire :
     ASSERTION_GENERATION = dictionaire ["ASSERTION-GENERATION"]
-#--- SOURCE_FILE_DIRECTORIES
+#--- USER SOURCE_FILE_DIRECTORIES
   SOURCE_FILE_DIRECTORIES = []
   if "SOURCE-DIR" in dictionaire :
     SOURCE_FILE_DIRECTORIES = dictionaire ["SOURCE-DIR"]
+#--- SYSTEM SOURCE_FILE_DIRECTORIES
   if "SOURCES-IN-DEV-DIR" in dictionaire :
     sourcesInDevDir = dictionaire ["SOURCES-IN-DEV-DIR"]
     for d in sourcesInDevDir :
-      SOURCE_FILE_DIRECTORIES.append (DEV_FILES_DIR + "/" + d)
+      SOURCE_FILE_DIRECTORIES.append (TARGET_DIR + "/" + d)
 #--- GROUP_SOURCES
   GROUP_SOURCES = False
   if "GROUP-SOURCES" in dictionaire:
@@ -171,7 +191,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   rule = makefile.Rule ([baseHeader_file], "Build base header file")
   rule.mOpenSourceOnError = False
   rule.mDependences.append ("makefile.json")
-  rule.mCommand += [DEV_FILES_DIR + "/build_base_header_file.py", baseHeader_file, str (CPU_MHZ), TASK_COUNT, platformName, "1" if ASSERTION_GENERATION else "0"]
+  rule.mCommand += [DEV_FILES_DIR + "/build_base_header_file.py", baseHeader_file, str (CPU_MHZ), TASK_COUNT, targetName, "1" if ASSERTION_GENERATION else "0"]
   rule.mPriority = -1
   make.addRule (rule)
 #--------------------------------------------------------------------------- Build all header file
@@ -197,6 +217,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   rule.mDependences.append ("makefile.json")
   rule.mDependences.append (DEV_FILES_DIR + "/build_interrupt_handlers.py")
   rule.mCommand += [DEV_FILES_DIR + "/build_interrupt_handlers.py"]
+  rule.mCommand += [TARGET_DIR]
   rule.mCommand += [interruptHandlerCppFile]
   rule.mCommand += [interruptHandlerSFile]
   rule.mCommand += [serviceScheme]
@@ -333,22 +354,56 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
       rule.mDependences.append ("makefile.json")
       make.addRule (rule)
       asObjectFileList.append (listingFile)
-#--------------------------------------------------------------------------- Link for internal flash
-  PRODUCT_FLASH = PRODUCT_DIR + "/product"
-  LINKER_SCRIPT_INTERNAL_FLASH = DEV_FILES_DIR + "/" + linkerScript
-  allGoal.append (PRODUCT_FLASH + ".elf")
-#--- Add link rule
-  rule = makefile.Rule ([PRODUCT_FLASH + ".elf"], "Linking " + PRODUCT_FLASH + ".elf")
-  rule.mDependences += objectFileList
-  rule.mDependences.append (LINKER_SCRIPT_INTERNAL_FLASH)
-  rule.mDependences.append ("makefile.json")
-  rule.mCommand += LD_TOOL_WITH_OPTIONS
-  rule.mCommand += objectFileList
-  rule.mCommand += ["-T" + LINKER_SCRIPT_INTERNAL_FLASH]
-  rule.mCommand.append ("-Wl,-Map=" + PRODUCT_FLASH + ".map")
-  rule.mCommand += common_definitions.commonLinkerFlags (usesLTO)
-  rule.mCommand += ["-o", PRODUCT_FLASH + ".elf"]
-  make.addRule (rule)
+#--------------------------------------------------------------------------- Enumerate deployments
+  deploymentSet = set ()
+  for name in os.listdir (TARGET_DIR + "/deployments") :
+    if not name.startswith ('.') :
+      deploymentSet.add (name)
+#--------------------------------------------------------------------------- Build deployment files
+  runGoalDictionary = dict ()
+  for deployment in deploymentSet :
+    runGoalDictionary ["run-" + deployment] = deployment
+    LINKER_SCRIPT = TARGET_DIR + "/deployments/" + deployment + "/linker-script.ld"
+    PRODUCT = PRODUCT_DIR + "/deployment-" + deployment
+    allGoal.append (PRODUCT + ".elf")
+  #--- Add link rule
+    rule = makefile.Rule ([PRODUCT + ".elf"], "Linking " + PRODUCT + ".elf")
+    rule.mDependences += objectFileList
+    rule.mDependences.append (LINKER_SCRIPT)
+    rule.mDependences.append ("makefile.json")
+    rule.mCommand += LD_TOOL_WITH_OPTIONS
+    rule.mCommand += objectFileList
+    rule.mCommand += ["-T" + LINKER_SCRIPT]
+    rule.mCommand.append ("-Wl,-Map=" + PRODUCT + ".map")
+    rule.mCommand += common_definitions.commonLinkerFlags (usesLTO)
+    rule.mCommand += ["-o", PRODUCT + ".elf"]
+    make.addRule (rule)
+    make.addGoal ("run-" + deployment, allGoal, "Building " + deployment + " deployment and run")
+  #--- Add deployment rules
+    sys.path.append (TARGET_DIR + "/deployments/" + deployment + "/")
+    import deployment_rules
+    deployment_rules = reload (deployment_rules)
+    (goal, rule) = deployment_rules.buildDeployment (PRODUCT, verbose)
+    allGoal.append (goal)
+    make.addRule (rule)
+    sys.path.pop ()
+  #--- Write deployment script
+    pythonScriptFilePath = projectDir + "/2-run-" + deployment + "-via-usb.py"
+    if not os.path.exists (pythonScriptFilePath) :
+      f = open (DEV_FILES_DIR + "/deployment-script.py.txt", "r")
+      genericScript = f.read ()
+      f.close ()
+      pythonScriptContents = genericScript.replace ("DEPLOYMENT", "run-" + deployment)
+      f = open (pythonScriptFilePath, "wt")
+      f.write (pythonScriptContents)
+      f.close ()
+      #---
+      mode = os.stat(pythonScriptFilePath).st_mode
+      # print (mode)
+      mode += 0o0100 # Add execute permission
+      # print (mode)
+      os.chmod (pythonScriptFilePath, mode)
+
 #--- Add hex rule
 #   allGoal.append (PRODUCT_FLASH + ".hex")
 #   rule = makefile.Rule ([PRODUCT_FLASH + ".hex"], "Hexing " + PRODUCT_FLASH + ".hex")
@@ -372,19 +427,18 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
 #   rule.mCommand.append (PRODUCT_FLASH + ".bin")
 #   make.addRule (rule)
 #--- Add uf2 rule
-  allGoal.append (PRODUCT_FLASH + ".uf2")
-  rule = makefile.Rule ([PRODUCT_FLASH + ".uf2"], "Converting elf to UF2 " + PRODUCT_FLASH + ".elf")
-  rule.mDependences.append (PRODUCT_FLASH + ".elf")
-  rule.mDependences.append ("makefile.json")
-  rule.mCommand.append (ELF2UF2_TOOL_PATH)
-  if showCommand :
-    rule.mCommand.append ("-v")
-  rule.mCommand.append (PRODUCT_FLASH + ".elf")
-  rule.mCommand.append (PRODUCT_FLASH + ".uf2")
-  make.addRule (rule)
+#   allGoal.append (PRODUCT_FLASH + ".uf2")
+#   rule = makefile.Rule ([PRODUCT_FLASH + ".uf2"], "Converting elf to UF2 " + PRODUCT_FLASH + ".elf")
+#   rule.mDependences.append (PRODUCT_FLASH + ".elf")
+#   rule.mDependences.append ("makefile.json")
+#   rule.mCommand.append (ELF2UF2_TOOL_PATH)
+#   if verbose :
+#     rule.mCommand.append ("-v")
+#   rule.mCommand.append (PRODUCT_FLASH + ".elf")
+#   rule.mCommand.append (PRODUCT_FLASH + ".uf2")
+#   make.addRule (rule)
 #--------------------------------------------------------------------------- Goals
   make.addGoal ("all", allGoal, "Build all")
-  make.addGoal ("run", allGoal, "Building all and run")
   make.addGoal ("view-hex", allGoal, "Building all and show hex")
   make.addGoal ("display-obj-size", allGoal, "Build binaries and display object sizes")
   make.addGoal ("as", asObjectFileList, "Compile C and C++ to assembly")
@@ -392,29 +446,32 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, showCommand):
   #make.printRules ()
   #make.checkRules ()
 #   make.writeRuleDependancesInDotFile ("dependances.dot")
-  make.runGoal (maxConcurrentJobs, showCommand)
+  make.runGoal (maxConcurrentJobs, verbose)
 #--------------------------------------------------------------------------- Ok ?
   make.printErrorCountAndExitOnError ()
 #---------------------------------------------------------------------------- "display-obj-size"
   if GOAL == "display-obj-size" :
-    makefile.runCommand (DISPLAY_OBJ_SIZE_TOOL + objectFileList + ["-t"], "Display Object Size", False, showCommand)
+    makefile.runCommand (DISPLAY_OBJ_SIZE_TOOL + objectFileList + ["-t"], "Display Object Size", False, verbose)
 #---------------------------------------------------------------------------- "All" or "run"
-  if (GOAL == "all") or (GOAL == "run") or (GOAL == "view-hex") :
-    s = runProcessAndGetOutput (DISPLAY_OBJ_SIZE_TOOL + ["-t"] + [PRODUCT_FLASH + ".elf"])
-    secondLine = s.split('\n')[1]
-    numbers = [int(s) for s in secondLine.split() if s.isdigit()]
-    print ("  ROM code:    " + str (numbers [0]) + " bytes")
-    print ("  ROM data:    " + str (numbers [1]) + " bytes")
-    print ("  RAM + STACK: " + str (numbers [2]) + " bytes")
-#----------------------------------------------- Run ?
-  if GOAL == "run":
-    FLASH_PI_PICO = [DEV_FILES_DIR + "/uf2conv.py", "-d", "/dev/cu.usbmodem14301", "--deploy", PRODUCT_FLASH + ".uf2"]
-    print (makefile.BOLD_BLUE () + "Flashing Raspberry Pi Pico..." + makefile.ENDC ())
-    runProcess (FLASH_PI_PICO)
-    print (makefile.BOLD_GREEN () + "Success" + makefile.ENDC ())
-  elif GOAL == "view-hex":
-    print (makefile.BOLD_GREEN () + "View hex..." + makefile.ENDC ())
-    scriptDir = os.path.dirname (os.path.abspath (__file__))
-    runProcess (["python", scriptDir+ "/view-hex.py", PRODUCT_FLASH + ".hex"])
+  if GOAL == "all" :
+    for deploymentKey in runGoalDictionary.keys () :
+      deployment = runGoalDictionary [deploymentKey]
+      PRODUCT = PRODUCT_DIR + "/deployment-" + deployment
+      s = runProcessAndGetOutput (DISPLAY_OBJ_SIZE_TOOL + ["-t"] + [PRODUCT + ".elf"])
+      secondLine = s.split('\n')[1]
+      numbers = [int(s) for s in secondLine.split() if s.isdigit()]
+      print ("Deployment " + deployment + ":")
+      print ("  ROM code:    " + str (numbers [0]) + " bytes")
+      print ("  ROM data:    " + str (numbers [1]) + " bytes")
+      print ("  RAM + STACK: " + str (numbers [2]) + " bytes")
+#---------------------------------------------------------------------------- Run ?
+  if GOAL in runGoalDictionary.keys () :
+    deployment = runGoalDictionary [GOAL]
+    sys.path.append (TARGET_DIR + "/deployments/" + deployment)
+    import deployment_rules
+    deployment_rules = reload (deployment_rules)
+    PRODUCT = PRODUCT_DIR + "/deployment-" + deployment
+    DEPLOYMENT_HELPER_DIR = TARGET_DIR + "/deployment-helpers"
+    deployment_rules.performDeployment (DEPLOYMENT_HELPER_DIR, PRODUCT)
 
 #---------------------------------------------------------------------------------------------------

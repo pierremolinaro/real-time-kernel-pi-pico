@@ -41,23 +41,25 @@ def cppSeparator () :
 #------------------------------ Interrupt dictionary
 interruptDictionary = interrupt_names_raspberry_pi_pico.interruptNames ()
 # print "Dest " + destinationFile
+#------------------------------ Target directory
+targetDirectory = sys.argv [1]
 #------------------------------ Assembly destination file
-destinationCppFile = sys.argv [1]
+destinationCppFile = sys.argv [2]
 # print "Dest " + destinationAssemblerFile
 #------------------------------ Assembly destination file
-destinationAssemblerFile = sys.argv [2]
+destinationAssemblerFile = sys.argv [3]
 # print "Dest " + destinationAssemblerFile
 #------------------------------ Service scheme
-requiredServiceScheme = sys.argv [3]
+requiredServiceScheme = sys.argv [4]
 #------------------------------ Section scheme
-requiredSectionScheme = sys.argv [4]
+requiredSectionScheme = sys.argv [5]
 #------------------------------ IRQ Section scheme
-requiredIRQSectionScheme = sys.argv [5]
+requiredIRQSectionScheme = sys.argv [6]
 #------------------------------ Unused Interrupt scheme
-unusedInterruptScheme = sys.argv [6]
+unusedInterruptScheme = sys.argv [7]
 #------------------------------ Header files
 headerFiles = []
-for i in range (7, len (sys.argv)):
+for i in range (8, len (sys.argv)):
   headerFiles.append (sys.argv [i])
 #print headerFiles
 #------------------------------ Destination file string
@@ -106,9 +108,9 @@ for header in headerFiles:
         sectionName = splitStr [1].strip ()
         sectionList.append (sectionName)
 #------------------------------ SERVICES -----------------------------------------------
-DEV_FILES_DIR = os.path.dirname (os.path.realpath (__file__))
+# DEV_FILES_DIR = os.path.dirname (os.path.realpath (__file__))
 #------------------------------ Find all section schemes
-SERVICE_SCHEME_DIR = DEV_FILES_DIR + "/generators-service"
+SERVICE_SCHEME_DIR = targetDirectory + "/generators-service"
 # print ("SERVICE_SCHEME_DIR " + SERVICE_SCHEME_DIR)
 allServiceSchemes = []
 foundServiceScheme = False
@@ -145,7 +147,7 @@ if foundServiceScheme and (requiredServiceScheme != "") :
   sFile += sCode
 #------------------------------ SECTION ------------------------------------------------
 #------------------------------ Find all section schemes
-SECTION_SCHEME_DIR = DEV_FILES_DIR + "/generators-section"
+SECTION_SCHEME_DIR = targetDirectory + "/generators-section"
 # print ("SECTION_SCHEME_DIR " + SECTION_SCHEME_DIR)
 allSectionSchemes = []
 foundSectionScheme = False
@@ -182,7 +184,7 @@ if foundSectionScheme and (requiredSectionScheme != "") :
   sFile += sCode
 #------------------------------ INTERRUPTS AS SECTION ----------------------------------
 #------------------------------ Find all irq section schemes
-IRQ_SECTION_SCHEME_DIR = DEV_FILES_DIR + "/generators-irq-section"
+IRQ_SECTION_SCHEME_DIR = targetDirectory + "/generators-irq-section"
 # print ("IRQ_SECTION_SCHEME_DIR " + IRQ_SECTION_SCHEME_DIR)
 allIRQSectionSchemes = []
 foundIRQSectionScheme = False
@@ -219,7 +221,7 @@ if foundIRQSectionScheme and (requiredIRQSectionScheme != "") :
   sFile += sCode
 #------------------------------ UNUSED INTERRUPTS --------------------------------------
 #------------------------------ Find all unused interrupt schemes
-UNUSED_IRQ_SCHEME_DIR = DEV_FILES_DIR + "/generators-unused-irq"
+UNUSED_IRQ_SCHEME_DIR = targetDirectory + "/generators-unused-irq"
 # print ("UNUSED_IRQ_SCHEME_DIR " + UNUSED_IRQ_SCHEME_DIR)
 allUnusedInterruptSchemes = []
 foundUnusedInterruptScheme = False

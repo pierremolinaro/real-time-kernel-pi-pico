@@ -1,4 +1,6 @@
-{ "SOURCE-DIR" : ["sources"],
+{ "TARGET" : "RP2040",
+
+  "SOURCE-DIR" : ["sources"],
 
   "SOURCES-IN-DEV-DIR" : ["sources-common", "sources-digital-io"],
 
