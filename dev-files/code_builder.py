@@ -9,7 +9,6 @@ import sys, os, subprocess, shutil, json
 import makefile
 import common_definitions
 import download_and_install_gccarm
-import download_and_install_elf_to_uf2
 import dev_platform
 
 #---------------------------------------------------------------------------------------------------
@@ -100,6 +99,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     print (makefile.BOLD_RED () + s + makefile.ENDC ())
     sys.exit (1)
   TARGET_DIR = DEV_FILES_DIR + "/targets/" + targetName
+  sys.path.append (TARGET_DIR + "/helpers")
 #--------------------------------------------------------------------------- Install compiler ?
   BASE_NAME = "arm-none-eabi"
   TOOL_DIR = download_and_install_gccarm.installGCCARMandGetToolDirectory ()
@@ -111,8 +111,6 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   OBJCOPY_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-objcopy"]
   DISPLAY_OBJ_SIZE_TOOL = [TOOL_DIR + "/bin/" + BASE_NAME + "-size"]
   OBJDUMP_TOOL = TOOL_DIR + "/bin/" + BASE_NAME + "-objdump"
-#--------------------------------------------------------------------------- Install elf2uf2 ?
-  ELF2UF2_TOOL_PATH = download_and_install_elf_to_uf2.compile_install_elf2uf2 ()
 #--------------------------------------------------------------------------- Parse JSON dictinary
 #--- CPU_MHZ
   CPU_MHZ = 0
@@ -206,7 +204,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   rule.enterSecondaryDependanceFile (allHeadersSecondaryDependenceFile, make)
   rule.mPriority = -1
   make.addRule (rule)
-#--------------------------------------------------------------------------- Build interrupt handler files
+#--------------------------------------------------------------   --- Build interrupt handler files
   interruptHandlerSFile = GENERATED_SOURCE_DIR + "/interrupt-handlers-assembly.s"
   interruptHandlerCppFile = GENERATED_SOURCE_DIR + "/interrupt-handlers-cpp.cpp"
   S_SOURCE_LIST.append (interruptHandlerSFile)
@@ -380,7 +378,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     make.addRule (rule)
     make.addGoal ("run-" + deployment, allGoal, "Building " + deployment + " deployment and run")
   #--- Add deployment rules
-    sys.path.append (TARGET_DIR + "/deployments/" + deployment + "/")
+    sys.path.append (TARGET_DIR + "/deployments/" + deployment)
     import deployment_rules
     deployment_rules = reload (deployment_rules)
     (goal, rule) = deployment_rules.buildDeployment (PRODUCT, verbose)
@@ -398,7 +396,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
       f.write (pythonScriptContents)
       f.close ()
       #---
-      mode = os.stat(pythonScriptFilePath).st_mode
+      mode = os.stat (pythonScriptFilePath).st_mode
       # print (mode)
       mode += 0o0100 # Add execute permission
       # print (mode)
@@ -471,7 +469,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     import deployment_rules
     deployment_rules = reload (deployment_rules)
     PRODUCT = PRODUCT_DIR + "/deployment-" + deployment
-    DEPLOYMENT_HELPER_DIR = TARGET_DIR + "/deployment-helpers"
+    DEPLOYMENT_HELPER_DIR = TARGET_DIR + "/helpers"
     deployment_rules.performDeployment (DEPLOYMENT_HELPER_DIR, PRODUCT)
 
 #---------------------------------------------------------------------------------------------------

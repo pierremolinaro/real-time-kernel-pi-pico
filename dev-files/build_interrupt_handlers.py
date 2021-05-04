@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 #---------------------------------------------------------------------------------------------------
 
-import sys, os, interrupt_names_raspberry_pi_pico
+import sys, os
 
 #---------------------------------------------------------------------------------------------------
 
@@ -38,9 +38,6 @@ def cppSeparator () :
 #    ENTRY POINT
 #---------------------------------------------------------------------------------------------------
 
-#------------------------------ Interrupt dictionary
-interruptDictionary = interrupt_names_raspberry_pi_pico.interruptNames ()
-# print "Dest " + destinationFile
 #------------------------------ Target directory
 targetDirectory = sys.argv [1]
 #------------------------------ Assembly destination file
@@ -62,6 +59,12 @@ headerFiles = []
 for i in range (8, len (sys.argv)):
   headerFiles.append (sys.argv [i])
 #print headerFiles
+#------------------------------ Import interrupt_names
+HELPER_DIR = targetDirectory + "/helpers"
+sys.path.append (HELPER_DIR)
+import interrupt_names
+#------------------------------ Interrupt dictionary
+interruptDictionary = interrupt_names.interruptNames ()
 #------------------------------ Destination file string
 cppFile = "#include \"all-headers.h\"\n"
 sFile  = "  .syntax unified\n"
