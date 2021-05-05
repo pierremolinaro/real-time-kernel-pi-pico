@@ -436,12 +436,9 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
       print ("  RAM + STACK:      " + str (numbers [2]) + " bytes")
 #---------------------------------------------------------------------------- Run ?
   if GOAL in runGoalDictionary.keys () :
-    deployment = runGoalDictionary [GOAL]
-    sys.path.append (TARGET_DIR + "/deployments/" + deployment)
-    import deployment_rules
-    deployment_rules = reload (deployment_rules)
-    PRODUCT = PRODUCT_DIR + "/deployment-" + deployment
-    DEPLOYMENT_HELPER_DIR = TARGET_DIR + "/helpers"
-    deployment_rules.performDeployment (DEPLOYMENT_HELPER_DIR, PRODUCT)
+    selectedDeployment = runGoalDictionary [GOAL]
+    PRODUCT = PRODUCT_DIR + "/deployment-" + selectedDeployment
+    DEPLOYMENT_DIR = TARGET_DIR + "/deployment"
+    deployment.performDeployment (DEPLOYMENT_DIR, PRODUCT, selectedDeployment)
 
 #---------------------------------------------------------------------------------------------------

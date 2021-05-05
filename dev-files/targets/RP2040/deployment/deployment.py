@@ -31,9 +31,9 @@ def buildDeployment (PRODUCT, deployment, verbose):
 
 #---------------------------------------------------------------------------------------------------
 
-def performDeployment (DEPLOYMENT_HELPER_DIR, PRODUCT, deployment) :
+def performDeployment (DEPLOYMENT_DIR, PRODUCT, deployment) :
   DEPLOY_COMMAND = [
-    DEPLOYMENT_HELPER_DIR + "/uf2conv.py",
+    DEPLOYMENT_DIR + "/uf2conv.py",
     "-d", "/dev/cu.usbmodem14301",
     "--deploy", PRODUCT + ".uf2"
   ]
