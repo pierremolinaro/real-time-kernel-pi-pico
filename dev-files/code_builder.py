@@ -103,14 +103,19 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
 #--------------------------------------------------------------------------- Install compiler ?
   BASE_NAME = "arm-none-eabi"
   TOOL_DIR = download_and_install_gccarm.installGCCARMandGetToolDirectory ()
+#--------------------------------------------------------------------------- Target Dictionary
+  targetDictionary = dictionaryFromJsonFile (TARGET_DIR + "/helpers/target-parameters.json")
 #--------------------------------------------------------------------------- Configure compiler
-  AS_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-as", "-mthumb", "-mcpu=cortex-m0plus"]
-  COMPILER_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-gcc", "-mthumb", "-mcpu=cortex-m0plus"]
-  LD_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-ld"]
+  gccOptions = targetDictionary ["GCC-OPTIONS"]
+  AS_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-as"]
+  AS_TOOL_WITH_OPTIONS += gccOptions
+  COMPILER_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-gcc"]
+  COMPILER_TOOL_WITH_OPTIONS += gccOptions
+#   LD_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-ld"]
   LD_TOOL_WITH_OPTIONS = COMPILER_TOOL_WITH_OPTIONS
-  OBJCOPY_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-objcopy"]
+  # OBJCOPY_TOOL_WITH_OPTIONS = [TOOL_DIR + "/bin/" + BASE_NAME + "-objcopy"]
   DISPLAY_OBJ_SIZE_TOOL = [TOOL_DIR + "/bin/" + BASE_NAME + "-size"]
-  OBJDUMP_TOOL = TOOL_DIR + "/bin/" + BASE_NAME + "-objdump"
+#   OBJDUMP_TOOL = TOOL_DIR + "/bin/" + BASE_NAME + "-objdump"
 #--------------------------------------------------------------------------- Parse JSON dictinary
 #--- CPU_MHZ
   CPU_MHZ = 0
@@ -288,14 +293,14 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     make.addRule (rule)
     objectFileList.append (objectFile)
   #--- objdump python source
-    objdumpPythonFile = BUILD_DIR + "/" + source + ".objdump.py"
-    rule = makefile.Rule ([objdumpPythonFile], "Building " + source + ".objdump.py")
-    rule.mDependences.append (objectFile)
-    rule.mDependences.append ("makefile.json")
-    rule.mCommand += [DEV_FILES_DIR + "/build_objdump.py", OBJDUMP_TOOL, source, objdumpPythonFile]
-    rule.mPriority = -1
-    make.addRule (rule)
-    allGoal.append (objdumpPythonFile)
+#     objdumpPythonFile = BUILD_DIR + "/" + source + ".objdump.py"
+#     rule = makefile.Rule ([objdumpPythonFile], "Building " + source + ".objdump.py")
+#     rule.mDependences.append (objectFile)
+#     rule.mDependences.append ("makefile.json")
+#     rule.mCommand += [DEV_FILES_DIR + "/build_objdump.py", OBJDUMP_TOOL, source, objdumpPythonFile]
+#     rule.mPriority = -1
+#     make.addRule (rule)
+#     allGoal.append (objdumpPythonFile)
   #--- AS rule
     rule = makefile.Rule ([asObjectFile], "Compiling -> s " + source)
     rule.mOpenSourceOnError = False

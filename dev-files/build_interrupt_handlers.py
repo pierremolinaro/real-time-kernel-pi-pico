@@ -65,11 +65,13 @@ sys.path.append (HELPER_DIR)
 import interrupt_names
 #------------------------------ Interrupt dictionary
 interruptDictionary = interrupt_names.interruptNames ()
-#------------------------------ Destination file string
+#------------------------------ Assembly file contents
+assemblyHeaderFile = HELPER_DIR + "/assembly-header.s"
+f = open (assemblyHeaderFile, "r")
+sFile = f.read ()
+f.close ()
+#------------------------------ C++ file contents
 cppFile = "#include \"all-headers.h\"\n"
-sFile  = "  .syntax unified\n"
-sFile += "  .cpu cortex-m0plus\n"
-sFile += "  .thumb\n\n"
 #------------------------------ Explore header files
 interruptServiceList = []
 interruptSectionList = []

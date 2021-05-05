@@ -1,0 +1,3 @@
+{ "GCC-OPTIONS" : ["-mthumb", "-mcpu=cortex-m0plus"]
+
+}
