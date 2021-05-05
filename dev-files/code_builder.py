@@ -223,6 +223,14 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   rule.mDependences += H_SOURCE_LIST
   rule.mDependences.append ("makefile.json")
   rule.mDependences.append (DEV_FILES_DIR + "/build_interrupt_handlers.py")
+  if serviceScheme != "" :
+    rule.mDependences.append (TARGET_DIR + "/generators-service/" + serviceScheme + "/service_generator.py")
+  if sectionScheme != "" :
+    rule.mDependences.append (TARGET_DIR + "/generators-section/" + sectionScheme + "/section_generator.py")
+  if irqSectionScheme != "" :
+    rule.mDependences.append (TARGET_DIR + "/generators-irq-section/" + irqSectionScheme + "/irq_section_generator.py")
+  if unusedIRQScheme != "" :
+    rule.mDependences.append (TARGET_DIR + "/generators-unused-irq/" + unusedIRQScheme + "/unused_irq_generator.py")
   rule.mCommand += [DEV_FILES_DIR + "/build_interrupt_handlers.py"]
   rule.mCommand += [TARGET_DIR]
   rule.mCommand += [interruptHandlerCppFile]

@@ -148,7 +148,6 @@ static void consumerTask (USER_MODE) {
 
 static void displayTask (USER_MODE) {
   while (1) {
-    waitDuring (MODE_ 1000) ;
     gotoXY (MODE_ 0, 0) ;
     printUnsigned (MODE_ gProducerCount) ;
     gotoXY (MODE_ 10, 0) ;
@@ -162,6 +161,7 @@ static void displayTask (USER_MODE) {
     printUnsigned (MODE_ usedRAMByteCount ()) ;
     gotoXY (MODE_ 0, 3) ;
     printUnsigned (MODE_ freeRAMByteCount ()) ;
+    waitDuring (MODE_ 1000) ;
   }
 }
 
