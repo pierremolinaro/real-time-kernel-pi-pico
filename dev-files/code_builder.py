@@ -98,7 +98,8 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     print (makefile.BOLD_RED () + s + makefile.ENDC ())
     sys.exit (1)
   TARGET_DIR = DEV_FILES_DIR + "/targets/" + targetName
-  sys.path.append (TARGET_DIR + "/helpers")
+  sys.path.append (TARGET_DIR + "/deployment")
+  import deployment
 #--------------------------------------------------------------------------- Install compiler ?
   BASE_NAME = "arm-none-eabi"
   TOOL_DIR = download_and_install_gccarm.installGCCARMandGetToolDirectory ()
@@ -356,24 +357,22 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
       make.addRule (rule)
       asObjectFileList.append (listingFile)
 #--------------------------------------------------------------------------- Enumerate deployments
-  deploymentSet = set ()
-  for name in os.listdir (TARGET_DIR + "/deployments") :
-    if not name.startswith ('.') :
-      deploymentSet.add (name)
+  deploymentDictionary = deployment.deploymentDictionary ()
 #--------------------------------------------------------------------- - Check selected deployments
-  for deployment in selectedDeployments :
-    if not deployment in deploymentSet :
-      s = "Invalid deployment \"" + deployment + "\"; possible values:\n"
-      for dep in deploymentSet :
+  for selectedDeployment in selectedDeployments :
+    if not selectedDeployment in deploymentDictionary.keys () :
+      s = "Invalid deployment \"" + selectedDeployment + "\"; possible values:\n"
+      for dep in deploymentDictionary.keys () :
         s += "  - \"" + dep + "\"\n"
       print (makefile.BOLD_RED () + s + makefile.ENDC ())
       sys.exit (1)
 #--------------------------------------------------------------------------- Build deployment files
   runGoalDictionary = dict ()
-  for deployment in selectedDeployments :
-    runGoalDictionary ["run-" + deployment] = deployment
-    LINKER_SCRIPT = TARGET_DIR + "/deployments/" + deployment + "/linker-script.ld"
-    PRODUCT = PRODUCT_DIR + "/deployment-" + deployment
+  for selectedDeployment in selectedDeployments :
+    runGoalDictionary ["run-" + selectedDeployment] = selectedDeployment
+    linkerScript = deploymentDictionary [selectedDeployment]
+    LINKER_SCRIPT = TARGET_DIR + "/deployment/" + linkerScript
+    PRODUCT = PRODUCT_DIR + "/deployment-" + selectedDeployment
     allGoal.append (PRODUCT + ".elf")
   #--- Add link rule
     rule = makefile.Rule ([PRODUCT + ".elf"], "Linking " + PRODUCT + ".elf")
@@ -387,22 +386,19 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     rule.mCommand += common_definitions.commonLinkerFlags (usesLTO)
     rule.mCommand += ["-o", PRODUCT + ".elf"]
     make.addRule (rule)
-    make.addGoal ("run-" + deployment, allGoal, "Building " + deployment + " deployment and run")
+    make.addGoal ("run-" + selectedDeployment, allGoal, "Building " + selectedDeployment + " deployment and run")
   #--- Add deployment rules
-    sys.path.append (TARGET_DIR + "/deployments/" + deployment)
-    import deployment_rules
-    deployment_rules = reload (deployment_rules)
-    (goal, rule) = deployment_rules.buildDeployment (PRODUCT, verbose)
+    (goal, rule) = deployment.buildDeployment (PRODUCT, selectedDeployment, verbose)
     allGoal.append (goal)
     make.addRule (rule)
-    sys.path.pop ()
+#     sys.path.pop ()
   #--- Write deployment script
-    pythonScriptFilePath = projectDir + "/2-run-" + deployment + "-via-usb.py"
+    pythonScriptFilePath = projectDir + "/2-run-" + selectedDeployment + "-via-usb.py"
     if not os.path.exists (pythonScriptFilePath) :
       f = open (DEV_FILES_DIR + "/deployment-script.py.txt", "r")
       genericScript = f.read ()
       f.close ()
-      pythonScriptContents = genericScript.replace ("DEPLOYMENT", "run-" + deployment)
+      pythonScriptContents = genericScript.replace ("DEPLOYMENT", "run-" + selectedDeployment)
       f = open (pythonScriptFilePath, "wt")
       f.write (pythonScriptContents)
       f.close ()
@@ -412,40 +408,6 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
       mode += 0o0100 # Add execute permission
       # print (mode)
       os.chmod (pythonScriptFilePath, mode)
-
-#--- Add hex rule
-#   allGoal.append (PRODUCT_FLASH + ".hex")
-#   rule = makefile.Rule ([PRODUCT_FLASH + ".hex"], "Hexing " + PRODUCT_FLASH + ".hex")
-#   rule.mDependences.append (PRODUCT_FLASH + ".elf")
-#   rule.mDependences.append ("makefile.json")
-#   rule.mCommand += OBJCOPY_TOOL_WITH_OPTIONS
-#   rule.mCommand.append ("-O")
-#   rule.mCommand.append ("ihex")
-#   rule.mCommand.append (PRODUCT_FLASH + ".elf")
-#   rule.mCommand.append (PRODUCT_FLASH + ".hex")
-#   make.addRule (rule)
-#--- Add bin rule
-#   allGoal.append (PRODUCT_FLASH + ".bin")
-#   rule = makefile.Rule ([PRODUCT_FLASH + ".bin"], "Converting hex to bin " + PRODUCT_FLASH + ".hex")
-#   rule.mDependences.append (PRODUCT_FLASH + ".hex")
-#   rule.mDependences.append ("makefile.json")
-#   rule.mCommand += OBJCOPY_TOOL_WITH_OPTIONS
-#   rule.mCommand.append ("-O")
-#   rule.mCommand.append ("binary")
-#   rule.mCommand.append (PRODUCT_FLASH + ".elf")
-#   rule.mCommand.append (PRODUCT_FLASH + ".bin")
-#   make.addRule (rule)
-#--- Add uf2 rule
-#   allGoal.append (PRODUCT_FLASH + ".uf2")
-#   rule = makefile.Rule ([PRODUCT_FLASH + ".uf2"], "Converting elf to UF2 " + PRODUCT_FLASH + ".elf")
-#   rule.mDependences.append (PRODUCT_FLASH + ".elf")
-#   rule.mDependences.append ("makefile.json")
-#   rule.mCommand.append (ELF2UF2_TOOL_PATH)
-#   if verbose :
-#     rule.mCommand.append ("-v")
-#   rule.mCommand.append (PRODUCT_FLASH + ".elf")
-#   rule.mCommand.append (PRODUCT_FLASH + ".uf2")
-#   make.addRule (rule)
 #--------------------------------------------------------------------------- Goals
   make.addGoal ("all", allGoal, "Build all")
   make.addGoal ("view-hex", allGoal, "Building all and show hex")
@@ -463,16 +425,15 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     makefile.runCommand (DISPLAY_OBJ_SIZE_TOOL + objectFileList + ["-t"], "Display Object Size", False, verbose)
 #---------------------------------------------------------------------------- "All" or "run"
   if GOAL == "all" :
-    for deployment in selectedDeployments :
-#       deployment = runGoalDictionary [deploymentKey]
-      PRODUCT = PRODUCT_DIR + "/deployment-" + deployment
+    for selectedDeployment in selectedDeployments :
+      PRODUCT = PRODUCT_DIR + "/deployment-" + selectedDeployment
       s = runProcessAndGetOutput (DISPLAY_OBJ_SIZE_TOOL + ["-t"] + [PRODUCT + ".elf"])
       secondLine = s.split('\n')[1]
       numbers = [int(s) for s in secondLine.split() if s.isdigit()]
-      print ("Deployment " + deployment + ":")
-      print ("  ROM code:    " + str (numbers [0]) + " bytes")
-      print ("  ROM data:    " + str (numbers [1]) + " bytes")
-      print ("  RAM + STACK: " + str (numbers [2]) + " bytes")
+      print ("Deployment \"" + selectedDeployment + "\":")
+      print ("  Code:             " + str (numbers [0]) + " bytes")
+      print ("  Initialized data: " + str (numbers [1]) + " bytes")
+      print ("  RAM + STACK:      " + str (numbers [2]) + " bytes")
 #---------------------------------------------------------------------------- Run ?
   if GOAL in runGoalDictionary.keys () :
     deployment = runGoalDictionary [GOAL]
