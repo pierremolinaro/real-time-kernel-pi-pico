@@ -31,7 +31,7 @@ SECTIONS {
     *(.rel.*);
     *(.igot.plt);
     *(rel.ARM.*);
-    *(.boot2) ;
+    *(.boot2) ;  /* used only for FLASH deployment */
   }
 }
 
@@ -47,11 +47,6 @@ SECTIONS {
   .text : {
   /*-------------------- Entry point in RAM should be at the beginning of the RAM */
     KEEP (*(.reset.in.ram)) ;
-  /*-------------------- Vectors */
-    . = ALIGN (256) ;
-    __vectors_start_cpu_0 = . ;
-    KEEP (*(isr.vectors.cpu.0)) ;
-    __vectors_end_cpu_0 = . ;
   /*-------------------- BSS */
     . = ALIGN(4);
     __bss_start = . ;
@@ -134,9 +129,13 @@ __data_load_end   = LOADADDR (.data) + SIZEOF (.data) ;
 
 SECTIONS {
   .system_stack_cpu_0 : {
+  /*-------------------- Vectors */
+    __vectors_start_cpu_0 = . ;
+    KEEP (*(isr.vectors.cpu.0)) ;
+    __vectors_end_cpu_0 = . ;
     . = ALIGN (8) ;
     __system_stack_start_cpu_0 = . ;
-    . += 4096 ;
+    . += 4096 - 48 * 4 ;
     . = ALIGN (4) ;
     __system_stack_end_cpu_0 = . ;
   } > SRAM4

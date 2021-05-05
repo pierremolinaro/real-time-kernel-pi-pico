@@ -5,11 +5,10 @@
 void setup0 (USER_MODE) {
 //--- Programmer l'interruption sur front descendant sur le poussoir P4
 //  gpioAcknowledgeInterrupt (P4_PUSH_BUTTON, GPIO_ALL_IRQ) ;
-//  gpioEnableInterrupt (P4_PUSH_BUTTON, 0, true) ;
-// NVIC_ENABLE_IRQ (ISRSlot::SIO_IRQ_PROC0) ;
+  gpioEnableInterrupt (P4_PUSH_BUTTON, GPIO_IRQ_EDGE_FALL, true) ;
+  NVIC_ENABLE_IRQ (ISRSlot::IO_IRQ_BANK0) ;
 //--- Message d'accueil
-  printString (MODE_ "Hello!") ;
-
+  printString (MODE_ "Hello") ;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -26,20 +25,21 @@ void loop0 (USER_MODE) {
   gotoXY (MODE_ 0, 0) ;
   printUnsigned (MODE_ millis (MODE)) ;
   gotoXY (MODE_ 0, 1) ;
-  printHex8 (MODE_ iobank0_hw->io [13].ctrl) ;
-  gotoXY (MODE_ 0, 2) ;
-  printHex8 (MODE_ iobank0_hw->io [13].status) ;
-  gotoXY (MODE_ 0, 3) ;
-  NVIC_ICPR = ~ 0U ;
-  printHex8 (MODE_ NVIC_ICPR) ;
+  printUnsigned (MODE_ gClicCount) ;
+//   gotoXY (MODE_ 0, 2) ;
+//   printHex8 (MODE_ iobank0_hw->io [13].status) ;
+//   gotoXY (MODE_ 0, 3) ;
+//   printHex8 (MODE_ NVIC_ICPR) ;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-// void clicInterrupt (SECTION_MODE) {
-//   gClicCount += 1 ;
-// //--- Acquitter l'interruption
-//   gpioAcknowledgeInterrupt (P4_PUSH_BUTTON, GPIO_IRQ_EDGE_FALL) ;
-// }
+void clicInterrupt (SECTION_MODE) {
+//--- Acquitter l'interruption
+  gpioAcknowledgeInterrupt (P4_PUSH_BUTTON, GPIO_IRQ_EDGE_FALL) ;
+//---
+  gClicCount += 1 ;
+
+}
 
 //--------------------------------------------------------------------------------------------------

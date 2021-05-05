@@ -32,6 +32,7 @@ SECTIONS {
     *(.rel.*);
     *(.igot.plt);
     *(rel.ARM.*);
+    *(.reset.in.ram) ; /* used only for RAM deployment */
   }
 }
 

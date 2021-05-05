@@ -15,7 +15,7 @@ void pinMode (const DigitalPort inPort, const DigitalMode inMode) {
     ;
     sio_hw->gpio_oe_set = 1U << portIndex ; // Enable Output, page 47
     sio_hw->gpio_clr = 1U << portIndex ; // Set output to low level, page 46
-    iobank0_hw->io [portIndex].ctrl = ctrl ; // Function "SIO"
+    iobank0_hw->io [portIndex].ctrl = ctrl ; // Function "SIO" (page 268)
     break ;
   case DigitalMode::INPUT :
     padsbank0_hw->io [portIndex] = // Page 321
@@ -25,7 +25,7 @@ void pinMode (const DigitalPort inPort, const DigitalMode inMode) {
       | PADS_BANK0_GPIO0_SCHMITT_BITS // Enable schmitt trigger
     ;
     sio_hw->gpio_oe_clr = 1U << portIndex ; // Disable output, page 47
-    iobank0_hw->io [portIndex].ctrl = ctrl ; // Function "SIO"
+    iobank0_hw->io [portIndex].ctrl = ctrl ; // Function "SIO" (page 268)
     break ;
   case DigitalMode::INPUT_PULLDOWN :
     padsbank0_hw->io [portIndex] = // Page 321
@@ -36,7 +36,7 @@ void pinMode (const DigitalPort inPort, const DigitalMode inMode) {
       | PADS_BANK0_GPIO0_SCHMITT_BITS // Enable schmitt trigger
     ;
     sio_hw->gpio_oe_clr = 1U << portIndex ; // Disable output, page 47
-    iobank0_hw->io [portIndex].ctrl = ctrl ; // Function "SIO"
+    iobank0_hw->io [portIndex].ctrl = ctrl ; // Function "SIO" (page 268)
     break ;
   case DigitalMode::INPUT_PULLUP :
     padsbank0_hw->io [portIndex] = // Page 321
@@ -47,7 +47,7 @@ void pinMode (const DigitalPort inPort, const DigitalMode inMode) {
       | PADS_BANK0_GPIO0_SCHMITT_BITS // Enable schmitt trigger
     ;
     sio_hw->gpio_oe_clr = 1U << portIndex ; // Disable output, page 47
-    iobank0_hw->io [portIndex].ctrl = ctrl ; // Function "SIO"
+    iobank0_hw->io [portIndex].ctrl = ctrl ; // Function "SIO" (page 268)
     break ;
   }
 }
@@ -92,24 +92,24 @@ void gpioAcknowledgeInterrupt (const DigitalPort inPort, const uint32_t inEvents
 //--------------------------------------------------------------------------------------------------
 
 void gpioEnableInterrupt (const DigitalPort inPort, const uint32_t inEvents, const bool inEnable) {
-// Separate mask/force/status per-core, so check which core called, and
-// set the relevant IRQ controls.
-//   io_irq_ctrl_hw_t * irq_ctrl_base __attribute__((unused)) = get_core_num ()
-//     ? & (iobank0_hw->proc1_irq_ctrl)
-//     : & (iobank0_hw->proc0_irq_ctrl)
-//   ;
+//--- Separate mask/force/status per-core, so check which core called, and
+//    set the relevant IRQ controls.
+  io_irq_ctrl_hw_t * irq_ctrl_base = (get_core_num () == 1)
+    ? & (iobank0_hw->proc1_irq_ctrl)
+    : & (iobank0_hw->proc0_irq_ctrl)
+  ;
 //--- Clear stale events which might cause immediate spurious handler entry
-//  gpioAcknowledgeInterrupt (inPort, inEvents) ;
+  gpioAcknowledgeInterrupt (inPort, inEvents) ;
 //--- Enable or disable irq
-//   const uint32_t portIndex = uint32_t (inPort) ;
-//   const uint32_t events = inEvents << (4 * (portIndex % 8)) ;
-//   io_rw_32 * en_reg = & irq_ctrl_base->inte [portIndex / 8] ;
-//
-//   if (inEnable) {
-//     *en_reg |= events ; // hw_set_bits (en_reg, events);
-//   }else{
-//     *en_reg &= ~ events ; //hw_clear_bits (en_reg, events);
-//   }
+  const uint32_t portIndex = uint32_t (inPort) ;
+  const uint32_t events = inEvents << (4 * (portIndex % 8)) ;
+  io_rw_32 * en_reg = & (irq_ctrl_base->inte [portIndex / 8]) ; // Page 273
+
+  if (inEnable) {
+    *en_reg |= events ; // hw_set_bits (en_reg, events);
+  }else{
+    *en_reg &= ~ events ; //hw_clear_bits (en_reg, events);
+  }
 }
 
 //--------------------------------------------------------------------------------------------------

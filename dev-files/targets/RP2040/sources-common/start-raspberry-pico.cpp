@@ -430,6 +430,15 @@ void cpu0Phase3Boot (void) {
 //------------------------------------ Configure VTOR Cortex-M0+ register
   extern uint32_t __vectors_start_cpu_0 ;
   scb_hw->vtor = uint32_t (& __vectors_start_cpu_0) ;
+
+  while ((sio_hw->fifo_st & 1) != 0) {
+    const uint32_t unused __attribute__((unused)) = sio_hw->fifo_rd ;
+  }
+//------------------------------------ Empty the FIFO
+  while ((sio_hw->fifo_st & SIO_FIFO_ST_VLD_BITS) != 0) {
+    const uint32_t unused __attribute__((unused)) = sio_hw->fifo_rd ;
+  }
+
 //------------------------------------ Configure NVIC_IPR registers
 //   #define NVIC_IPR(idx) (* ((volatile uint32_t *) (0xE000E400 + 4 * (idx))))
 //   for (uint32_t i=0 ; i<8 ; i++) {
