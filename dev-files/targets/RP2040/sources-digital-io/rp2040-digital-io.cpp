@@ -94,7 +94,7 @@ void gpioAcknowledgeInterrupt (const DigitalPort inPort, const uint32_t inEvents
 void gpioEnableInterrupt (const DigitalPort inPort, const uint32_t inEvents, const bool inEnable) {
 //--- Separate mask/force/status per-core, so check which core called, and
 //    set the relevant IRQ controls.
-  io_irq_ctrl_hw_t * irq_ctrl_base = (get_core_num () == 1)
+  io_irq_ctrl_hw_t * irq_ctrl_base = (getCoreIndex () == 1)
     ? & (iobank0_hw->proc1_irq_ctrl)
     : & (iobank0_hw->proc0_irq_ctrl)
   ;

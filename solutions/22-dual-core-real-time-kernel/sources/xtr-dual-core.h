@@ -2,21 +2,16 @@
 
 //--------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
-#include "struct-sio.h"
+#include "software-modes.h"
 
 //--------------------------------------------------------------------------------------------------
-
-void cpu0Phase3Boot (void) asm ("cpu.0.phase3.boot") ;
-
+//  SIO Interrupt
 //--------------------------------------------------------------------------------------------------
 
-void cpu0Phase3Init (void) asm ("cpu.0.phase3.init") ;
+//$interrupt-service SIO_IRQ_PROC0
+void sio0InterruptServiceRoutine (IRQ_MODE) asm ("interrupt.service.SIO_IRQ_PROC0") ;
 
-//--------------------------------------------------------------------------------------------------
-
-inline uint32_t getCoreIndex (void) {
-  return sio_hw->cpuid ;
-}
+//$interrupt-service SIO_IRQ_PROC1
+void sio1InterruptServiceRoutine (IRQ_MODE) asm ("interrupt.service.SIO_IRQ_PROC1") ;
 
 //--------------------------------------------------------------------------------------------------

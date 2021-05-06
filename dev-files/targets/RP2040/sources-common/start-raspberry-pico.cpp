@@ -438,23 +438,13 @@ void cpu0Phase3Boot (void) {
   while ((sio_hw->fifo_st & SIO_FIFO_ST_VLD_BITS) != 0) {
     const uint32_t unused __attribute__((unused)) = sio_hw->fifo_rd ;
   }
-
-//------------------------------------ Configure NVIC_IPR registers
-//   #define NVIC_IPR(idx) (* ((volatile uint32_t *) (0xE000E400 + 4 * (idx))))
-//   for (uint32_t i=0 ; i<8 ; i++) {
-//     NVIC_IPR (i) = 0x80808080 ;
-//   }
-//   for (uint32_t i=0 ; i<=29 ; i++) {
-//     iobank0_hw->io [i].ctrl = 0x1F ;
-//   }
-//   for (uint32_t i=0 ; i<3 ; i++) {
-//     iobank0_hw->proc0_irq_ctrl.inte [i] = 0xFFFFFFFF ;
-//   }
 }
 
 //--------------------------------------------------------------------------------------------------
 //   INIT ROUTINE
 //--------------------------------------------------------------------------------------------------
+
+void start_cpu_1 () ; // Code run by CPU 0
 
 void cpu0Phase3Init (void) {
 //--------------- Aller exécuter les routines d'initialisation de la section boot.routine.array
@@ -481,6 +471,7 @@ void cpu0Phase3Init (void) {
     (* ptr) () ;
     ptr ++ ;
   }
+//  start_cpu_1 () ;
 }
 
 //--------------------------------------------------------------------------------------------------

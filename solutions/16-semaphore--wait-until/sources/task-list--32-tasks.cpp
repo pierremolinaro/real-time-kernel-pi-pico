@@ -33,13 +33,27 @@ void TaskList::enterTask (SECTION_MODE_ TaskControlBlock * inTaskPtr) {
 }
 
 //--------------------------------------------------------------------------------------------------
+//  GET FIRST TASK FROM LIST: returns nullptr if list is empty
+//--------------------------------------------------------------------------------------------------
+
+TaskControlBlock * TaskList::getFirstTask (IRQ_MODE) {
+  TaskControlBlock * taskPtr = nullptr ;
+  if (mList != 0) {
+    const uint32_t taskIndex = uint32_t (__builtin_ctz (mList)) ;
+    TASK_LIST_ASSERT (taskIndex < TASK_COUNT, taskIndex) ;
+    taskPtr = descriptorPointerForTaskIndex (taskIndex) ;
+  }
+  return taskPtr ;
+}
+
+//--------------------------------------------------------------------------------------------------
 //  REMOVE FIRST TASK FROM LIST: returns nullptr if list is empty
 //--------------------------------------------------------------------------------------------------
 
 TaskControlBlock * TaskList::removeFirstTask (IRQ_MODE) {
   TaskControlBlock * taskPtr = nullptr ;
   if (mList != 0) {
-    const uint32_t taskIndex = (uint32_t) __builtin_ctz (mList) ;
+    const uint32_t taskIndex = uint32_t (__builtin_ctz (mList)) ;
     TASK_LIST_ASSERT (taskIndex < TASK_COUNT, taskIndex) ;
     const uint32_t mask = 1U << taskIndex ;
     mList &= ~ mask ;

@@ -19,6 +19,9 @@ class TaskList {
 //--- Block a task in list
   public: void enterTask (SECTION_MODE_ TaskControlBlock * inTaskPtr) ;
 
+//--- get first task (returns nullptr if list is empty)
+  public: TaskControlBlock * getFirstTask (IRQ_MODE) ;
+
 //--- Remove first task (returns nullptr if list is empty)
   public: TaskControlBlock * removeFirstTask (IRQ_MODE) ;
 
