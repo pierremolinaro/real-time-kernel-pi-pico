@@ -1,8 +1,8 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 #------------------------------------------------------------------------------*
-# https://docs.python.org/2/library/subprocess.html#module-subprocess
+# https://docs.python3.org/2/library/subprocess.html#module-subprocess
 
 import subprocess
 import sys

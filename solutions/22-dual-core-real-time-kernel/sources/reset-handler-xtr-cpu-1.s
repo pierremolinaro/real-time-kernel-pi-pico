@@ -2,6 +2,12 @@
 	.cpu cortex-m0plus
 	.thumb
 
+//---------------------------------------------------------------------------------------------------
+//   INCLUDE ACTIVITY LEDS MACROS
+//---------------------------------------------------------------------------------------------------
+
+.include "activity-leds.hs"
+
 //--------------------------------------------------------------------------------------------------
 //  RESET HANDLER (DOUBLE STACK MODE) CPU 0
 //--------------------------------------------------------------------------------------------------
@@ -39,10 +45,8 @@ reset.handler.cpu.1: // Cortex M0 boots with interrupts enabled, in Thread mode
 //---------------------------------- This is the background task: turn off activity led
 //  Activity led 1 is connected to GP27
 background.task.cpu.1: // Only use R0, R1, R2, R3 and R12. Other registers are not preserved
-  ldr   r0, = 0xD0000000 + 0x018 // Address of GPIO_OUT_CLR control register
-  ldr   r1, = (1 << 27)   // Port GP27
-  str   r1, [r0]         // Turn off
-@  wfi
+  MACRO_ACTIVITY_LED_1_OFF
+  wfi
   b     background.task.cpu.1
 
 //--------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #---------------------------------------------------------------------------------------------------
 
@@ -204,9 +204,7 @@ def buildServiceCode (serviceList, boolServiceSet, interruptServiceList, interru
     sFile += "//----------------------------------------- Save preserved registers\n"
     sFile += "  push  {r4, lr}\n"
     sFile += "//----------------------------------------- Activity led On\n"
-    sFile += "  ldr   r0, = 0xD0000000 + 0x014 // Address of GPIO_OUT_SET control register\n"
-    sFile += "  ldr   r1, = (1 << 26) // Port GP26\n"
-    sFile += "  str   r1, [r0]        // Turn on\n"
+    sFile += "  MACRO_ACTIVITY_LED_0_ON\n"
     sFile += "//----------------------------------------- R4 <- running task context\n"
     sFile += "  ldr   r4, =var.running.task.control.block.ptr\n"
     sFile += "  ldr   r4, [r4]\n"

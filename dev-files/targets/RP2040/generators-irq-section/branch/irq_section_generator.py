@@ -1,11 +1,11 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: UTF-8 -*-
-#---------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 def asSeparator () :
   return "//" + ("-" * 78) + "\n"
 
-#---------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 def generateInterruptSection (interruptSectionName) :
   sCode  = asSeparator ()
@@ -17,17 +17,15 @@ def generateInterruptSection (interruptSectionName) :
   sCode += "  .type interrupt." + interruptSectionName + ", %function\n\n"
   sCode += "interrupt." + interruptSectionName + ":\n"
   sCode += "//----------------------------------------- Activity led On\n"
-  sCode += "  ldr   r0, =0xD0000000 + 0x014  // Address of SIO_GPIO_OUT_SET control register\n"
-  sCode += "  ldr   r1, = (1 << 26)   // Port GP26 is ACTIVITY 0\n"
-  sCode += "  str   r1, [r0]         // turn on\n"
+  sCode += "  MACRO_ACTIVITY_LED_0_ON\n"
   sCode += "//----------------------------------------- Goto interrupt function\n"
   sCode += "  ldr   r2, = interrupt.section." + interruptSectionName + "\n"
   sCode += "  bx    r2\n\n"
   return ("", sCode)
 
-#---------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 #    ENTRY POINT
-#---------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 def buildSectionInterruptCode (interruptSectionList):
   #------------------------------ Destination file strings
@@ -41,4 +39,4 @@ def buildSectionInterruptCode (interruptSectionList):
   #------------------------------ Return
   return (cppFile, sFile)
 
-#---------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #---------------------------------------------------------------------------------------------------
 
@@ -169,19 +169,6 @@ def generate_svc_handler () :
 def buildServiceCode (serviceList, boolServiceSet, interruptServiceList, interruptDictionary) :
   sFile = generate_svc_handler ()
   del interruptDictionary ["SVC"]
-#   sFile += asSeparator ()
-#   sFile += "\n"
-#   sFile += "  .section .text.cpu.1.phase3.init, \"ax\", %progbits\n"
-#   sFile += "  .global cpu.1.phase3.init\n"
-#   sFile += "  .align 1\n"
-#   sFile += "  .type cpu.1.phase3.init, %function\n\n"
-#   sFile += "cpu.1.phase3.init:\n"
-#   sFile += "  .fnstart\n"
-#   sFile += "  bx   lr\n"
-#   sFile += ".Lfunc_end_cpu.1.phase3.init:\n"
-#   sFile += "  .size cpu.1.phase3.init, .Lfunc_end_cpu.1.phase3.init - cpu.1.phase3.init\n"
-#   sFile += "  .cantunwind\n"
-#   sFile += "  .fnend\n\n"
   sFile += asSeparator ()
   sFile += "//   SERVICES\n"
   idx = 2
@@ -228,12 +215,7 @@ def buildServiceCode (serviceList, boolServiceSet, interruptServiceList, interru
     sFile += "  .type interrupt." + interruptServiceName + ", %function\n\n"
     sFile += "interrupt." + interruptServiceName + ":\n"
     sFile += "//----------------------------------------- Activity led On\n"
-    sFile += "  ldr   r0, = 0xD0000000 + 0x000 // Address of SIO CPUID control register\n"
-    sFile += "  ldr   r1, [r0] // R1 <- 0 for CPU0, 1 for CPU 1\n"
-    sFile += "  ldr   r2, = (1 << 26) // Port GP26\n"
-    sFile += "  lsls  r2, r2, r1 // R2 <- (1 << 26) for CPU0, (1 << 27) for CPU 1\n"
-    sFile += "  adds  r0, # 0x014 // Address of GPIO_OUT_SET control register\n"
-    sFile += "  str   r2, [r0]        // Turn on\n"
+    sFile += "  MACRO_ACTIVITY_LED_0_OR_1_ON\n"
     sFile += "//----------------------------------------- R0 <- calling task context\n"
     sFile += "  ldr   r1, = 0xD0000000 + 0x000 // Address of SIO CPUID control register\n"
     sFile += "  ldr   r1, [r1] // R1 <- 0 for CPU0, 1 for CPU 1\n"

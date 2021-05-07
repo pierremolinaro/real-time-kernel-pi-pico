@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 #---------------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@
 #        Added tolerance in secondary dependency file syntax:
 #
 #---------------------------------------------------------------------------------------------------
-# http://www.diveintopython3.net/porting-code-to-python-3-with-2to3.html
+# http://www.diveintopython3.net/porting-code-to-python3-3-with-2to3.html
 
 import subprocess, sys, os, copy
 import urllib, shutil, subprocess

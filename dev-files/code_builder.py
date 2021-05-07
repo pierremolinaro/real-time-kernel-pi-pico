@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #---------------------------------------------------------------------------------------------------
 
@@ -172,7 +172,8 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   PRODUCT_DIR = common_definitions.productDirectory ()
   ASBUILD_DIR = common_definitions.asDirectory ()
 #--------------------------------------------------------------------------- Build source lists
-  includeDirsInCompilerCommand = ["-I", GENERATED_SOURCE_DIR] #, "-I", projectDir]
+  includeDirsInCompilerCommand = ["-I", GENERATED_SOURCE_DIR]
+  H_SOURCE_SET = set ()
   H_SOURCE_LIST = []
   CPP_SOURCE_LIST = []
   S_SOURCE_LIST = []
@@ -186,8 +187,13 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
           CPP_SOURCE_LIST.append (sourcePath)
         elif extension == ".h" :
           H_SOURCE_LIST.append (sourcePath)
+          if sourcePath in H_SOURCE_SET :
+            print (makefile.BOLD_RED () + "Duplicated header file \"" + sourcePath + "\"" + makefile.ENDC ())
+          H_SOURCE_SET.add (sourcePath)
         elif extension == ".s" :
           S_SOURCE_LIST.append (sourcePath)
+        elif extension == ".hs" :
+          pass # Ok
         elif extension == ".ld" :
           pass # Ok
         elif extension != "" : # Ceci permet d'ignorer les fichés cachés (dont les noms commencent par un point)
@@ -300,7 +306,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     rule.enterSecondaryDependanceFile (objectFile + ".dep", make)
     make.addRule (rule)
     objectFileList.append (objectFile)
-  #--- objdump python source
+  #--- objdump python3 source
 #     objdumpPythonFile = BUILD_DIR + "/" + source + ".objdump.py"
 #     rule = makefile.Rule ([objdumpPythonFile], "Building " + source + ".objdump.py")
 #     rule.mDependences.append (objectFile)
