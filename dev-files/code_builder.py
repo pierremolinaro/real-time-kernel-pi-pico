@@ -369,6 +369,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
       rule.mOpenSourceOnError = False
       rule.mCommand += AS_TOOL_WITH_OPTIONS
       rule.mCommand += [sourcePath]
+      rule.mCommand += includeDirsInCompilerCommand
       rule.mCommand += ["-o", "/dev/null"]
       rule.mCommand += ["-aln=" + listingFile]
       rule.mDependences.append (sourcePath)

@@ -103,7 +103,7 @@ static void producerTask (USER_MODE) {
         allocatedBufferSize = 1 ;
       }
     }else{
-      waitDuring (MODE_ 10) ;
+      waitDuring (MODE_ 999) ;
     }
   }
 }
