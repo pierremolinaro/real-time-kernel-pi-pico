@@ -10,16 +10,15 @@
 .endm
 
 //-----------------------------------------------------------------------------
-//   ACTIVITY LED 0 or 1 ON (only use r0, r1, r2 or r3)
+//   ACTIVITY LED 0 or 1 ON (only use r0, r1)
+//   R2 contains the CPU index: 0 for CPU0, 1 for CPU 1, DO NOT MODIFY R2
 //-----------------------------------------------------------------------------
 
 .macro MACRO_ACTIVITY_LED_0_OR_1_ON
-  ldr   r0, = 0xD0000000 + 0x000 // Address of SIO CPUID control register
-  ldr   r1, [r0]        // R1 <- 0 for CPU0, 1 for CPU 1
-  ldr   r2, = (1 << 26) // Port GP26
-  lsls  r2, r2, r1      // R2 <- (1 << 26) for CPU0, (1 << 27) for CPU 1
-  adds  r0, # 0x014     // Address of GPIO_OUT_SET control register
-  str   r2, [r0]        // Turn on
+  ldr   r0, = 0xD0000000 + 0x014 // Address of GPIO_OUT_SET control register
+  ldr   r1, = (1 << 26) // Port GP26
+  lsls  r1, r1, r2      // R1 <- (1 << 26) for CPU0, (1 << 27) for CPU 1
+  str   r1, [r0]        // Turn on
 .endm
 
 //-----------------------------------------------------------------------------

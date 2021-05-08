@@ -223,16 +223,17 @@ static void kernel_makeTaskReady (IRQ_MODE_
 
 //--------------------------------------------------------------------------------------------------
 
-void kernelSelectTaskToRun (IRQ_MODE) asm ("kernel.select.task.to.run") ; // Invoked from assembly
+void kernelSelectTaskToRunAndNotifyOtherCPU (IRQ_MODE)
+   asm ("kernel.select.task.to.run.and.notify.other.cpu") ; // Invoked from assembly
 
-void kernelSelectTaskToRun (IRQ_MODE) {
+void kernelSelectTaskToRunAndNotifyOtherCPU (IRQ_MODE) {
   const uint32_t cpuIdx = getCoreIndex () ;
   if (gRunningTaskControlBlockPtr [cpuIdx] != nullptr) {
     gReadyTaskList.enterTask (MODE_ gRunningTaskControlBlockPtr [cpuIdx]) ;
   }
   gRunningTaskControlBlockPtr [cpuIdx] = gReadyTaskList.removeFirstTask (MODE) ;
 //--- Interrupt other cpu if there is a task with greater priority than other cpu current task
-  if ((sio_hw->fifo_st & SIO_FIFO_ST_RDY_BITS) != 0) {
+  if ((sio_hw->fifo_st & SIO_FIFO_ST_RDY_BITS) != 0) { // SIO FIFO not full ?
     TaskControlBlock * candidateTaskPtr = gReadyTaskList.getFirstTask (MODE) ;
     if (candidateTaskPtr != nullptr) {
       const uint32_t otherCpuIdx = cpuIdx ^ 1 ;
@@ -418,7 +419,7 @@ void GuardList::enterTask (SECTION_MODE_ TaskControlBlock * inTaskPtr) {
 TaskControlBlock * GuardList::removeFirstTask (SECTION_MODE) {
   TaskControlBlock * taskPtr = nullptr ;
   if (mGuardList != 0) {
-    const uint32_t taskIndex = (uint32_t)  __builtin_ctz (mGuardList) ;
+    const uint32_t taskIndex = uint32_t (__builtin_ctz (mGuardList)) ;
     XTR_ASSERT (taskIndex < TASK_COUNT, taskIndex) ;
     const uint32_t mask = 1U << taskIndex ;
     mGuardList &= ~ mask ;

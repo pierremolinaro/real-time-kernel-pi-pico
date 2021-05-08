@@ -12,7 +12,7 @@
 
   "IRQ-SECTION-SCHEME" : "branch",
 
-  "SERVICE-SCHEME" : "svc-dual-core",
+  "SERVICE-SCHEME" : "svc-dual-core-v2",
 
   "SECTION-SCHEME" : "disable-interrupts-spinlock",
 

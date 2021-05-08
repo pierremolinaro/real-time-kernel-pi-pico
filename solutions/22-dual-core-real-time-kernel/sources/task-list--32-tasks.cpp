@@ -81,7 +81,7 @@ void TaskList::removeTask (SECTION_MODE_ TaskControlBlock * inTaskPtr) {
 TaskControlBlock * TaskList::Iterator::nextTask (IRQ_MODE) {
   TaskControlBlock * taskPtr = nullptr ;
   if (mIteratedList != 0) {
-    const uint32_t taskIndex = (uint32_t) __builtin_ctz (mIteratedList) ;
+    const uint32_t taskIndex = uint32_t (__builtin_ctz (mIteratedList)) ;
     TASK_LIST_ASSERT (taskIndex < TASK_COUNT, taskIndex) ;
     const uint32_t mask = 1U << taskIndex ;
     mIteratedList &= ~ mask ;

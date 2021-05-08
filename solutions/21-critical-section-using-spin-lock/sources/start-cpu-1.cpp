@@ -2,12 +2,6 @@
 
 //--------------------------------------------------------------------------------------------------
 
-inline static void __sev (void) {
-  __asm volatile ("sev") ;
-}
-
-//--------------------------------------------------------------------------------------------------
-
 static inline void multicore_fifo_drain (void) {
   while ((sio_hw->fifo_st & SIO_FIFO_ST_VLD_BITS) != 0) {
     const uint32_t unused __attribute__((unused)) = sio_hw->fifo_rd ;
@@ -18,14 +12,11 @@ static inline void multicore_fifo_drain (void) {
 
 static inline void multicore_fifo_push_blocking (const uint32_t inData) {
 //--- We wait for the fifo to have some space
-   // return !!(sio_hw->fifo_st & SIO_FIFO_ST_RDY_BITS);
   while ((sio_hw->fifo_st & SIO_FIFO_ST_RDY_BITS) == 0) { }
-//  while (!multicore_fifo_wready ()) { }
 //--- Send data
   sio_hw->fifo_wr = inData ;  // Page 50
-//  sio_hw->fifo_wr = data;
 //--- Fire off an event to the other core
-  __sev () ;
+  __asm volatile ("sev") ;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -36,8 +27,6 @@ static uint32_t multicore_fifo_pop_blocking (void) {
   while ((sio_hw->fifo_st & SIO_FIFO_ST_VLD_BITS) == 0) {
     __asm volatile ("wfe") ;
   }
-//  while (!multicore_fifo_rvalid()) { __wfe(); }
-//  return sio_hw->fifo_rd;
   return sio_hw->fifo_rd ;
 }
 
@@ -60,7 +49,7 @@ static void multicore_launch_core1_raw (void (*cpu1Code)(void),
   //--- we drain before sending a 0
     if (cmd == 0) {
       multicore_fifo_drain () ;
-      __sev () ; // core 1 may be waiting for fifo space
+        __asm volatile ("sev") ; // core 1 may be waiting for fifo space
     }
     multicore_fifo_push_blocking (cmd) ;
     const uint32_t response = multicore_fifo_pop_blocking () ;
@@ -79,6 +68,7 @@ static void start_cpu_1 (INIT_MODE) { // Code run by CPU 0
   extern uint32_t __system_stack_end_cpu_1 ;
   const uint32_t top_of_system_stack_cpu_1 = uint32_t (& __system_stack_end_cpu_1) ;
   multicore_launch_core1_raw (reset_handler_cpu1, top_of_system_stack_cpu_1, vectors_cpu_0) ;
+  NVIC_ENABLE_IRQ (ISRSlot::SIO_IRQ_PROC0) ;
 }
 
 //--------------------------------------------------------------------------------------------------
