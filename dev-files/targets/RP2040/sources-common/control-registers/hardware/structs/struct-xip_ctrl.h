@@ -24,6 +24,6 @@ typedef struct {
 #define XIP_STAT_FIFO_EMPTY    0x2u
 #define XIP_STAT_FLUSH_RDY     0x1u
 
-#define xip_ctrl_hw ((xip_ctrl_hw_t *const)XIP_CTRL_BASE)
+#define xip_ctrl_hw ((xip_ctrl_hw_t *)XIP_CTRL_BASE)
 
 #endif

@@ -23,6 +23,6 @@ typedef struct {
 
 check_hw_layout(adc_hw_t, ints, ADC_INTS_OFFSET);
 
-#define adc_hw ((adc_hw_t *const)ADC_BASE)
+#define adc_hw ((adc_hw_t *)ADC_BASE)
 
 #endif

@@ -18,6 +18,6 @@ typedef struct {
     } io[6];
 } ioqspi_hw_t;
 
-#define ioqspi_hw ((ioqspi_hw_t *const)IO_QSPI_BASE)
+#define ioqspi_hw ((ioqspi_hw_t *)IO_QSPI_BASE)
 
 #endif

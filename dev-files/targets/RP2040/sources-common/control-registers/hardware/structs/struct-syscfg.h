@@ -21,6 +21,6 @@ typedef struct {
     io_rw_32 mempowerdown;
 } syscfg_hw_t;
 
-#define syscfg_hw ((syscfg_hw_t *const)SYSCFG_BASE)
+#define syscfg_hw ((syscfg_hw_t *)SYSCFG_BASE)
 
 #endif

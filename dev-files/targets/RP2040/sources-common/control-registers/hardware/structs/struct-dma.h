@@ -58,7 +58,7 @@ typedef struct {
     } ch[NUM_DMA_CHANNELS];
 } dma_debug_hw_t;
 
-#define dma_hw ((dma_hw_t *const)DMA_BASE)
-#define dma_debug_hw ((dma_debug_hw_t *const)(DMA_BASE + DMA_CH0_DBG_CTDREQ_OFFSET))
+#define dma_hw ((dma_hw_t *)DMA_BASE)
+#define dma_debug_hw ((dma_debug_hw_t *)(DMA_BASE + DMA_CH0_DBG_CTDREQ_OFFSET))
 
 #endif

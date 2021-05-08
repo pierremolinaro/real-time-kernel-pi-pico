@@ -43,6 +43,6 @@ typedef struct {
 
 check_hw_layout(bus_ctrl_hw_t, counter[0].value, BUSCTRL_PERFCTR0_OFFSET);
 
-#define bus_ctrl_hw ((bus_ctrl_hw_t *const)BUSCTRL_BASE)
+#define bus_ctrl_hw ((bus_ctrl_hw_t *)BUSCTRL_BASE)
 
 #endif

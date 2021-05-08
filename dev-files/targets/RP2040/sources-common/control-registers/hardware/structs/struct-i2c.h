@@ -55,8 +55,8 @@ typedef struct {
     io_rw_32 clr_restart_det;
 } i2c_hw_t;
 
-#define i2c0_hw ((i2c_hw_t *const)I2C0_BASE)
-#define i2c1_hw ((i2c_hw_t *const)I2C1_BASE)
+#define i2c0_hw ((i2c_hw_t *)I2C0_BASE)
+#define i2c1_hw ((i2c_hw_t *)I2C1_BASE)
 
 // List of configuration constants for the Synopsys I2C hardware (you may see
 // references to these in I2C register header; these are *fixed* values,

@@ -43,5 +43,5 @@ typedef struct {
     io_rw_32 txd_drive_edge;
 } ssi_hw_t;
 
-#define ssi_hw ((ssi_hw_t *const)XIP_SSI_BASE)
+#define ssi_hw ((ssi_hw_t *)XIP_SSI_BASE)
 #endif

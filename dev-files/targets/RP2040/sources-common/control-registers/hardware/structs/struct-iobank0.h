@@ -30,6 +30,6 @@ typedef struct {
 } iobank0_hw_t;
 /// \end::iobank0_hw[]
 
-#define iobank0_hw ((iobank0_hw_t *const)IO_BANK0_BASE)
+#define iobank0_hw ((iobank0_hw_t *)IO_BANK0_BASE)
 
 #endif

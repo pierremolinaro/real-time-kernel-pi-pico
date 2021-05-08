@@ -42,7 +42,7 @@ typedef struct {
     io_ro_32 ints1;
 } pio_hw_t;
 
-#define pio0_hw ((pio_hw_t *const)PIO0_BASE)
-#define pio1_hw ((pio_hw_t *const)PIO1_BASE)
+#define pio0_hw ((pio_hw_t *)PIO0_BASE)
+#define pio1_hw ((pio_hw_t *)PIO1_BASE)
 
 #endif

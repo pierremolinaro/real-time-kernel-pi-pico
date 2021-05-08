@@ -28,6 +28,6 @@ typedef struct {
     io_rw_32 ints;
 } pwm_hw_t;
 
-#define pwm_hw ((pwm_hw_t *const)PWM_BASE)
+#define pwm_hw ((pwm_hw_t *)PWM_BASE)
 
 #endif

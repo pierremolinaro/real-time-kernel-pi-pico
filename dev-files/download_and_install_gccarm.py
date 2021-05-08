@@ -33,7 +33,7 @@ class bcolors:
 #---------------------------------------------------------------------------------------------------
 
 def distributionGCC () :
-  gcc = "gcc-arm-none-eabi-7-2017-q4-major"
+  gcc = "gcc-arm-none-eabi-10-2020-q4-major"
   if host_platform.getPlatform () == "linux32" :
     gcc = "gcc-arm-none-eabi-5_4-2016q3"
   return gcc
@@ -45,7 +45,7 @@ def distributionGCC () :
 def compilerArchiveURL () :
   baseURL = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/"
   PLATFORM = host_platform.getPlatform ()
-  distribution = "7-2017q4/gcc-arm-none-eabi-7-2017-q4-major-" + PLATFORM + ".tar.bz2"
+  distribution = "10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-" + PLATFORM + ".tar.bz2"
   if host_platform.getPlatform () == "linux32" :
     distribution = "5_4-2016q3/gcc-arm-none-eabi-5_4-2016q3-20160926-linux.tar.bz2"
   return baseURL + distribution

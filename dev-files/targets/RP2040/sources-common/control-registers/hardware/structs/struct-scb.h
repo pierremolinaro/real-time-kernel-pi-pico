@@ -19,6 +19,6 @@ typedef struct {
     // ...
 } armv6m_scb_t;
 
-#define scb_hw ((armv6m_scb_t *const)(PPB_BASE + M0PLUS_CPUID_OFFSET))
+#define scb_hw ((armv6m_scb_t *)(PPB_BASE + M0PLUS_CPUID_OFFSET))
 
 #endif

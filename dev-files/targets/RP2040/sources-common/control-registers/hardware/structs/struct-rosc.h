@@ -24,6 +24,6 @@ typedef struct {
     io_rw_32 dftx;
 } rosc_hw_t;
 
-#define rosc_hw ((rosc_hw_t *const)ROSC_BASE)
+#define rosc_hw ((rosc_hw_t *)ROSC_BASE)
 
 #endif
