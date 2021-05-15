@@ -9,14 +9,14 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "task-list--32-tasks.h"
-#include "xtr.h"
+#include "xtr-single-core.h"
 
 //--------------------------------------------------------------------------------------------------
 
 class Semaphore {
 //--- Properties
   protected: TaskList mWaitingTaskList ;
-  protected : GuardList mGuardList ;
+  protected: GuardList mGuardList ;
   protected: uint32_t mValue ;
 
 //--- Constructor
@@ -40,8 +40,8 @@ class Semaphore {
 
 //--- Guarded P
 //$section semaphore.guardedP
-  public : bool guarded_P (USER_MODE) asm ("semaphore.guardedP") ;
-  private : bool sys_guarded_P (SECTION_MODE) asm ("section.semaphore.guardedP") ;
+  public: bool guarded_P (USER_MODE) asm ("semaphore.guardedP") ;
+  private: bool sys_guarded_P (SECTION_MODE) asm ("section.semaphore.guardedP") ;
 
 //--- No copy
   private: Semaphore (const Semaphore &) = delete ;

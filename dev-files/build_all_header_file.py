@@ -13,7 +13,7 @@ destinationFile = sys.argv [1]
 dependenceFile = sys.argv [2]
 #------------------------------ Header files
 dependenceString = ""
-s = "#pragma once\n\n"
+s = "" # "#pragma once\n\n"
 s += separator + "\n"
 for i in range (3, len (sys.argv)):
   s += "#include \"" + os.path.basename (sys.argv [i]) + "\"\n"

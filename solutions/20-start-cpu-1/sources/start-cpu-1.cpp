@@ -49,7 +49,7 @@ static void multicore_launch_core1_raw (void (*cpu1Code)(void),
   //--- we drain before sending a 0
     if (cmd == 0) {
       multicore_fifo_drain () ;
-        __asm volatile ("sev") ; // core 1 may be waiting for fifo space
+      __asm volatile ("sev") ; // core 1 may be waiting for fifo space
     }
     multicore_fifo_push_blocking (cmd) ;
     const uint32_t response = multicore_fifo_pop_blocking () ;

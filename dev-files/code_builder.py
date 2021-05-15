@@ -219,6 +219,24 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   rule.enterSecondaryDependanceFile (allHeadersSecondaryDependenceFile, make)
   rule.mPriority = -1
   make.addRule (rule)
+#--------------------------------------------------------------------------- Build precompiled header file
+#   allHeadersSecondaryDependenceFile = GENERATED_SOURCE_DIR + "/all-headers.h"
+#   precompiledHeader_file = GENERATED_SOURCE_DIR + "/all-headers.h.gch"
+#   rule = makefile.Rule ([precompiledHeader_file], "Build Precompiled header file")
+#   rule.mOpenSourceOnError = False
+#   rule.mDependences.append ("makefile.json")
+#   rule.mDependences.append (allHeadersSecondaryDependenceFile)
+#   rule.mCommand += COMPILER_TOOL_WITH_OPTIONS
+#   rule.mCommand += ["-DSTATIC=static __attribute__((unused))"] if GROUP_SOURCES else ["-DSTATIC="]
+#   rule.mCommand += common_definitions.checkModeOptions ()
+#   rule.mCommand += common_definitions.C_Cpp_optimizationOptions ()
+#   rule.mCommand += common_definitions.Cpp_actualOptions (False)
+#   rule.mCommand += includeDirsInCompilerCommand
+#   rule.mCommand += ["-x", "c++-header", allHeadersSecondaryDependenceFile]
+#   rule.mCommand += ["-o", precompiledHeader_file]
+#   rule.mPriority = -1
+#   make.addRule (rule)
+#   allGoal.append (precompiledHeader_file)
 #--------------------------------------------------------------   --- Build interrupt handler files
   interruptHandlerSFile = GENERATED_SOURCE_DIR + "/interrupt-handlers-assembly.s"
   interruptHandlerCppFile = GENERATED_SOURCE_DIR + "/interrupt-handlers-cpp.cpp"
@@ -272,11 +290,13 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   #--- Checking source
     rule = makefile.Rule ([objectFileForChecking], "Checking " + source)
     rule.mOpenSourceOnError = False
-    rule.mDependences.append (allHeaders_file)
+    rule.mDependences.append (allHeadersSecondaryDependenceFile)
+#     rule.mDependences.append (precompiledHeader_file)
     rule.mDependences.append (sourcePath)
     rule.mDependences.append ("makefile.json")
     rule.enterSecondaryDependanceFile (objectFileForChecking + ".dep", make)
     rule.mCommand += COMPILER_TOOL_WITH_OPTIONS
+    rule.mCommand += ["-x", "c++"]
     rule.mCommand += common_definitions.checkModeOptions ()
     rule.mCommand += common_definitions.C_Cpp_optimizationOptions ()
     rule.mCommand += common_definitions.Cpp_actualOptions (False)
@@ -300,7 +320,8 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     rule.mCommand += ["-DSTATIC=static __attribute__((unused))"] if GROUP_SOURCES else ["-DSTATIC="]
     rule.mCommand += includeDirsInCompilerCommand
     rule.mCommand += ["-MD", "-MP", "-MF", objectFile + ".dep"]
-    rule.mDependences.append (allHeaders_file)
+    rule.mDependences.append (allHeadersSecondaryDependenceFile)
+##    rule.mDependences.append (precompiledHeader_file)
     rule.mDependences.append (sourcePath)
     rule.mDependences.append ("makefile.json")
     rule.enterSecondaryDependanceFile (objectFile + ".dep", make)

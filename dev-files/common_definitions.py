@@ -28,8 +28,6 @@ def commonLinkerFlags (usesLTO) :
 
 def checkModeOptions () :
   result = []
-  result.append ("-x")
-  result.append ("c++")
   result.append ("-DCHECK_SOFTWARE_MODES")
   return result
 

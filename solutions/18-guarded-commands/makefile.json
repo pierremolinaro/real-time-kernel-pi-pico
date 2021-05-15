@@ -16,7 +16,7 @@
 
   "SECTION-SCHEME" : "disable-interrupts",
 
-  "TASK-COUNT" : 4,
+  "TASK-COUNT" : 6,
 
   "CPU-MHZ" : 125
 }
