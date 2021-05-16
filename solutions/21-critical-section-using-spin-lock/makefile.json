@@ -1,6 +1,6 @@
 { "TARGET" : "RP2040",
 
-  "DEPLOYMENT" : ["flash", "ram"],
+  "DEPLOYMENT" : ["flash"],
 
   "SOURCE-DIR" : ["sources"],
 

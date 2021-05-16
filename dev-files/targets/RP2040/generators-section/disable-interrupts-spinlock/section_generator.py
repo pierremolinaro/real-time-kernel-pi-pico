@@ -9,11 +9,12 @@ def asSeparator () :
 
 def generateDisableInterruptAndSpinLockHeader () :
   sCode  = asSeparator ()
-  sCode += "//   SECTION VARIABLES\n\n"
-  sCode += "	.section	.bss.spinlock.acquired, \"aw\", %nobits\n\n"
-  sCode += "  .global	  spinlock.acquired\n\n"
+  sCode += "//   SECTION VARIABLES\n"
+  sCode += asSeparator () + "\n"
+  sCode += "  .section  .bss.spinlock.acquired, \"aw\", %nobits\n\n"
+  sCode += "  .global    spinlock.acquired\n\n"
   sCode += "spinlock.acquired: // C type: uint8_t [2]\n"
-  sCode += "  .space	2\n\n"
+  sCode += "  .space  2\n\n"
   return ("", sCode)
 
 #---------------------------------------------------------------------------------------------------

@@ -162,8 +162,6 @@ static void displayTask (USER_MODE) {
     printUnsigned (MODE_ gCpu1AllocationCount) ;
     gotoXY (MODE_ 0, 2) ;
     printUnsigned (MODE_ usedRAMByteCount ()) ;
-    gotoXY (MODE_ 10, 2) ;
-    printHex8 (MODE_ gCpu1Parameter) ;
     gotoXY (MODE_ 0, 3) ;
     printSpaces (MODE_ 10) ;
     gotoXY (MODE_ 0, 3) ;
