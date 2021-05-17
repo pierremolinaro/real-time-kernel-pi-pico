@@ -138,6 +138,6 @@ void kernel_internalWaitForGuardChange (KERNEL_MODE) asm ("service.guard.interna
 
 //--------------------------------------------------------------------------------------------------
 
-void guard_commandStatesDidChange (IRQ_MODE_ GuardList & ioGuardList) ;
+void guard_blockingStateDidChange (IRQ_MODE_ GuardList & ioGuardList) ;
 
 //--------------------------------------------------------------------------------------------------

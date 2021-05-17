@@ -42,7 +42,7 @@ void Semaphore::sys_V (IRQ_MODE) {
   const bool found = irq_makeTaskReadyFromList (MODE_ mWaitingTaskList) ;
   if (! found) {
     mValue += 1 ;
-    guard_commandStatesDidChange (MODE_ mGuardList) ;
+    guard_blockingStateDidChange (MODE_ mGuardList) ;
   }
 }
 

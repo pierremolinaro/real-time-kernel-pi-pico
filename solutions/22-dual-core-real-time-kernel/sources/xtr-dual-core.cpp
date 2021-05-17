@@ -505,7 +505,7 @@ void kernel_internalWaitForGuardChange (KERNEL_MODE) {
 
 //--------------------------------------------------------------------------------------------------
 
-void guard_commandStatesDidChange (IRQ_MODE_ GuardList & ioGuardList) {
+void guard_blockingStateDidChange (IRQ_MODE_ GuardList & ioGuardList) {
   TaskControlBlock * task ;
   while ((task = ioGuardList.removeFirstTask (MODE))) {
     removeTaskFromGuards (MODE_ task) ;

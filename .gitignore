@@ -5,3 +5,5 @@
 **/zPRODUCTS/*
 **/zSOURCES/*
 archives/**
+**/2-run-flash-via-usb.py
+**/2-run-ram-via-usb.py
