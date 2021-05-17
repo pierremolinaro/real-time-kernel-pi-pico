@@ -49,13 +49,15 @@ void busyWaitDuring_faultMode (FAULT_MODE_ const uint32_t inDelayMS) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//   systick — ANY MODE
+//   MICRO SECONDS
 //--------------------------------------------------------------------------------------------------
 
-uint32_t systick_current_cpu (ANY_MODE) {
-  return systick_hw->cvr ;
+uint64_t section_microseconds (SECTION_MODE) {
+  const uint32_t lowValue = timer_hw->timelr ;
+  const uint32_t highValue = timer_hw->timehr ;
+  const uint64_t value = (uint64_t (highValue) << 32) | lowValue ;
+  return value ;
 }
-
 //--------------------------------------------------------------------------------------------------
 //   busyWaitDuring — INIT MODE
 //--------------------------------------------------------------------------------------------------

@@ -19,6 +19,16 @@ void busyWaitDuring (USER_MODE_ const uint32_t inDelayMS) ;
 void busyWaitUntil (USER_MODE_ const uint32_t inDeadlineMS) ;
 
 //--------------------------------------------------------------------------------------------------
+//   MICRO SECONDS
+//--------------------------------------------------------------------------------------------------
+
+//$section fonction.microseconds
+
+uint64_t microseconds (USER_MODE) asm ("fonction.microseconds") ;
+
+uint64_t section_microseconds (SECTION_MODE) asm ("section.fonction.microseconds") ;
+
+//--------------------------------------------------------------------------------------------------
 //   ANY MODE
 //--------------------------------------------------------------------------------------------------
 

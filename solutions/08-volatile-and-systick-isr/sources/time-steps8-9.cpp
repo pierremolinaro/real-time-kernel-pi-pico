@@ -26,14 +26,6 @@ static void activateSystickInterrupt (INIT_MODE) {
 MACRO_INIT_ROUTINE (activateSystickInterrupt) ;
 
 //--------------------------------------------------------------------------------------------------
-//   systick — ANY MODE
-//--------------------------------------------------------------------------------------------------
-
-uint32_t systick_current_cpu (ANY_MODE) {
-  return systick_hw->cvr ;
-}
-
-//--------------------------------------------------------------------------------------------------
 //   busyWaitDuring — INIT MODE
 //--------------------------------------------------------------------------------------------------
 
@@ -71,6 +63,17 @@ void systickInterruptServiceRoutine (SECTION_MODE) {
 
 uint32_t millis (ANY_MODE) {
   return gUptime ;
+}
+
+//--------------------------------------------------------------------------------------------------
+//   MICRO SECONDS
+//--------------------------------------------------------------------------------------------------
+
+uint64_t section_microseconds (SECTION_MODE) {
+  const uint32_t lowValue = timer_hw->timelr ;
+  const uint32_t highValue = timer_hw->timehr ;
+  const uint64_t value = (uint64_t (highValue) << 32) | lowValue ;
+  return value ;
 }
 
 //--------------------------------------------------------------------------------------------------

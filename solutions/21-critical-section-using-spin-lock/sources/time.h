@@ -34,9 +34,17 @@ void service_waitUntil (KERNEL_MODE_ const uint32_t inDeadlineMS) asm ("service.
 //   ANY MODE
 //--------------------------------------------------------------------------------------------------
 
-uint32_t systick_current_cpu (ANY_MODE) ;
-
 uint32_t millis (ANY_MODE) ;
+
+//--------------------------------------------------------------------------------------------------
+//   MICRO SECONDS
+//--------------------------------------------------------------------------------------------------
+
+//$section fonction.microseconds
+
+uint64_t microseconds (USER_MODE) asm ("fonction.microseconds") ;
+
+uint64_t section_microseconds (SECTION_MODE) asm ("section.fonction.microseconds") ;
 
 //--------------------------------------------------------------------------------------------------
 //   INTERRUPT ROUTINE
