@@ -19,7 +19,7 @@ mBuffer () {
 
 //--------------------------------------------------------------------------------------------------
 
-void BoundedBuffer::append (USER_MODE_ const uint32_t inData) {
+void BoundedBuffer::append (USER_MODE_ const uint8_t * inData) {
   mInput.P (MODE) ;
   internalAppend (MODE_ inData) ;
   mOutput.V (MODE) ;
@@ -27,7 +27,7 @@ void BoundedBuffer::append (USER_MODE_ const uint32_t inData) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BoundedBuffer::section_internalAppend (SECTION_MODE_ const uint32_t inData) {
+void BoundedBuffer::section_internalAppend (SECTION_MODE_ const uint8_t * inData) {
   mBuffer [mWriteIndex] = inData ;
   mWriteIndex = (mWriteIndex + 1) % BOUNDED_BUFFER_SIZE ;
   mCount += 1 ;
@@ -35,7 +35,7 @@ void BoundedBuffer::section_internalAppend (SECTION_MODE_ const uint32_t inData)
 
 //--------------------------------------------------------------------------------------------------
 
-bool BoundedBuffer::guarded_append (USER_MODE_ const uint32_t inData) {
+bool BoundedBuffer::guarded_append (USER_MODE_ const uint8_t * inData) {
   const bool result = mInput.guarded_P (MODE) ;
   if (result) {
     internalAppend (MODE_ inData) ;
@@ -46,9 +46,9 @@ bool BoundedBuffer::guarded_append (USER_MODE_ const uint32_t inData) {
 
 //--------------------------------------------------------------------------------------------------
 
-uint32_t BoundedBuffer::remove (USER_MODE) {
+const uint8_t * BoundedBuffer::remove (USER_MODE) {
   mOutput.P (MODE) ;
-  uint32_t data = 0 ;
+  const uint8_t * data ;
   internalRemove (MODE_ data) ;
   mInput.V (MODE) ;
   return data ;
@@ -56,7 +56,7 @@ uint32_t BoundedBuffer::remove (USER_MODE) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BoundedBuffer::section_internalRemove (SECTION_MODE_ uint32_t & outData) {
+void BoundedBuffer::section_internalRemove (SECTION_MODE_ const uint8_t * & outData) {
   outData = mBuffer [mReadIndex] ;
   mReadIndex = (mReadIndex + 1) % BOUNDED_BUFFER_SIZE ;
   mCount -= 1 ;
@@ -64,7 +64,7 @@ void BoundedBuffer::section_internalRemove (SECTION_MODE_ uint32_t & outData) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool BoundedBuffer::guarded_remove (USER_MODE_ uint32_t & outData) {
+bool BoundedBuffer::guarded_remove (USER_MODE_ const uint8_t * & outData) {
   const bool result = mOutput.guarded_P (MODE) ;
   if (result) {
     internalRemove (MODE_ outData) ;
@@ -75,7 +75,7 @@ bool BoundedBuffer::guarded_remove (USER_MODE_ uint32_t & outData) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool BoundedBuffer::irq_append (IRQ_MODE_ const uint32_t inData) {
+bool BoundedBuffer::irq_append (IRQ_MODE_ const uint8_t * inData) {
   const bool ok = mCount < BOUNDED_BUFFER_SIZE ;
   if (ok) {
     mBuffer [mWriteIndex] = inData ;
