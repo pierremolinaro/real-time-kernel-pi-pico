@@ -107,6 +107,7 @@ def Cpp_actualOptions (usesLTO):
   result.append ("-fno-threadsafe-statics")
   result.append ("-Wmissing-declarations")
   result.append ("-Wsuggest-override")
+  result.append ("-Wconversion")
   return result
 
 #---------------------------------------------------------------------------------------------------

@@ -6,11 +6,11 @@ void cpu1_code (void) asm ("reset.handler.cpu.1") ;
 
 void cpu1_code (void) {
   while (1) {
-  //--- Drive BUILTIN_LED high --> led is on
+  //--- Drive GP27 high --> led is on
     digitalWrite (DigitalPort::GP27, true) ;
   //--- Wait...
     for (volatile uint32_t i=0 ; i< 100 * 1000 ; i++) {}
-  //--- Drive BUILTIN_LED low --> led is off
+  //--- Drive GP27 low --> led is off
     digitalWrite (DigitalPort::GP27, false) ;
   //--- Wait...
     for (volatile uint32_t i=0 ; i< 500 * 1000 ; i++) {}

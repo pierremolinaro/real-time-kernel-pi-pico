@@ -128,7 +128,7 @@ void * section_fatPointerAlloc (SECTION_MODE_ const size_t inBlockSize) {
           gFirstFreeAddress = size_t (& __heap_end) ;
           result = nullptr ;
         }else{
-          result->mFreeListIndex = freeListIndex ;
+          result->mFreeListIndex = uint16_t (freeListIndex) ;
           result->mAllocatedByteSize = uint32_t (1) << smallestPowerOfTwo ;
           result ++ ;
           gAllocationCountArray [freeListIndex] += 1 ;

@@ -220,7 +220,7 @@ void clearScreen (USER_MODE) {
 void gotoXY (USER_MODE_ const uint32_t inColumn, const uint32_t inLine) {
   static const uint8_t tab [4] = {0, 64, 20, 84} ;
   if ((inLine < 4) && (inColumn < 20)) {
-    write8bitCommand (MODE_ tab [inLine] + inColumn + 0x80U) ;
+    write8bitCommand (MODE_ tab [inLine] + uint8_t (inColumn + 0x80U)) ;
   }
 }
 
@@ -259,7 +259,7 @@ void printUnsigned (USER_MODE_ const uint32_t inValue) {
   bool isPrinting = false ;
   while (divisor > 0) {
     if (isPrinting || (value >= divisor)) {
-      printChar (MODE_ '0' + value / divisor) ;
+      printChar (MODE_ char ('0' + value / divisor)) ;
       value %= divisor ;
       isPrinting = true ;
     }
@@ -275,12 +275,12 @@ void printUnsigned (USER_MODE_ const uint32_t inValue) {
 void printUnsigned64 (USER_MODE_ const uint64_t inValue) {
   char buffer [20] ;
   buffer [19] = '\0' ;
-  buffer [18] = (inValue % 10) + '0' ;
+  buffer [18] = char ((inValue % 10) + '0') ;
   uint32_t idx = 18 ;
   uint64_t v = inValue / 10 ;
   while (v != 0) {
     idx -- ;
-    buffer [idx] = (v % 10) + '0' ;
+    buffer [idx] = char ((v % 10) + '0') ;
     v /= 10 ;
   }
   printString (MODE_ & buffer [idx]) ;
@@ -302,9 +302,9 @@ void printSigned (USER_MODE_ const int32_t inValue) {
 void printHex1 (USER_MODE_ const uint32_t inValue) {
   const uint32_t v = inValue & 0xF ;
   if (v < 10) {
-    printChar (MODE_ '0' + v) ;
+    printChar (MODE_ char ('0' + v)) ;
   }else{
-    printChar (MODE_ 'A' + v - 10) ;
+    printChar (MODE_ char ('A' + v - 10)) ;
   }
 }
 
