@@ -4,7 +4,7 @@
 
 //--------------------------------------------------------------------------------------------------
 
-  .section ".reset.in.ram", "ax", %progbits
+  .section ".start.in.ram", "ax", %progbits
 
   .global ram.entry.point
   .type ram.entry.point, %function

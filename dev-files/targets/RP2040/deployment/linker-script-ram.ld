@@ -46,7 +46,7 @@ ENTRY (ram.entry.point)
 SECTIONS {
   .text : {
   /*-------------------- Entry point in RAM should be at the beginning of the RAM */
-    KEEP (*(.reset.in.ram)) ;
+    KEEP (*(.start.in.ram)) ;
   /*-------------------- BSS */
     . = ALIGN(4);
     __bss_start = . ;

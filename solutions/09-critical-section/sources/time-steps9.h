@@ -32,8 +32,6 @@ uint64_t section_microseconds (SECTION_MODE) asm ("section.fonction.microseconds
 //   ANY MODE
 //--------------------------------------------------------------------------------------------------
 
-uint32_t systick_current_cpu (ANY_MODE) ;
-
 uint32_t millis (ANY_MODE) ;
 
 //--------------------------------------------------------------------------------------------------

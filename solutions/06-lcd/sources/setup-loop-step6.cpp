@@ -18,7 +18,7 @@ void loop0 (USER_MODE) {
   gCount %= 20 ;
   gotoXY (MODE_ 0, 1) ;
   printSpaces (MODE_ 2) ;
-  gotoXY (MODE_ 0, 12) ;
+  gotoXY (MODE_ 0, 1) ;
   printUnsigned (MODE_ gCount) ;
   digitalToggle (BUILTIN_LED) ;
 }

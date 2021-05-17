@@ -26,7 +26,7 @@ MACRO_REAL_TIME_ISR (rtISR) ;
 //--------------------------------------------------------------------------------------------------
 
 void setup0 (USER_MODE) {
-  printString (MODE_ "Attendre...") ;
+  printString (MODE_ "Wait...") ;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -54,6 +54,12 @@ void loop0 (USER_MODE) {
       gotoXY (MODE_ 0, 3) ;
       printUnsigned (MODE_ gCount3) ;
     }
+  }else{
+    busyWaitDuring (MODE_ 1000) ;
+    gotoXY (MODE_ 10, 0) ;
+    printUnsigned (MODE_ millis (MODE)) ;
+    gotoXY (MODE_ 10, 1) ;
+    printUnsigned64 (MODE_ microseconds (MODE)) ;
   }
 }
 

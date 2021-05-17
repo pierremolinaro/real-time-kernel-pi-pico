@@ -66,17 +66,6 @@ uint32_t millis (ANY_MODE) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//   MICRO SECONDS
-//--------------------------------------------------------------------------------------------------
-
-uint64_t section_microseconds (SECTION_MODE) {
-  const uint32_t lowValue = timer_hw->timelr ;
-  const uint32_t highValue = timer_hw->timehr ;
-  const uint64_t value = (uint64_t (highValue) << 32) | lowValue ;
-  return value ;
-}
-
-//--------------------------------------------------------------------------------------------------
 //   busyWaitDuring, busyWaitUntil — USER MODE
 //--------------------------------------------------------------------------------------------------
 

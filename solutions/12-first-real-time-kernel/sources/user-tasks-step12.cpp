@@ -12,11 +12,12 @@ static void task1 (USER_MODE) {
   while (1) {
     if (gDisplayTime <= millis (MODE)) {
       digitalWrite (L4_LED, !digitalRead (P4_PUSH_BUTTON)) ;
-      const uint64_t s = microseconds (MODE) ;
+      const uint32_t ms = millis (MODE) ;
+      const uint64_t us = microseconds (MODE) ;
       gotoXY (MODE_ 0, 1) ;
-      printUnsigned64 (MODE_ s) ;
+      printUnsigned64 (MODE_ us) ;
       gotoXY (MODE_ 0, 2) ;
-      printUnsigned (MODE_ millis (MODE)) ;
+      printUnsigned (MODE_ ms) ;
       gDisplayTime += 1000 ;
     }
   }
