@@ -10,7 +10,7 @@
 
   "UNUSED-IRQ-SCHEME" : "goto-fault-handler",
 
-  "IRQ-SECTION-SCHEME" : "branch",
+  "IRQ-SECTION-SCHEME" : "spinlock",
 
   "SERVICE-SCHEME" : "svc-single-core",
 

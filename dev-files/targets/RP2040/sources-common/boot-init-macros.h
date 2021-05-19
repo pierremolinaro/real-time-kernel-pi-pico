@@ -43,3 +43,15 @@
   __attribute__ ((used)) = ROUTINE ;
 
 //--------------------------------------------------------------------------------------------------
+//
+// Inscrire l'adresse de la routine dans la section 'init.routine.array' pour exécution automatique lors du démarrage
+//
+//--------------------------------------------------------------------------------------------------
+
+#define MACRO_INIT_CPU1_ROUTINE(ROUTINE) \
+  static void (* UNIQUE_IDENTIFIER) (INIT_CPU1_MODE) \
+  __attribute__ ((section ("phase.3.cpu.1.init.routine.array"))) \
+  __attribute__ ((unused)) \
+  __attribute__ ((used)) = ROUTINE ;
+
+//--------------------------------------------------------------------------------------------------

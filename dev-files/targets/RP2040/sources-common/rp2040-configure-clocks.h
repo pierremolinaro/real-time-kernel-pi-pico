@@ -15,6 +15,10 @@ void cpu0Phase3Init (void) asm ("cpu.0.phase3.init") ;
 
 //--------------------------------------------------------------------------------------------------
 
+void cpu1Phase3Init (void) asm ("cpu.1.phase3.init") ;
+
+//--------------------------------------------------------------------------------------------------
+
 inline uint32_t getCoreIndex (void) {
   return sio_hw->cpuid ;
 }

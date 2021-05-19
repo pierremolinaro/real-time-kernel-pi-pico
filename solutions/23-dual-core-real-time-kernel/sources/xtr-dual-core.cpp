@@ -590,14 +590,18 @@ void sio1InterruptServiceRoutine (IRQ_MODE){
 }
 
 //--------------------------------------------------------------------------------------------------
+//   Init CPU 1
+//--------------------------------------------------------------------------------------------------
 
-void cpu1Phase3Init (void) asm ("cpu.1.phase3.init") ;
-
-void cpu1Phase3Init (void) {
+static void cpu1Init (INIT_CPU1_MODE) {
 //--- Clear FIFO1 overflow bits
   sio_hw->fifo_st = SIO_FIFO_ST_WOF_BITS | SIO_FIFO_ST_ROE_BITS ;
 //---
   NVIC_ENABLE_IRQ (ISRSlot::SIO_IRQ_PROC1) ;
 }
+
+//--------------------------------------------------------------------------------------------------
+
+MACRO_INIT_CPU1_ROUTINE (cpu1Init) ;
 
 //--------------------------------------------------------------------------------------------------

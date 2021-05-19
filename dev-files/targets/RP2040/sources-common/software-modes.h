@@ -56,6 +56,30 @@
   #define INIT_MODE_
 #endif
 
+
+//--------------------------------------------------------------------------------------------------
+//   I N I T    M O D E    C P U    1
+//--------------------------------------------------------------------------------------------------
+
+#ifdef CHECK_SOFTWARE_MODES
+  class INIT_CPU1_mode_class {
+    private: INIT_CPU1_mode_class (void) = delete ;
+    private: INIT_CPU1_mode_class & operator = (const INIT_CPU1_mode_class &) = delete ;
+
+    public: INIT_CPU1_mode_class (const INIT_CPU1_mode_class &) ;
+  } ;
+#endif
+
+//--------------------------------------------------------------------------------------------------
+
+#ifdef CHECK_SOFTWARE_MODES
+  #define INIT_CPU1_MODE  const INIT_CPU1_mode_class MODE
+  #define INIT_CPU1_MODE_ const INIT_CPU1_mode_class MODE,
+#else
+  #define INIT_CPU1_MODE  void
+  #define INIT_CPU1_MODE_
+#endif
+
 //--------------------------------------------------------------------------------------------------
 //   U S E R    M O D E
 //--------------------------------------------------------------------------------------------------

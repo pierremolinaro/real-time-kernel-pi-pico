@@ -85,6 +85,12 @@ SECTIONS {
     KEEP (*(real.time.interrupt.routine.array)) ;
     . = ALIGN (4) ;
     __real_time_interrupt_routine_array_end = . ;
+  /*-------------------- Phase 3 init CPU 1 routine array */
+    . = ALIGN (4) ;
+    __phase_3_cpu_1_init_routine_array_start = . ;
+    KEEP (*(phase.3.cpu.1.init.routine.array)) ;
+    . = ALIGN (4) ;
+    __phase_3_cpu_1_init_routine_array_end = . ;
   /*-------------------- ROM data */
     . = ALIGN(4);
     *(.rodata*);

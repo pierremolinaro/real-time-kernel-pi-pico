@@ -323,12 +323,10 @@ void cpu0Phase3Boot (void) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//   INIT ROUTINE
+//   PHASE 3 INIT ROUTINE, CPU 0
 //--------------------------------------------------------------------------------------------------
 
-void start_cpu_1 () ; // Code run by CPU 0
-
-void cpu0Phase3Init (void) {
+void cpu0Phase3Init (void) { // Executed by CPU 0
 //--------------- Aller exécuter les routines d'initialisation de la section boot.routine.array
   extern void (* __boot_routine_array_start) (void) ;
   extern void (* __boot_routine_array_end) (void) ;
@@ -350,6 +348,21 @@ void cpu0Phase3Init (void) {
   extern void (* __init_routine_array_end) (void) ;
   ptr = & __init_routine_array_start ;
   while (ptr != & __init_routine_array_end) {
+    (* ptr) () ;
+    ptr ++ ;
+  }
+}
+
+//--------------------------------------------------------------------------------------------------
+//   PHASE 3 INIT ROUTINE, CPU 1
+//--------------------------------------------------------------------------------------------------
+
+void cpu1Phase3Init (void) { // Executed by CPU 1
+//--- Aller exécuter les routines d'initialisation de la section phase.3.cpu.1.init.routine.array
+  extern void (* __phase_3_cpu_1_init_routine_array_start) (void) ;
+  extern void (* __phase_3_cpu_1_init_routine_array_end) (void) ;
+  void (* * ptr) (void) = & __phase_3_cpu_1_init_routine_array_start ;
+  while (ptr != & __phase_3_cpu_1_init_routine_array_end) {
     (* ptr) () ;
     ptr ++ ;
   }
