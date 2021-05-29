@@ -68,6 +68,8 @@ static void start_cpu_1 (INIT_MODE) { // Code run by CPU 0
   extern uint32_t __system_stack_end_cpu_1 ;
   const uint32_t top_of_system_stack_cpu_1 = uint32_t (& __system_stack_end_cpu_1) ;
   multicore_launch_core1_raw (reset_handler_cpu1, top_of_system_stack_cpu_1, vectors_cpu_0) ;
+//--- Clear FIFO0 overflow bits
+  sio_hw->fifo_st = SIO_FIFO_ST_WOF_BITS | SIO_FIFO_ST_ROE_BITS ;
   NVIC_ENABLE_IRQ (ISRSlot::SIO_IRQ_PROC0) ;
 }
 

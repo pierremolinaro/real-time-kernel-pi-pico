@@ -16,7 +16,7 @@
 
   "SECTION-SCHEME" : "disable-interrupts-spinlock",
 
-  "TASK-COUNT" : 4,
+  "TASK-COUNT" : 5,
 
   "CPU-MHZ" : 125
 }

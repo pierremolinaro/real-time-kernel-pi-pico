@@ -193,7 +193,7 @@ uint8_t indexForDescriptorTask (const TaskControlBlock * inTaskPtr) { // should 
 
 //--------------------------------------------------------------------------------------------------
 //   RUNNING TASK DESCRIPTOR POINTERS
-// Shared with assembly code
+//   Shared with assembly code
 //--------------------------------------------------------------------------------------------------
 
 TaskControlBlock * gRunningTaskControlBlockPtr [2] asm ("var.running.tasks.control.block.ptr") ;
@@ -207,8 +207,8 @@ static TaskList gReadyTaskList ;
 //--------------------------------------------------------------------------------------------------
 
 static void kernel_makeNoTaskRunning (KERNEL_MODE) {
-   const uint32_t cpuIdx = getCoreIndex () ;
-   gRunningTaskControlBlockPtr [cpuIdx] = nullptr ; // No running task
+  const uint32_t cpuIdx = getCoreIndex () ;
+  gRunningTaskControlBlockPtr [cpuIdx] = nullptr ; // No running task
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -240,11 +240,12 @@ void kernelSelectTaskToRunAndNotifyOtherCPU (IRQ_MODE) {
       bool interruptOtherCPU = (gRunningTaskControlBlockPtr [otherCpuIdx] == nullptr) ;
       if (!interruptOtherCPU) {
         const uint32_t candidateTaskIdx = indexForDescriptorTask (candidateTaskPtr) ;
-        const uint32_t runningTaskIdx = indexForDescriptorTask (gRunningTaskControlBlockPtr [otherCpuIdx]) ;
+        TaskControlBlock * otherRunningTaskPtr = gRunningTaskControlBlockPtr [otherCpuIdx] ;
+        const uint32_t runningTaskIdx = indexForDescriptorTask (otherRunningTaskPtr) ;
         interruptOtherCPU = candidateTaskIdx < runningTaskIdx ;
       }
       if (interruptOtherCPU) {
-        sio_hw->fifo_wr = 0 ;  // Page 50, write any data to FIFO for interrupting CPU
+        sio_hw->fifo_wr = 0 ;  // Page 50, write any data to FIFO for interrupting other CPU
       }
     }
   }
@@ -590,10 +591,10 @@ void sio1InterruptServiceRoutine (IRQ_MODE){
 }
 
 //--------------------------------------------------------------------------------------------------
-//   Init CPU 1
+//   cpu1_SIO_IRQ_init
 //--------------------------------------------------------------------------------------------------
 
-static void cpu1Init (INIT_CPU1_MODE) {
+static void cpu1_SIO_IRQ_init (INIT_CPU1_MODE) {
 //--- Clear FIFO1 overflow bits
   sio_hw->fifo_st = SIO_FIFO_ST_WOF_BITS | SIO_FIFO_ST_ROE_BITS ;
 //---
@@ -602,6 +603,6 @@ static void cpu1Init (INIT_CPU1_MODE) {
 
 //--------------------------------------------------------------------------------------------------
 
-MACRO_INIT_CPU1_ROUTINE (cpu1Init) ;
+MACRO_INIT_CPU1_ROUTINE (cpu1_SIO_IRQ_init) ;
 
 //--------------------------------------------------------------------------------------------------

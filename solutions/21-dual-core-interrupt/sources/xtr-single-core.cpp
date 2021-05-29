@@ -207,7 +207,7 @@ static TaskList gReadyTaskList ;
 //--------------------------------------------------------------------------------------------------
 
 static void kernel_makeNoTaskRunning (KERNEL_MODE) {
-   gRunningTaskControlBlockPtr = nullptr ; // No running task
+  gRunningTaskControlBlockPtr = nullptr ; // No running task
 }
 
 //--------------------------------------------------------------------------------------------------
