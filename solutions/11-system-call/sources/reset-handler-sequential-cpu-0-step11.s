@@ -1,6 +1,6 @@
-	.syntax unified
-	.cpu cortex-m0plus
-	.thumb
+  .syntax unified
+  .cpu cortex-m0plus
+  .thumb
 
 //--------------------------------------------------------------------------------------------------
 //  RESET HANDLER (DOUBLE STACK MODE) CPU 0
@@ -9,15 +9,15 @@
 //--- This is stack for background task
    BACKGROUND.STACK.SIZE.CPU.0 = 512
 
-	.section	.bss.background.task.stack, "aw", %nobits
-  .align	  3   // Stack should be aligned on a 8-byte boundary
+  .section  .bss.background.task.stack, "aw", %nobits
+  .align    3   // Stack should be aligned on a 8-byte boundary
 
 background.task.stack.cpu.0:
-  .space	BACKGROUND.STACK.SIZE.CPU.0
+  .space  BACKGROUND.STACK.SIZE.CPU.0
 
 //--------------------------------------------------------------------------------------------------
 
-  .section	".text", "ax", %progbits
+  .section  ".text", "ax", %progbits
 
   .global reset.handler.cpu.0
   .type reset.handler.cpu.0, %function

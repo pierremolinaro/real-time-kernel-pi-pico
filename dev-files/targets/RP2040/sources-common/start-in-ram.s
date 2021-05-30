@@ -1,6 +1,6 @@
-	.syntax unified
-	.cpu cortex-m0plus
-	.thumb
+  .syntax unified
+  .cpu cortex-m0plus
+  .thumb
 
 //--------------------------------------------------------------------------------------------------
 

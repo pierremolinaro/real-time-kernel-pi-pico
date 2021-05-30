@@ -16,7 +16,7 @@ static inline void multicore_fifo_push_blocking (const uint32_t inData) {
 //--- Send data
   sio_hw->fifo_wr = inData ;  // Page 50
 //--- Fire off an event to the other core
-  __asm volatile ("sev") ;
+  asm volatile ("sev") ;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ static uint32_t multicore_fifo_pop_blocking (void) {
 // If nothing there yet, we wait for an event first,
 // to try and avoid too much busy waiting
   while ((sio_hw->fifo_st & SIO_FIFO_ST_VLD_BITS) == 0) {
-    __asm volatile ("wfe") ;
+    asm volatile ("wfe") ;
   }
   return sio_hw->fifo_rd ;
 }
@@ -49,7 +49,7 @@ static void multicore_launch_core1_raw (void (*cpu1Code)(void),
   //--- we drain before sending a 0
     if (cmd == 0) {
       multicore_fifo_drain () ;
-      __asm volatile ("sev") ; // core 1 may be waiting for fifo space
+      asm volatile ("sev") ; // core 1 may be waiting for fifo space
     }
     multicore_fifo_push_blocking (cmd) ;
     const uint32_t response = multicore_fifo_pop_blocking () ;
