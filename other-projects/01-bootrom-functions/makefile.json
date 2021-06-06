@@ -1,0 +1,22 @@
+{ "TARGET" : "RP2040",
+
+  "DEPLOYMENT" : ["flash"],
+
+  "SOURCE-DIR" : ["sources", "../common-sources-utilities", "../common-sources-dual-core"],
+
+  "SOURCES-IN-DEV-DIR" : ["sources-common", "sources-digital-io", "synchronization-tools"],
+
+  "DEV-DIR" : "../../dev-files",
+
+  "UNUSED-IRQ-SCHEME" : "goto-fault-handler",
+
+  "IRQ-SECTION-SCHEME" : "spinlock",
+
+  "SERVICE-SCHEME" : "svc-dual-core-v2",
+
+  "SECTION-SCHEME" : "disable-interrupts-spinlock",
+
+  "TASK-COUNT" : 3,
+
+  "CPU-MHZ" : 125
+}

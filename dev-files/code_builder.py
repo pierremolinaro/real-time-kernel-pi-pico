@@ -407,6 +407,14 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
         s += "  - \"" + dep + "\"\n"
       print (makefile.BOLD_RED () + s + makefile.ENDC ())
       sys.exit (1)
+#--------------------------------------------------------------- Additional source for deployement
+  for selectedDeployment in selectedDeployments :
+    additionalSourceDirectory = deployment.additionalSourceDirectoryForDeployment (selectedDeployment)
+    if additionalSourceDirectory != "" :
+      fullPath = TARGET_DIR + "/deployment/" + additionalSourceDirectory
+      for name in sorted (os.listdir (fullPath)) :
+        print (name)
+
 #--------------------------------------------------------------------------- Build deployment files
   runGoalDictionary = dict ()
   for selectedDeployment in selectedDeployments :

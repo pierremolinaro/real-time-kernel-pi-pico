@@ -16,6 +16,16 @@ def deploymentDictionary () :
 
 #---------------------------------------------------------------------------------------------------
 
+def additionalSourceDirectoryForDeployment (deployment) :
+  result = ""
+  if deployment == "flash" :
+    result = "sources-for-flash-deployment"
+  elif deployment == "ram" :
+    result = "sources-for-ram-deployment"
+  return result
+
+#---------------------------------------------------------------------------------------------------
+
 def buildDeployment (PRODUCT, deployment, verbose):
   goal = PRODUCT + ".uf2"
   rule = makefile.Rule ([PRODUCT + ".uf2"], "Converting elf to UF2 " + PRODUCT + ".elf")

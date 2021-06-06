@@ -58,7 +58,7 @@ def C_Cpp_commonOptions (usesLTO):
   result.append ("-Wswitch")
   result.append ("-Wswitch-enum")
   result.append ("-Wuninitialized")
-  result.append ("-Wsign-conversion")
+#  result.append ("-Wsign-conversion")
 
 #--- Ordre de ne pas engendrer l'appel des destructeurs des variables globales C++
 # et donc d'utiliser des symboles tels que __cxa_exit, __lock___atexit_recursive_mutex, …
@@ -107,7 +107,7 @@ def Cpp_actualOptions (usesLTO):
   result.append ("-fno-threadsafe-statics")
   result.append ("-Wmissing-declarations")
   result.append ("-Wsuggest-override")
-  result.append ("-Wconversion")
+#  result.append ("-Wconversion")
   return result
 
 #---------------------------------------------------------------------------------------------------
