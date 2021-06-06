@@ -59,6 +59,140 @@ def dictionaryFromJsonFile (file) :
     sys.exit (1)
   return result
 
+#---------------------------------------------------------------------------------------------------
+#   Add CPP source file to makefile
+#---------------------------------------------------------------------------------------------------
+
+def addCppSourceFileToMakeFile (sourcePath,
+                                make,
+                                BUILD_DIR,
+                                allHeadersSecondaryDependenceFile,
+                                COMPILER_TOOL_WITH_OPTIONS,
+                                includeDirsInCompilerCommand,
+                                usesLTO,
+                                GROUP_SOURCES,
+                                allHeaders_file,
+                                ASBUILD_DIR,
+                                AS_TOOL_WITH_OPTIONS) :
+  source = os.path.basename (sourcePath)
+  objectFile = BUILD_DIR + "/" + source + ".o"
+  objectFileForChecking = BUILD_DIR + "/" + source + ".check.o"
+  asObjectFile = BUILD_DIR + "/" + source + ".s"
+#--- Checking source
+  rule1 = makefile.Rule ([objectFileForChecking], "Checking " + source)
+  rule1.mOpenSourceOnError = False
+  rule1.mDependences.append (allHeadersSecondaryDependenceFile)
+#   rule1.mDependences.append (precompiledHeader_file)
+  rule1.mDependences.append (sourcePath)
+  rule1.mDependences.append ("makefile.json")
+  rule1.enterSecondaryDependanceFile (objectFileForChecking + ".dep", make)
+  rule1.mCommand += COMPILER_TOOL_WITH_OPTIONS
+  rule1.mCommand += ["-x", "c++"]
+  rule1.mCommand += common_definitions.checkModeOptions ()
+  rule1.mCommand += common_definitions.C_Cpp_optimizationOptions ()
+  rule1.mCommand += common_definitions.Cpp_actualOptions (False)
+  rule1.mCommand += ["-c", sourcePath]
+  rule1.mCommand += ["-o", objectFileForChecking]
+  rule1.mCommand += ["-DSTATIC="]
+  rule1.mCommand += includeDirsInCompilerCommand
+  rule1.mCommand += ["-MD", "-MP", "-MF", objectFileForChecking + ".dep"]
+  make.addRule (rule1)
+  rule1.mPriority = -1
+#   allGoal.append (objectFileForChecking)
+#--- Compile source
+  rule2 = makefile.Rule ([objectFile], "Compiling " + source)
+  rule2.mOpenSourceOnError = False
+  rule2.mCommand += COMPILER_TOOL_WITH_OPTIONS
+  rule2.mCommand += common_definitions.C_Cpp_optimizationOptions ()
+  rule2.mCommand += common_definitions.Cpp_actualOptions (usesLTO)
+  rule2.mCommand += ["-g"]
+  rule2.mCommand += ["-c", sourcePath]
+  rule2.mCommand += ["-o", objectFile]
+  rule2.mCommand += ["-DSTATIC=static __attribute__((unused))"] if GROUP_SOURCES else ["-DSTATIC="]
+  rule2.mCommand += includeDirsInCompilerCommand
+  rule2.mCommand += ["-MD", "-MP", "-MF", objectFile + ".dep"]
+  rule2.mDependences.append (allHeadersSecondaryDependenceFile)
+##  rule2.mDependences.append (precompiledHeader_file)
+  rule2.mDependences.append (sourcePath)
+  rule2.mDependences.append ("makefile.json")
+  rule2.enterSecondaryDependanceFile (objectFile + ".dep", make)
+  make.addRule (rule2)
+#   objectFileList.append (objectFile)
+#--- AS rule
+  rule3 = makefile.Rule ([asObjectFile], "Compiling -> s " + source)
+  rule3.mOpenSourceOnError = False
+  rule3.mCommand += COMPILER_TOOL_WITH_OPTIONS
+  rule3.mCommand += common_definitions.C_Cpp_optimizationOptions ()
+  rule3.mCommand += common_definitions.Cpp_actualOptions (usesLTO)
+  rule3.mCommand += ["-S", sourcePath]
+  rule3.mCommand += ["-o", asObjectFile]
+  rule3.mCommand += ["-DSTATIC="]
+  rule3.mCommand += includeDirsInCompilerCommand
+  rule3.mCommand += ["-MD", "-MP", "-MF", asObjectFile + ".dep"]
+  rule3.mDependences.append (sourcePath)
+  rule3.mDependences.append (allHeaders_file)
+  rule3.mDependences.append ("makefile.json")
+  rule3.enterSecondaryDependanceFile (asObjectFile + ".dep", make)
+  make.addRule (rule3)
+#--- AS rule, getting output assembler file
+  listingFile = ASBUILD_DIR + "/" + source + ".s.list"
+  rule4 = makefile.Rule ([listingFile], "Assembling -> listing " + source)
+  rule4.mOpenSourceOnError = False
+  rule4.mCommand += AS_TOOL_WITH_OPTIONS
+  rule4.mCommand += [asObjectFile]
+  rule4.mCommand += ["-o", "/dev/null"]
+  rule4.mCommand += ["-aln=" + listingFile]
+  rule4.mDependences.append (asObjectFile)
+  rule4.mDependences.append (allHeaders_file)
+  rule4.mDependences.append ("makefile.json")
+  make.addRule (rule4)
+#   asObjectFileList.append (listingFile)
+#--- Return ([goal], [objectFile], [listingFile])
+  return ([objectFileForChecking], [objectFile], [listingFile])
+
+#---------------------------------------------------------------------------------------------------
+#   Add Assembly source file to makefile
+#---------------------------------------------------------------------------------------------------
+
+def addAsSourceFileToMakeFile (sourcePath,
+                               make,
+                               BUILD_DIR,
+                               ASBUILD_DIR,
+                               AS_TOOL_WITH_OPTIONS,
+                               includeDirsInCompilerCommand) :
+  source = os.path.basename (sourcePath)
+  objectFile = BUILD_DIR + "/" + source + ".o"
+  objectFileForChecking = BUILD_DIR + "/" + source + ".check.o"
+  asObjectFile = ASBUILD_DIR + "/" + source + ".s"
+  if sourcePath != "" :
+    rule = makefile.Rule ([objectFile], "Assembling " + source)
+    rule.mOpenSourceOnError = False
+    rule.mCommand += AS_TOOL_WITH_OPTIONS
+    rule.mCommand += [sourcePath]
+    rule.mCommand += ["-o", objectFile]
+    rule.mCommand += includeDirsInCompilerCommand
+    rule.mCommand += ["--MD", objectFile + ".dep"]
+    rule.mDependences.append (sourcePath)
+    rule.mDependences.append ("makefile.json")
+    rule.enterSecondaryDependanceFile (objectFile + ".dep", make)
+    make.addRule (rule)
+#     objectFileList.append (objectFile)
+  #--- Add listing file
+    listingFile = ASBUILD_DIR + "/" + source + ".list"
+    rule = makefile.Rule ([listingFile], "Assembling -> listing " + source)
+    rule.mOpenSourceOnError = False
+    rule.mCommand += AS_TOOL_WITH_OPTIONS
+    rule.mCommand += [sourcePath]
+    rule.mCommand += includeDirsInCompilerCommand
+    rule.mCommand += ["-o", "/dev/null"]
+    rule.mCommand += ["-aln=" + listingFile]
+    rule.mDependences.append (sourcePath)
+    rule.mDependences.append ("makefile.json")
+    make.addRule (rule)
+#     asObjectFileList.append (listingFile)
+#--- Return ([goal], [objectFile], [listingFile])
+  return ([objectFile], [listingFile])
+
 
 #---------------------------------------------------------------------------------------------------
 #   buildCode
@@ -283,124 +417,40 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   asObjectFileList = []
 #--- CPP source files
   for sourcePath in CPP_SOURCE_LIST :
-    source = os.path.basename (sourcePath)
-    objectFile = BUILD_DIR + "/" + source + ".o"
-    objectFileForChecking = BUILD_DIR + "/" + source + ".check.o"
-    asObjectFile = BUILD_DIR + "/" + source + ".s"
-  #--- Checking source
-    rule = makefile.Rule ([objectFileForChecking], "Checking " + source)
-    rule.mOpenSourceOnError = False
-    rule.mDependences.append (allHeadersSecondaryDependenceFile)
-#     rule.mDependences.append (precompiledHeader_file)
-    rule.mDependences.append (sourcePath)
-    rule.mDependences.append ("makefile.json")
-    rule.enterSecondaryDependanceFile (objectFileForChecking + ".dep", make)
-    rule.mCommand += COMPILER_TOOL_WITH_OPTIONS
-    rule.mCommand += ["-x", "c++"]
-    rule.mCommand += common_definitions.checkModeOptions ()
-    rule.mCommand += common_definitions.C_Cpp_optimizationOptions ()
-    rule.mCommand += common_definitions.Cpp_actualOptions (False)
-    rule.mCommand += ["-c", sourcePath]
-    rule.mCommand += ["-o", objectFileForChecking]
-    rule.mCommand += ["-DSTATIC="]
-    rule.mCommand += includeDirsInCompilerCommand
-    rule.mCommand += ["-MD", "-MP", "-MF", objectFileForChecking + ".dep"]
-    make.addRule (rule)
-    rule.mPriority = -1
-    allGoal.append (objectFileForChecking)
- #--- Compile source
-    rule = makefile.Rule ([objectFile], "Compiling " + source)
-    rule.mOpenSourceOnError = False
-    rule.mCommand += COMPILER_TOOL_WITH_OPTIONS
-    rule.mCommand += common_definitions.C_Cpp_optimizationOptions ()
-    rule.mCommand += common_definitions.Cpp_actualOptions (usesLTO)
-    rule.mCommand += ["-g"]
-    rule.mCommand += ["-c", sourcePath]
-    rule.mCommand += ["-o", objectFile]
-    rule.mCommand += ["-DSTATIC=static __attribute__((unused))"] if GROUP_SOURCES else ["-DSTATIC="]
-    rule.mCommand += includeDirsInCompilerCommand
-    rule.mCommand += ["-MD", "-MP", "-MF", objectFile + ".dep"]
-    rule.mDependences.append (allHeadersSecondaryDependenceFile)
-##    rule.mDependences.append (precompiledHeader_file)
-    rule.mDependences.append (sourcePath)
-    rule.mDependences.append ("makefile.json")
-    rule.enterSecondaryDependanceFile (objectFile + ".dep", make)
-    make.addRule (rule)
-    objectFileList.append (objectFile)
-  #--- objdump python3 source
-#     objdumpPythonFile = BUILD_DIR + "/" + source + ".objdump.py"
-#     rule = makefile.Rule ([objdumpPythonFile], "Building " + source + ".objdump.py")
-#     rule.mDependences.append (objectFile)
-#     rule.mDependences.append ("makefile.json")
-#     rule.mCommand += [DEV_FILES_DIR + "/build_objdump.py", OBJDUMP_TOOL, source, objdumpPythonFile]
-#     rule.mPriority = -1
-#     make.addRule (rule)
-#     allGoal.append (objdumpPythonFile)
-  #--- AS rule
-    rule = makefile.Rule ([asObjectFile], "Compiling -> s " + source)
-    rule.mOpenSourceOnError = False
-    rule.mCommand += COMPILER_TOOL_WITH_OPTIONS
-    rule.mCommand += common_definitions.C_Cpp_optimizationOptions ()
-    rule.mCommand += common_definitions.Cpp_actualOptions (usesLTO)
-    rule.mCommand += ["-S", sourcePath]
-    rule.mCommand += ["-o", asObjectFile]
-    rule.mCommand += ["-DSTATIC="]
-    rule.mCommand += includeDirsInCompilerCommand
-    rule.mCommand += ["-MD", "-MP", "-MF", asObjectFile + ".dep"]
-    rule.mDependences.append (sourcePath)
-    rule.mDependences.append (allHeaders_file)
-    rule.mDependences.append ("makefile.json")
-    rule.enterSecondaryDependanceFile (asObjectFile + ".dep", make)
-    make.addRule (rule)
-  #--- AS rule, getting output assembler file
-    listingFile = ASBUILD_DIR + "/" + source + ".s.list"
-    rule = makefile.Rule ([listingFile], "Assembling -> listing " + source)
-    rule.mOpenSourceOnError = False
-    rule.mCommand += AS_TOOL_WITH_OPTIONS
-    rule.mCommand += [asObjectFile]
-    rule.mCommand += ["-o", "/dev/null"]
-    rule.mCommand += ["-aln=" + listingFile]
-    rule.mDependences.append (asObjectFile)
-    rule.mDependences.append (allHeaders_file)
-    rule.mDependences.append ("makefile.json")
-    make.addRule (rule)
-    asObjectFileList.append (listingFile)
+    (goals, objectFiles, listingFiles) = addCppSourceFileToMakeFile (
+      sourcePath,
+      make,
+      BUILD_DIR,
+      allHeadersSecondaryDependenceFile,
+      COMPILER_TOOL_WITH_OPTIONS,
+      includeDirsInCompilerCommand,
+      usesLTO,
+      GROUP_SOURCES,
+      allHeaders_file,
+      ASBUILD_DIR,
+      AS_TOOL_WITH_OPTIONS
+    )
+    allGoal += goals
+    objectFileList += objectFiles
+    asObjectFileList += listingFiles
 #-- Add ARM S files
   for sourcePath in S_SOURCE_LIST :
-    source = os.path.basename (sourcePath)
-    objectFile = BUILD_DIR + "/" + source + ".o"
-    objectFileForChecking = BUILD_DIR + "/" + source + ".check.o"
-    asObjectFile = ASBUILD_DIR + "/" + source + ".s"
-    if sourcePath != "" :
-      rule = makefile.Rule ([objectFile], "Assembling " + source)
-      rule.mOpenSourceOnError = False
-      rule.mCommand += AS_TOOL_WITH_OPTIONS
-      rule.mCommand += [sourcePath]
-      rule.mCommand += ["-o", objectFile]
-      rule.mCommand += includeDirsInCompilerCommand
-      rule.mCommand += ["--MD", objectFile + ".dep"]
-      rule.mDependences.append (sourcePath)
-      rule.mDependences.append ("makefile.json")
-      rule.enterSecondaryDependanceFile (objectFile + ".dep", make)
-      make.addRule (rule)
-      objectFileList.append (objectFile)
-    #--- Add listing file
-      listingFile = ASBUILD_DIR + "/" + source + ".list"
-      rule = makefile.Rule ([listingFile], "Assembling -> listing " + source)
-      rule.mOpenSourceOnError = False
-      rule.mCommand += AS_TOOL_WITH_OPTIONS
-      rule.mCommand += [sourcePath]
-      rule.mCommand += includeDirsInCompilerCommand
-      rule.mCommand += ["-o", "/dev/null"]
-      rule.mCommand += ["-aln=" + listingFile]
-      rule.mDependences.append (sourcePath)
-      rule.mDependences.append ("makefile.json")
-      make.addRule (rule)
-      asObjectFileList.append (listingFile)
+    (objectFiles, listingFiles) = addAsSourceFileToMakeFile (
+      sourcePath,
+      make,
+      BUILD_DIR,
+      ASBUILD_DIR,
+      AS_TOOL_WITH_OPTIONS,
+      includeDirsInCompilerCommand
+    )
+    objectFileList += objectFiles
+    asObjectFileList += listingFiles
 #--------------------------------------------------------------------------- Enumerate deployments
   deploymentDictionary = deployment.deploymentDictionary ()
 #--------------------------------------------------------------------- - Check selected deployments
+  objectFileListDictionary = dict ()
   for selectedDeployment in selectedDeployments :
+    objectFileListDictionary [selectedDeployment] = list (objectFileList)
     if not selectedDeployment in deploymentDictionary.keys () :
       s = "Invalid deployment \"" + selectedDeployment + "\"; possible values:\n"
       for dep in deploymentDictionary.keys () :
@@ -411,9 +461,40 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   for selectedDeployment in selectedDeployments :
     additionalSourceDirectory = deployment.additionalSourceDirectoryForDeployment (selectedDeployment)
     if additionalSourceDirectory != "" :
-      fullPath = TARGET_DIR + "/deployment/" + additionalSourceDirectory
-      for name in sorted (os.listdir (fullPath)) :
-        print (name)
+      fullDirPath = TARGET_DIR + "/deployment/" + additionalSourceDirectory
+      for name in sorted (os.listdir (fullDirPath)) :
+        sourcePath = os.path.join (fullDirPath, name)
+        (b, extension) = os.path.splitext (sourcePath)
+        if extension == ".cpp" :
+          (goals, objectFiles, listingFiles) = addCppSourceFileToMakeFile (
+            sourcePath,
+            make,
+            BUILD_DIR,
+            allHeadersSecondaryDependenceFile,
+            COMPILER_TOOL_WITH_OPTIONS,
+            includeDirsInCompilerCommand,
+            usesLTO,
+            GROUP_SOURCES,
+            allHeaders_file,
+            ASBUILD_DIR,
+            AS_TOOL_WITH_OPTIONS
+          )
+          allGoal += goals
+          objectFileListDictionary [selectedDeployment] += objectFiles
+          asObjectFileList += listingFiles
+        elif extension == ".s" :
+          (objectFiles, listingFiles) = addAsSourceFileToMakeFile (
+            sourcePath,
+            make,
+            BUILD_DIR,
+            ASBUILD_DIR,
+            AS_TOOL_WITH_OPTIONS,
+            includeDirsInCompilerCommand
+          )
+          objectFileListDictionary [selectedDeployment] += objectFiles
+          asObjectFileList += listingFiles
+        elif extension != "" : # Ceci permet d'ignorer les fichés cachés (dont les noms commencent par un point)
+          print (makefile.MAGENTA () + makefile.BOLD () + "Note: unhandled file " + sourcePath + makefile.ENDC ())
 
 #--------------------------------------------------------------------------- Build deployment files
   runGoalDictionary = dict ()
@@ -425,11 +506,11 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
     allGoal.append (PRODUCT + ".elf")
   #--- Add link rule
     rule = makefile.Rule ([PRODUCT + ".elf"], "Linking " + PRODUCT + ".elf")
-    rule.mDependences += objectFileList
+    rule.mDependences += objectFileListDictionary [selectedDeployment]
     rule.mDependences.append (LINKER_SCRIPT)
     rule.mDependences.append ("makefile.json")
     rule.mCommand += LD_TOOL_WITH_OPTIONS
-    rule.mCommand += objectFileList
+    rule.mCommand += objectFileListDictionary [selectedDeployment]
     rule.mCommand += ["-T" + LINKER_SCRIPT]
     rule.mCommand.append ("-Wl,-Map=" + PRODUCT + ".map")
     rule.mCommand += common_definitions.commonLinkerFlags (usesLTO)

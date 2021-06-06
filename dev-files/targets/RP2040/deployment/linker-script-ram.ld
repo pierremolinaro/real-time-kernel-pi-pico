@@ -63,6 +63,7 @@ SECTIONS {
   /*-------------------- BOOT2 */
   /* Not executed at boot when deployment is ram, so it can be placed anywhere */
     __boot2_in_flash_start = . ;
+    flash.enable.xip.via.boot2 = . + 1 ;
     KEEP (*(.boot2)) ;
     __boot2_in_flash_end = . ;
   /*-------------------- Boot routine array */
@@ -154,21 +155,6 @@ SECTIONS {
 
 __run_in_ram_load_start = LOADADDR (.run.in.ram) ;
 __run_in_ram_load_end   = LOADADDR (.run.in.ram) + SIZEOF (.run.in.ram) ;
-
-/*----------------------------------------------------------------------------*/
-/*                                                                            */
-/*                        Boot2                                               */
-/*                                                                            */
-/*----------------------------------------------------------------------------*/
-
-SECTIONS {
-  .boot2.in.ram : {
-    __flash_enable_xip_via_boot2_in_ram_base_address = . ;
-    . += 1 ;
-    flash.enable.xip.via.boot2 = . ;
-    . += 255 ;
-  } > SRAM5
-}
 
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
