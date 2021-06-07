@@ -20,6 +20,9 @@ def runProcess (command) :
     print (makefile.BOLD_RED () + "Error " + str (returncode) + makefile.ENDC ())
     sys.exit (returncode)
 
+
+
+
 #---------------------------------------------------------------------------------------------------
 #   Run process, get output and wait for termination
 #---------------------------------------------------------------------------------------------------
@@ -41,6 +44,9 @@ def runProcessAndGetOutput (command) :
     sys.exit (childProcess.returncode)
   return result
 
+
+
+
 #---------------------------------------------------------------------------------------------------
 #   dictionaryFromJsonFile
 #---------------------------------------------------------------------------------------------------
@@ -58,6 +64,9 @@ def dictionaryFromJsonFile (file) :
     print (makefile.BOLD_RED () + "Syntax error in " + file + makefile.ENDC ())
     sys.exit (1)
   return result
+
+
+
 
 #---------------------------------------------------------------------------------------------------
 #   Add CPP source file to makefile
@@ -194,6 +203,8 @@ def addAsSourceFileToMakeFile (sourcePath,
   return ([objectFile], [listingFile])
 
 
+
+
 #---------------------------------------------------------------------------------------------------
 #   buildCode
 #---------------------------------------------------------------------------------------------------
@@ -251,6 +262,20 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   DISPLAY_OBJ_SIZE_TOOL = [TOOL_DIR + "/bin/" + BASE_NAME + "-size"]
 #   OBJDUMP_TOOL = TOOL_DIR + "/bin/" + BASE_NAME + "-objdump"
 #--------------------------------------------------------------------------- Parse JSON dictinary
+#--- SCHEME
+  if "SCHEME" in dictionaire:
+    SCHEME = dictionaire ["SCHEME"]
+    schemeFilePath = TARGET_DIR + "/schemes/" + SCHEME + ".json"
+    if os.path.exists (schemeFilePath) :
+      schemeDictionary = dictionaryFromJsonFile (schemeFilePath)
+      dictionaire ["UNUSED-IRQ-SCHEME"] = schemeDictionary ["UNUSED-IRQ-SCHEME"]
+      dictionaire ["IRQ-SECTION-SCHEME"] = schemeDictionary ["IRQ-SECTION-SCHEME"]
+      dictionaire ["SERVICE-SCHEME"] = schemeDictionary ["SERVICE-SCHEME"]
+      dictionaire ["SECTION-SCHEME"] = schemeDictionary ["SECTION-SCHEME"]
+      dictionaire ["SOURCES-IN-DEV-DIR"] = schemeDictionary ["SOURCES-IN-DEV-DIR"]
+    else:
+      print (makefile.RED () + makefile.BOLD () + "Unknow scheme '" + SCHEME + "'" + makefile.ENDC ())
+      sys.exit (1)
 #--- CPU_MHZ
   CPU_MHZ = 0
   if "CPU-MHZ" in dictionaire:
@@ -267,7 +292,7 @@ def buildCode (GOAL, projectDir, maxConcurrentJobs, verbose):
   if "SOURCES-IN-DEV-DIR" in dictionaire :
     sourcesInDevDir = dictionaire ["SOURCES-IN-DEV-DIR"]
     for d in sourcesInDevDir :
-      SOURCE_FILE_DIRECTORIES.append (TARGET_DIR + "/" + d)
+      SOURCE_FILE_DIRECTORIES.append (TARGET_DIR + "/sources/" + d)
 #--- GROUP_SOURCES
   GROUP_SOURCES = False
   if "GROUP-SOURCES" in dictionaire:

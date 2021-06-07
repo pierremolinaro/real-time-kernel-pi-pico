@@ -1,0 +1,10 @@
+{  "SOURCES-IN-DEV-DIR" : ["sources-common", "sources-digital-io", "utilities", "xtr-common", "xtr-dual-core"],
+
+  "UNUSED-IRQ-SCHEME" : "goto-fault-handler",
+
+  "IRQ-SECTION-SCHEME" : "spinlock",
+
+  "SERVICE-SCHEME" : "svc-dual-core-v2",
+
+  "SECTION-SCHEME" : "disable-interrupts-spinlock"
+}

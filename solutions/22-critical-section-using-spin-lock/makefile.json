@@ -4,7 +4,7 @@
 
   "SOURCE-DIR" : ["sources"],
 
-  "SOURCES-IN-DEV-DIR" : ["sources-common", "sources-digital-io", "synchronization-tools"],
+  "SOURCES-IN-DEV-DIR" : ["sources-common", "sources-digital-io", "utilities", "xtr-common"],
 
   "DEV-DIR" : "../../dev-files",
 

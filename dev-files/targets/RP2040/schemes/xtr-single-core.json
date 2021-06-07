@@ -1,0 +1,10 @@
+{ "SOURCES-IN-DEV-DIR" : ["sources-common", "sources-digital-io", "utilities", "xtr-common", "xtr-single-core"],
+
+  "UNUSED-IRQ-SCHEME" : "goto-fault-handler",
+
+  "IRQ-SECTION-SCHEME" : "branch",
+
+  "SERVICE-SCHEME" : "svc-single-core",
+
+  "SECTION-SCHEME" : "disable-interrupts"
+}

@@ -20,8 +20,8 @@ def additionalSourceDirectoryForDeployment (deployment) :
   result = ""
   if deployment == "flash" :
     result = "sources-for-flash-deployment"
-#   elif deployment == "ram" :
-#     result = "sources-for-ram-deployment"
+  elif deployment == "ram" :
+    result = "sources-for-ram-deployment"
   return result
 
 #---------------------------------------------------------------------------------------------------

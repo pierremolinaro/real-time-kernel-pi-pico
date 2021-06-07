@@ -1,0 +1,14 @@
+{ "TARGET" : "RP2040",
+
+  "DEPLOYMENT" : ["flash"],
+
+  "SOURCE-DIR" : ["sources"],
+
+  "SCHEME" : "xtr-dual-core",
+
+  "DEV-DIR" : "../../dev-files",
+
+  "TASK-COUNT" : 1,
+
+  "CPU-MHZ" : 125
+}
