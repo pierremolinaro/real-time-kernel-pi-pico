@@ -64,11 +64,11 @@ for stepDir in sorted (os.listdir (scriptDir)) :
            print (BOLD_RED () + "File '" + fileRelPath + "' contains htab" + ENDC ())
            sys.exit (1)
          if not file in fileDictionary :
-           fileDictionary [file] = contents
+           fileDictionary [file] = (contents, fileAbsPath)
          else :
-           otherContents = fileDictionary [file]
+           (otherContents, otherPath) = fileDictionary [file]
            if otherContents != contents :
-             print (BOLD_RED () + "Error for file '" + fileRelPath + "'" + ENDC ())
+             print (BOLD_RED () + "Error for file '" + fileRelPath + "', different from '" + otherPath + "'" + ENDC ())
              sys.exit (1)
 print (BOLD_GREEN () + "OK" + ENDC ())
 
