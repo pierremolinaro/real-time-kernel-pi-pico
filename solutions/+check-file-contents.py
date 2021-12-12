@@ -50,6 +50,7 @@ def BOLD_RED () :
 scriptDir = os.path.dirname (os.path.abspath (sys.argv [0]))
 #--- Enumerate directories
 fileDictionary = {}
+contentDictionary = {}
 for stepDir in sorted (os.listdir (scriptDir)) :
    sourceDir = os.path.join (scriptDir, stepDir, "sources")
    if os.path.isdir (sourceDir) :
@@ -62,14 +63,25 @@ for stepDir in sorted (os.listdir (scriptDir)) :
          f.close ()
          if contents.find ('\t') >= 0 :
            print (BOLD_RED () + "File '" + fileRelPath + "' contains htab" + ENDC ())
-           sys.exit (1)
+#           sys.exit (1)
          if not file in fileDictionary :
            fileDictionary [file] = (contents, fileAbsPath)
          else :
            (otherContents, otherPath) = fileDictionary [file]
            if otherContents != contents :
-             print (BOLD_RED () + "Error for file '" + fileRelPath + "', different from '" + otherPath + "'" + ENDC ())
-             sys.exit (1)
+             print (BOLD_RED () + "Different contents for:")
+             print (BOLD_RED () + "  '" + fileRelPath + "'")
+             print (BOLD_RED () + "  '" + otherPath + "'" + ENDC ())
+#             sys.exit (1)
+         if not contents in contentDictionary :
+           contentDictionary [contents] = fileRelPath
+         else :
+           otherPath = contentDictionary [contents]
+           if os.path.basename (os.path.normpath (otherPath)) != os.path.basename (os.path.normpath (fileRelPath)) :
+             print (BOLD_RED () + "Same contents for:")
+             print (BOLD_RED () + "  '" + fileRelPath + "'")
+             print (BOLD_RED () + "  '" + otherPath + "'" + ENDC ())
+#             sys.exit (1)
 print (BOLD_GREEN () + "OK" + ENDC ())
 
 #---------------------------------------------------------------------------------------------------

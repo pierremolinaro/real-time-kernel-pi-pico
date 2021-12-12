@@ -6,12 +6,6 @@
 
 //--------------------------------------------------------------------------------------------------
 
-void setup0 (USER_MODE) asm ("cpu.0.setup") ;
-
-void loop0 (USER_MODE) asm ("cpu.0.loop") ;
-
-//--------------------------------------------------------------------------------------------------
-
 //$interrupt-section IO_IRQ_BANK0
 
 void clicInterrupt (SECTION_MODE) asm ("interrupt.section.IO_IRQ_BANK0") ;
