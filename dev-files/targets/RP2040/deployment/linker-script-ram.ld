@@ -46,6 +46,12 @@ SECTIONS {
   .text : {
   /*-------------------- Entry point in RAM should be at the beginning of the RAM */
     KEEP (*(.start.in.ram)) ;
+  /*-------------------- BOOT2 */
+  /* Not executed at boot when deployment is ram, so it can be placed anywhere */
+    __boot2_in_flash_start = . ;
+    flash.enable.xip.via.boot2 = . + 1 ;
+    KEEP (*(.boot2)) ;
+    __boot2_in_flash_end = . ;
   /*-------------------- BSS */
     . = ALIGN(4);
     __bss_start = . ;
@@ -60,12 +66,6 @@ SECTIONS {
     *(.text*) ;
     *(.text) ;
     *(text) ;
-  /*-------------------- BOOT2 */
-  /* Not executed at boot when deployment is ram, so it can be placed anywhere */
-    __boot2_in_flash_start = . ;
-    flash.enable.xip.via.boot2 = . + 1 ;
-    KEEP (*(.boot2)) ;
-    __boot2_in_flash_end = . ;
   /*-------------------- Boot routine array */
     . = ALIGN (4) ;
     __boot_routine_array_start = . ;

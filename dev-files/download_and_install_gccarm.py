@@ -34,6 +34,7 @@ class bcolors:
 
 def distributionGCC () :
   gcc = "gcc-arm-none-eabi-10-2020-q4-major"
+  gcc = "gcc-arm-11.2-2022.02-darwin-x86_64-arm-none-eabi"
   if host_platform.getPlatform () == "linux32" :
     gcc = "gcc-arm-none-eabi-5_4-2016q3"
   return gcc
