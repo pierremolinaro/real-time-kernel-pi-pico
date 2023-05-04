@@ -1,5 +1,8 @@
 #include "all-headers.h"
 
+#pragma GCC diagnostic ignored "-Warray-bounds"
+
+
 //-------------------------------------------------------------------------------------------------
 
 extern uint16_t bootromFunctionAddressArray [14] asm ("bootrom.function.address.array") ;
@@ -21,7 +24,13 @@ static const uint32_t flash_enter_cmd_xip_index    = 13 ;
 
 //-------------------------------------------------------------------------------------------------
 
-#define MEMORY(address) *((volatile uint8_t *) (address))
+//#define MEMORY(address) *((volatile uint8_t *) (address))
+
+static uint8_t MEMORY (const size_t inAddress) { // Requires GCC diagnostic ignored "-Warray-bounds"
+  const uint8_t value = *((volatile uint8_t *) inAddress) ;
+
+  return value ;
+}
 
 //-------------------------------------------------------------------------------------------------
 
