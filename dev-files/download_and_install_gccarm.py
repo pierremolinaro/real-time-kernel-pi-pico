@@ -16,17 +16,17 @@ import host_platform
 #---------------------------------------------------------------------------------------------------
 
 class bcolors:
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    GREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
+    HEADER = '\033[35m'
+    BLUE = '\033[34m'
+    GREEN = '\033[32m'
+    WARNING = '\033[33m'
+    FAIL = '\033[31m'
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-    BOLD_BLUE = '\033[1m' + '\033[94m'
-    BOLD_GREEN = '\033[1m' + '\033[92m'
-    BOLD_RED = '\033[1m' + '\033[91m'
+    BOLD_BLUE = '\033[1m' + '\033[34m'
+    BOLD_GREEN = '\033[1m' + '\033[32m'
+    BOLD_RED = '\033[1m' + '\033[31m'
 
 #-----------------------------------------------------------------------------------------
 #   DISTRIBUTION GCC, COMPILER REPOSITORY URL (version 12.2.MPACBTI-Rel1 du 22 mars 2023)
